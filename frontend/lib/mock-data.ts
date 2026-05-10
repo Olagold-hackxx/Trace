@@ -1,277 +1,303 @@
-import type { Job, JobActivity, JobApplication } from "@/lib/jobs";
+import { TRADERS, WORKERS } from "./constants";
 
-export const jobs: Job[] = [
+// TraceScore for each trader
+export const TRACE_SCORES = {
+  "trader-1": { score: 742, components: { revenue: 85, repayment: 92, volume: 78, history: 88, jobs: 81 } },
+  "trader-2": { score: 695, components: { revenue: 75, repayment: 85, volume: 70, history: 80, jobs: 72 } },
+  "trader-3": { score: 758, components: { revenue: 88, repayment: 95, volume: 82, history: 90, jobs: 85 } },
+  "trader-4": { score: 710, components: { revenue: 78, repayment: 88, volume: 75, history: 82, jobs: 76 } },
+  "trader-5": { score: 780, components: { revenue: 92, repayment: 98, volume: 88, history: 95, jobs: 90 } },
+};
+
+// Jobs data
+export const JOBS = [
   {
-    id: "job_001",
-    title: "Sales assistant needed today",
-    category: "Sales assistant",
-    created_by_name: "Mama Ngozi's Provisions",
-    created_by_user_id: "user_trader_001",
-    creator_role_context: "trader",
-    location: "Mile 12 Market, Lagos",
-    state: "Lagos",
-    pay_amount_kobo: 800000,
-    duration: "1 day",
-    status: "open",
-    payment_status: "held",
-    applicants: 6,
-    required_skills: ["Sales", "Customer handling", "Cash handling"],
-    description:
-      "Need someone to assist with sales and customer management during market rush.",
-    created_at: "2025-05-07T09:00:00.000Z",
-    updated_at: "2025-05-08T11:00:00.000Z"
-  },
-  {
-    id: "job_002",
-    title: "Field agent for shop verification",
-    category: "Field verification",
-    created_by_name: "BlueRiver Microfinance",
-    created_by_user_id: "user_lender_001",
-    creator_role_context: "lender",
+    id: "job-1",
+    traderId: "trader-1",
+    traderName: "Amaka Foods",
+    title: "Stock Clerk",
+    description: "Help with daily stocktaking and shelf organization at Amaka Foods warehouse.",
     location: "Yaba, Lagos",
-    state: "Lagos",
-    pay_amount_kobo: 1200000,
-    duration: "4 hours",
-    status: "open",
-    payment_status: "pending",
-    applicants: 3,
-    required_skills: ["Verification", "Smartphone", "Reporting"],
-    description:
-      "Visit merchant location, confirm business activity, and upload verification notes.",
-    created_at: "2025-05-06T10:30:00.000Z",
-    updated_at: "2025-05-08T12:10:00.000Z"
-  },
-  {
-    id: "job_003",
-    title: "Inventory helper for electronics shop",
-    category: "Inventory helper",
-    created_by_name: "Chidi's Electronics",
-    created_by_user_id: "user_trader_002",
-    creator_role_context: "trader",
-    location: "Onitsha Main Market",
-    state: "Anambra",
-    pay_amount_kobo: 1000000,
-    duration: "1 day",
+    pay: 8000,
+    duration: "Full Day (8hrs)",
+    category: "Stocktaking",
+    postedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    applicants: 5,
     status: "active",
-    payment_status: "held",
-    applicants: 9,
-    required_skills: ["Inventory", "Lifting", "Organization"],
-    description: "Assist with stock counting and product arrangement.",
-    created_at: "2025-05-05T08:15:00.000Z",
-    updated_at: "2025-05-08T14:40:00.000Z"
-  }
-];
-
-export const applicants: JobApplication[] = [
-  {
-    id: "app_001",
-    job_id: "job_001",
-    applicant_user_id: "user_trader_010",
-    applicant_name: "Timi Ade",
-    applicant_role_context: "trader",
-    location: "Ketu, Lagos",
-    reliabilityScore: 92,
-    message: "I can start today and handle rush-hour customer flow.",
-    status: "pending",
-    created_at: "2025-05-08T09:15:00.000Z"
+    image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=400&h=300&fit=crop",
   },
   {
-    id: "app_002",
-    job_id: "job_001",
-    applicant_user_id: "user_lender_008",
-    applicant_name: "Aisha Bello",
-    applicant_role_context: "lender",
+    id: "job-2",
+    traderId: "trader-2",
+    traderName: "Bola Stores",
+    title: "Delivery Assistant",
+    description: "Assist with product delivery and customer service at Bola Stores.",
+    location: "Ikeja, Lagos",
+    pay: 7500,
+    duration: "Half Day (4hrs)",
+    category: "Delivery",
+    postedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    applicants: 3,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
+  },
+  {
+    id: "job-3",
+    traderId: "trader-3",
+    traderName: "Kemi Snacks",
+    title: "Packaging & Quality Check",
+    description: "Package snacks and perform quality checks at Kemi Snacks facility.",
+    location: "Surulere, Lagos",
+    pay: 9000,
+    duration: "Full Day (8hrs)",
+    category: "Packing",
+    postedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    applicants: 7,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1488459716781-6f3ee4b7970b?w=400&h=300&fit=crop",
+  },
+  {
+    id: "job-4",
+    traderId: "trader-4",
+    traderName: "Yaba Fresh Mart",
+    title: "Produce Sorting",
+    description: "Sort and organize fresh produce at the wholesale warehouse.",
+    location: "Akoka, Lagos",
+    pay: 6500,
+    duration: "Full Day (8hrs)",
+    category: "Sorting",
+    postedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    applicants: 4,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop",
+  },
+  {
+    id: "job-5",
+    traderId: "trader-5",
+    traderName: "Chinedu Provisions",
+    title: "Cashier & Customer Service",
+    description: "Manage point of sale and assist customers at Chinedu Provisions store.",
+    location: "Victoria Island, Lagos",
+    pay: 10000,
+    duration: "Half Day (4hrs)",
+    category: "Sales",
+    postedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    applicants: 6,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1556910103-1c02745acea4?w=400&h=300&fit=crop",
+  },
+  {
+    id: "job-6",
+    traderId: "trader-1",
+    traderName: "Amaka Foods",
+    title: "Inventory Management",
+    description: "Update inventory system and track stock movements.",
     location: "Yaba, Lagos",
-    reliabilityScore: 87,
-    message: "Available after loan field rounds and familiar with sales reporting.",
-    status: "accepted",
-    created_at: "2025-05-08T10:15:00.000Z"
+    pay: 8500,
+    duration: "Full Day (8hrs)",
+    category: "Admin",
+    postedDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+    applicants: 2,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1450849708868-641ca40dd42f?w=400&h=300&fit=crop",
   },
   {
-    id: "app_003",
-    job_id: "job_002",
-    applicant_user_id: "user_023",
-    applicant_name: "Daniel Okafor",
-    applicant_role_context: "user",
-    location: "Mile 12, Lagos",
-    reliabilityScore: 79,
-    message: "Can submit photo proof, geo-tagged notes, and completion summary.",
-    status: "pending",
-    created_at: "2025-05-08T11:15:00.000Z"
-  }
+    id: "job-7",
+    traderId: "trader-2",
+    traderName: "Bola Stores",
+    title: "Store Cleaning",
+    description: "Deep cleaning and maintenance of store premises.",
+    location: "Ikeja, Lagos",
+    pay: 5500,
+    duration: "Half Day (4hrs)",
+    category: "Cleaning",
+    postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    applicants: 8,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=400&h=300&fit=crop",
+  },
+  {
+    id: "job-8",
+    traderId: "trader-3",
+    traderName: "Kemi Snacks",
+    title: "Production Helper",
+    description: "Assist in snack production line and machinery operation.",
+    location: "Surulere, Lagos",
+    pay: 9500,
+    duration: "Full Day (8hrs)",
+    category: "Production",
+    postedDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+    applicants: 5,
+    status: "active",
+    image: "https://images.unsplash.com/photo-1529652715194-0a202c5b1c3e?w=400&h=300&fit=crop",
+  },
 ];
 
-export const jobActivities: JobActivity[] = [
+// Job Applicants
+export const JOB_APPLICANTS = {
+  "job-1": [
+    { id: "worker-1", name: "Tobi Ade", match: 95, applied: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+    { id: "worker-2", name: "Zainab Yusuf", match: 87, applied: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+    { id: "worker-3", name: "Mariam Bello", match: 82, applied: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
+    { id: "worker-4", name: "David Eze", match: 78, applied: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000) },
+    { id: "worker-5", name: "Aisha Lawal", match: 85, applied: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) },
+  ],
+  "job-2": [
+    { id: "worker-3", name: "Mariam Bello", match: 90, applied: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+    { id: "worker-5", name: "Aisha Lawal", match: 84, applied: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+    { id: "worker-6", name: "Chioma Obi", match: 88, applied: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
+  ],
+};
+
+// Transactions
+export const TRANSACTIONS = [
   {
-    id: "activity_001",
-    job_id: "job_001",
-    actor_user_id: "user_trader_001",
-    action: "job_created",
-    note: "Trader created a same-day sales support request.",
-    created_at: "2025-05-07T09:00:00.000Z"
+    id: "txn-1",
+    traderId: "trader-1",
+    amount: 125000,
+    type: "payment_received",
+    source: "Bank Transfer",
+    date: new Date(Date.now() - 0 * 24 * 60 * 60 * 1000),
+    status: "completed",
   },
   {
-    id: "activity_002",
-    job_id: "job_001",
-    actor_user_id: "user_lender_008",
-    action: "application_received",
-    note: "Aisha Bello applied with customer handling and cash support experience.",
-    created_at: "2025-05-08T10:15:00.000Z"
+    id: "txn-2",
+    traderId: "trader-1",
+    amount: 8000,
+    type: "worker_payout",
+    source: "Trace Work",
+    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    status: "completed",
   },
   {
-    id: "activity_003",
-    job_id: "job_001",
-    actor_user_id: "user_trader_001",
-    action: "worker_selected",
-    note: "Trader shortlisted the strongest availability and reliability fit.",
-    created_at: "2025-05-08T11:40:00.000Z"
+    id: "txn-3",
+    traderId: "trader-1",
+    amount: 250000,
+    type: "payment_received",
+    source: "Bank Transfer",
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    status: "completed",
   },
   {
-    id: "activity_004",
-    job_id: "job_001",
-    actor_user_id: "user_trader_001",
-    action: "payment_prepared",
-    note: "Funds moved into held status pending confirmed completion.",
-    created_at: "2025-05-08T12:05:00.000Z"
-  }
+    id: "txn-4",
+    traderId: "trader-1",
+    amount: 15000,
+    type: "worker_payout",
+    source: "Trace Work",
+    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    status: "completed",
+  },
+  {
+    id: "txn-5",
+    traderId: "trader-1",
+    amount: 175000,
+    type: "payment_received",
+    source: "Bank Transfer",
+    date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    status: "completed",
+  },
+  {
+    id: "txn-6",
+    traderId: "trader-1",
+    amount: 12500,
+    type: "worker_payout",
+    source: "Trace Work",
+    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+    status: "completed",
+  },
 ];
 
-export const traderTransactions = [
-  {
-    id: "txn_001",
-    type: "Squad payment",
-    counterparty: "Retail customer batch",
-    amount: "+NGN 285,000",
-    status: "Settled",
-    time: "08:24"
-  },
-  {
-    id: "txn_002",
-    type: "Inventory supplier",
-    counterparty: "Mainland stock house",
-    amount: "-NGN 95,000",
-    status: "Paid",
-    time: "09:02"
-  },
-  {
-    id: "txn_003",
-    type: "Job escrow hold",
-    counterparty: "Sales helper wallet",
-    amount: "-NGN 8,000",
-    status: "Held",
-    time: "10:20"
-  }
+// Revenue Data (for charts)
+export const REVENUE_DATA = [
+  { day: "Mon", revenue: 185000 },
+  { day: "Tue", revenue: 220000 },
+  { day: "Wed", revenue: 195000 },
+  { day: "Thu", revenue: 280000 },
+  { day: "Fri", revenue: 315000 },
+  { day: "Sat", revenue: 380000 },
+  { day: "Sun", revenue: 250000 },
 ];
 
-export const traderPayments = [
+// Revenue Trend Data (for line chart)
+export const REVENUE_TREND = [
+  { week: "Week 1", revenue: 1200000 },
+  { week: "Week 2", revenue: 1450000 },
+  { week: "Week 3", revenue: 1280000 },
+  { week: "Week 4", revenue: 1650000 },
+  { week: "Week 5", revenue: 1820000 },
+  { week: "Week 6", revenue: 1950000 },
+  { week: "Week 7", revenue: 2100000 },
+  { week: "Week 8", revenue: 2350000 },
+];
+
+// Lender approvals
+export const LENDER_QUEUE = [
   {
-    title: "Incoming payment velocity",
-    value: "NGN 1.8M",
-    note: "7-day captured payment volume"
+    id: "lender-1",
+    name: "Zenith Capital",
+    merchants: [
+      {
+        traderName: "Amaka Foods",
+        traderId: "trader-1",
+        score: 742,
+        requestedAmount: 500000,
+        status: "under_review",
+        dateSubmitted: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      },
+      {
+        traderName: "Bola Stores",
+        traderId: "trader-2",
+        score: 695,
+        requestedAmount: 300000,
+        status: "under_review",
+        dateSubmitted: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+      },
+    ],
+    approvedCount: 18,
+    rejectedCount: 2,
   },
   {
-    title: "Repeat customers",
-    value: "64%",
-    note: "Signals stable repayment behavior"
+    id: "lender-2",
+    name: "Catalyst Fund",
+    merchants: [
+      {
+        traderName: "Chinedu Provisions",
+        traderId: "trader-5",
+        score: 780,
+        requestedAmount: 750000,
+        status: "under_review",
+        dateSubmitted: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+      },
+    ],
+    approvedCount: 24,
+    rejectedCount: 1,
   },
   {
-    title: "Chargeback rate",
-    value: "0.8%",
-    note: "Low dispute pressure on score"
-  }
-];
-
-export const scoreBreakdown = [
-  { label: "Payment consistency", value: "36 / 40" },
-  { label: "Business activity depth", value: "24 / 25" },
-  { label: "Seasonal resilience", value: "18 / 20" },
-  { label: "Operational reliability", value: "11 / 15" }
-];
-
-export const loans = [
-  {
-    id: "loan_001",
-    title: "Working capital top-up",
-    amount: "NGN 450,000",
-    rate: "5.5% / month",
-    status: "Approved",
-    note: "Disbursement linked to verified payment trail."
+    id: "lender-3",
+    name: "Growth Finance",
+    merchants: [
+      {
+        traderName: "Kemi Snacks",
+        traderId: "trader-3",
+        score: 758,
+        requestedAmount: 600000,
+        status: "pending_review",
+        dateSubmitted: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      },
+    ],
+    approvedCount: 15,
+    rejectedCount: 3,
   },
-  {
-    id: "loan_002",
-    title: "Stock expansion line",
-    amount: "NGN 900,000",
-    rate: "6.2% / month",
-    status: "Under review",
-    note: "Awaiting more recent revenue and turnover history."
-  }
 ];
 
-export const merchants = [
-  {
-    id: "merchant_001",
-    name: "Mama Ngozi's Provisions",
-    sector: "Groceries",
-    location: "Mile 12, Lagos",
-    score: 82,
-    need: "Restock financing before weekend rush"
-  },
-  {
-    id: "merchant_002",
-    name: "Chidi's Electronics",
-    sector: "Electronics",
-    location: "Onitsha",
-    score: 77,
-    need: "Inventory helper and short-term float"
-  }
-];
-
-export const lenderPortfolio = [
-  {
-    title: "Active merchants",
-    value: "128",
-    note: "Payment-linked underwriting cohort"
-  },
-  {
-    title: "At-risk accounts",
-    value: "7",
-    note: "Need follow-up tasks and verification"
-  },
-  {
-    title: "Recovered through jobs",
-    value: "NGN 2.3M",
-    note: "Field work improved collections and onboarding"
-  }
-];
-
-export const adminFeed = [
-  "New job created by trader",
-  "New job created by lender",
-  "Applicant applied",
-  "Applicant accepted",
-  "Payment released"
-];
-
-export const demoStory = [
-  "Trader receives Squad payment",
-  "KudiScore updates",
-  "Lender sees trader as loan-ready",
-  "Loan is approved",
-  "Trader creates a job for sales help",
-  "Another user applies",
-  "Trader accepts applicant",
-  "Job is completed",
-  "Payment is released"
-];
-
-export function getJob(jobId: string) {
-  return jobs.find((job) => job.id === jobId) ?? jobs[0];
-}
-
-export function getApplicationsForJob(jobId: string) {
-  return applicants.filter((application) => application.job_id === jobId);
-}
-
-export function getActivitiesForJob(jobId: string) {
-  return jobActivities.filter((activity) => activity.job_id === jobId);
-}
+// Platform stats
+export const PLATFORM_STATS = {
+  totalVolume: 45200000,
+  activeTraders: 342,
+  activeWorkers: 1205,
+  completedJobs: 3847,
+  verifiedWorkers: 1092,
+  capitalApproved: 18500000,
+  averageScore: 721,
+  paymentSuccess: 99.2,
+};

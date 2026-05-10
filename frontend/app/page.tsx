@@ -1,140 +1,154 @@
 import Link from "next/link";
-import { SectionCard } from "@/components/shared/SectionCard";
-import { StatCard } from "@/components/shared/StatCard";
-import { JobCard } from "@/components/jobs/JobCard";
-import { demoStory, jobs, merchants } from "@/lib/mock-data";
+import { HeroSection } from "@/components/landing/hero-section";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { FeaturesSection } from "@/components/landing/features-section";
+import { CTASection } from "@/components/landing/cta-section";
+import { COLORS } from "@/lib/constants";
 
-export default function LandingPage() {
+export default function Home() {
   return (
-    <main className="landing-shell">
-      <div className="landing-stack">
-        <section className="hero-grid">
-          <div className="card fade-in" style={{ gridColumn: "span 2" }}>
-            <div className="stack">
-              <span className="eyebrow">KudiScore</span>
-              <h1 className="display">
-                Turn payment history into credit strength, job access, and daily income mobility.
-              </h1>
-              <p className="lead">
-                KudiScore is a neo-brutalist operating surface for traders and lenders. It reads
-                real business activity, surfaces credit readiness, and folds jobs into the same
-                workflow so users can create work, find help, or earn from nearby tasks.
-              </p>
-              <div className="button-row">
-                <Link className="button" href="/auth/register">
-                  Register
-                </Link>
-                <Link className="button-secondary" href="/trader/dashboard">
-                  View Trader Demo
-                </Link>
-                <Link className="button-secondary" href="/lender/dashboard">
-                  View Lender Demo
-                </Link>
-              </div>
+    <div className="min-h-screen bg-[#f8f6f1] text-[#0f172a]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-[#e2e8f0] bg-white/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-2">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black text-white shadow-sm"
+              style={{ backgroundColor: COLORS.primary }}
+            >
+              T
             </div>
+            <span className="text-lg font-black tracking-tight text-[#0f172a]">
+              Trace
+            </span>
+          </Link>
+
+          <nav className="hidden items-center gap-8 md:flex">
+            <a
+              href="#features"
+              className="text-sm font-medium text-[#64748b] transition hover:text-[#0f172a]"
+            >
+              Features
+            </a>
+            <a
+              href="#how"
+              className="text-sm font-medium text-[#64748b] transition hover:text-[#0f172a]"
+            >
+              How It Works
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/auth/login"
+              className="text-sm font-semibold text-[#64748b] transition hover:text-[#0f172a]"
+            >
+              Login
+            </Link>
+            <Link
+              href="/auth/register"
+              className="rounded-xl px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              style={{ backgroundColor: COLORS.primary }}
+            >
+              Sign Up
+            </Link>
           </div>
-          <div className="card fade-in">
-            <div className="stack">
-              <span className="badge">Shared Jobs Module</span>
-              <h3>No separate worker side.</h3>
-              <p className="subtitle">
-                A trader can post or apply. A lender can post or apply. The worker is simply the
-                user who accepts or is assigned a job.
+        </div>
+      </header>
+
+      <main>
+        <HeroSection />
+        <FeaturesSection />
+        <HowItWorks />
+        <CTASection />
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-[#0f172a] text-white">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-10 md:grid-cols-4">
+            <div>
+              <div className="mb-4 flex items-center gap-2">
+                <div
+                  className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black text-white"
+                  style={{ backgroundColor: COLORS.primary }}
+                >
+                  T
+                </div>
+                <span className="text-lg font-black tracking-tight text-white">
+                  Trace
+                </span>
+              </div>
+              <p className="max-w-xs text-sm leading-6 text-slate-300">
+                Payments, TraceScore, restock capital, and on-demand work for
+                African trade.
               </p>
-              <ul className="checklist">
-                <li>Create jobs from operating cash flow.</li>
-                <li>Apply to nearby jobs to earn income.</li>
-                <li>Release payment after proof and completion.</li>
+            </div>
+
+            <div>
+              <h4 className="mb-4 text-sm font-bold text-white">Product</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    Trace Pay
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    TraceScore
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    Trace Jobs
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="mb-4 text-sm font-bold text-white">Company</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    Careers
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="mb-4 text-sm font-bold text-white">Legal</h4>
+              <ul className="space-y-3 text-sm">
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-slate-300 transition hover:text-orange-300">
+                    Terms
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
-        </section>
 
-        <section className="stat-grid">
-          <StatCard label="Live merchant score" value="82 / 100" foot="Powered by real payment activity" />
-          <StatCard label="Jobs activated" value="348" foot="Shared across trader and lender sides" />
-          <StatCard label="Loans approved" value="NGN 48M" foot="Readiness surfaced from verified transactions" />
-          <StatCard label="Worker payouts" value="NGN 6.2M" foot="Released from completed tasks" />
-        </section>
-
-        <section className="two-col">
-          <SectionCard
-            title="Trader growth loop"
-            subtitle="Payments increase trust, trust improves score, score opens credit, and jobs extend the business operating layer."
-          >
-            <div className="timeline-rail">
-              {demoStory.map((step, index) => (
-                <div key={step} className="feed-item">
-                  <strong>{String(index + 1).padStart(2, "0")}</strong>
-                  <span>{step}</span>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-          <SectionCard
-            title="Role-flexible users"
-            subtitle="KudiScore is not split into product silos. The same person can borrow, hire, work, repay, and build stronger reputation from one account context."
-          >
-            <div className="stack">
-              <div className="callout">
-                Traders use the jobs layer for rush-hour staffing, stock handling, delivery help,
-                payment desk support, and temporary field tasks.
-              </div>
-              <div className="callout">
-                Lenders use the same module for merchant verification, KYC collection, market
-                survey work, follow-up, inspections, and onboarding support.
-              </div>
-            </div>
-          </SectionCard>
-        </section>
-
-        <SectionCard
-          title="Available jobs right now"
-          subtitle="Jobs appear as part of the business growth layer, with the same loud orange neo-brutalist visual language used across the rest of the product."
-        >
-          <div className="jobs-grid">
-            {jobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                href={job.creator_role_context === "trader" ? `/trader/jobs/${job.id}` : `/lender/jobs/${job.id}`}
-              />
-            ))}
+          <div className="pt-8 text-center text-sm text-slate-400">
+            © 2026 Trace. All rights reserved.
           </div>
-        </SectionCard>
-
-        <section className="two-col">
-          <SectionCard
-            title="Lender intelligence"
-            subtitle="Underwriters do not just see a static profile. They see payment depth, merchant activity, field verification demand, and whether operating jobs are being completed well."
-          >
-            <div className="stack">
-              {merchants.map((merchant) => (
-                <div key={merchant.id} className="progress-item">
-                  <div>
-                    <strong>{merchant.name}</strong>
-                    <p className="subtitle">
-                      {merchant.sector} · {merchant.location}
-                    </p>
-                  </div>
-                  <span className="badge">Score {merchant.score}</span>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-          <SectionCard
-            title="What ships in this frontend folder"
-            subtitle="A complete route scaffold for Trader, Lender, and Admin pages, shared job components, mock-data-only screens, and a matching product prompt file."
-          >
-            <ul className="bullet-list">
-              <li>Landing and auth pages.</li>
-              <li>Trader dashboard, score, loans, jobs, and profile flows.</li>
-              <li>Lender merchants, portfolio, jobs, and profile flows.</li>
-              <li>Admin demo controls and live feed pages.</li>
-            </ul>
-          </SectionCard>
-        </section>
-      </div>
-    </main>
+        </div>
+      </footer>
+    </div>
   );
 }
