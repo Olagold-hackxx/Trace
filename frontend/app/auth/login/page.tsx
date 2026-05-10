@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { COLORS } from "@/lib/constants";
-import { Mail, Lock } from "@mui/icons-material";
+import { COLORS, IMAGES } from "@/lib/constants";
+import { Mail, Lock, ArrowForward, Storefront, AccountBalance } from "@mui/icons-material";
 
 export default function LoginPage() {
   const [userType, setUserType] = useState<"trader" | "lender">("trader");
@@ -12,130 +12,127 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const routes: Record<string, string> = {
-      trader: "/dashboard",
-      lender: "/lender",
-    };
-
+    const routes: Record<string, string> = { trader: "/dashboard", lender: "/lender" };
     window.location.href = routes[userType];
   };
 
-  const userTypes = [
-    { value: "trader", label: "Trader", color: COLORS.primary },
-    { value: "lender", label: "Lender", color: COLORS.role.lender },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white lg:grid lg:grid-cols-2">
-      {/* Left side */}
-      <aside className="hidden min-h-screen flex-col justify-between bg-[#0f172a] p-12 lg:flex">
-        <Link href="/" className="flex items-center gap-2">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black text-white"
-            style={{ backgroundColor: COLORS.primary }}
-          >
-            T
-          </div>
-          <span className="text-lg font-black tracking-tight text-white">
-            Trace
-          </span>
-        </Link>
+    <div className="min-h-screen flex" style={{ backgroundColor: "#0A0A0F" }}>
+      {/* Left — image panel */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        <img src={IMAGES.trader1} alt="Trader" className="w-full h-full object-cover object-top" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(10,10,15,0.3) 0%, rgba(10,10,15,0.85) 100%)" }} />
 
-        <div className="max-w-xl">
-          <div className="mb-5 w-fit rounded-full border border-orange-400/20 bg-orange-500/10 px-4 py-2 text-sm font-bold text-orange-300">
-            Welcome back
+        {/* Content overlay */}
+        <div className="absolute inset-0 flex flex-col justify-between p-12">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg" style={{ backgroundColor: COLORS.primary }}>T</div>
+            <span className="text-xl font-black text-white tracking-tight">Trace</span>
+          </Link>
+
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#FF6B35]/30 px-4 py-2 mb-6" style={{ backgroundColor: "rgba(255,107,53,0.1)" }}>
+              <span className="h-2 w-2 rounded-full bg-[#22C55E] animate-pulse" />
+              <span className="text-sm font-semibold text-[#F5A623]">1,200+ active traders</span>
+            </div>
+            <h2 className="text-4xl font-black text-white mb-5 leading-tight">
+              Your business is<br />waiting for you.
+            </h2>
+            <p className="text-[#9B99B5] text-lg leading-8 max-w-sm">
+              Log back in and keep collecting payments, building your score, and hiring reliable workers.
+            </p>
+
+            {/* Floating stats */}
+            <div className="mt-10 grid grid-cols-2 gap-4">
+              {[
+                { label: "Received today", value: "₦18,500" },
+                { label: "TraceScore", value: "742" },
+              ].map((s) => (
+                <div key={s.label} className="rounded-2xl p-4 backdrop-blur-md" style={{ backgroundColor: "rgba(20,20,32,0.8)", border: "1px solid rgba(42,42,64,0.8)" }}>
+                  <p className="text-xs text-[#5C5A78] mb-1">{s.label}</p>
+                  <p className="text-2xl font-black text-[#F0EFE8]">{s.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <h1 className="text-5xl font-black tracking-tight text-white">
-            Manage payments, credit, and jobs in one place.
-          </h1>
-          <p className="mt-5 text-lg leading-8 text-slate-300">
-            Access your Trace account to manage business payments, TraceScore,
-            restock capital, and worker operations.
-          </p>
+
+          <p className="text-sm text-[#3A3A58]">© 2026 Trace Technologies Ltd.</p>
         </div>
+      </div>
 
-        <p className="text-sm text-slate-400">
-          © 2024 Trace. All rights reserved.
-        </p>
-      </aside>
-
-      {/* Right side */}
-      <main className="flex min-h-screen items-center justify-center bg-[#f8f6f1] p-4 sm:p-6">
-        <div className="w-full max-w-md rounded-3xl border border-[#e2e8f0] bg-white p-6 text-[#0f172a] shadow-2xl shadow-slate-950/10 sm:p-8">
-          <div className="mb-8 lg:hidden">
-            <Link href="/" className="flex items-center gap-2">
-              <div
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black text-white"
-                style={{ backgroundColor: COLORS.primary }}
-              >
-                T
-              </div>
-              <span className="text-lg font-black tracking-tight text-[#0f172a]">
-                Trace
-              </span>
+      {/* Right — form */}
+      <div className="flex flex-1 items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-10">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black" style={{ backgroundColor: COLORS.primary }}>T</div>
+              <span className="text-xl font-black text-[#F0EFE8]">Trace</span>
             </Link>
           </div>
 
-          <h2 className="text-2xl font-black tracking-tight text-[#0f172a]">
-            Sign In
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-[#64748b]">
-            Log in to your Trace account.
-          </p>
-
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            {userTypes.map((type) => (
-              <button
-                key={type.value}
-                type="button"
-                onClick={() => setUserType(type.value as "trader" | "lender")}
-                className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
-                  userType === type.value
-                    ? "text-white shadow-sm"
-                    : "border border-[#e2e8f0] bg-[#f8fafc] text-[#64748b] hover:bg-[#f1f5f9]"
-                }`}
-                style={
-                  userType === type.value
-                    ? { backgroundColor: type.color }
-                    : undefined
-                }
-              >
-                {type.label}
-              </button>
-            ))}
+          <div className="mb-8">
+            <h1 className="text-3xl font-black text-[#F0EFE8] mb-2">Welcome back</h1>
+            <p className="text-[#5C5A78]">Sign in to your Trace account.</p>
           </div>
 
-          <form onSubmit={handleLogin} className="mt-8 space-y-5">
+          {/* Role selector */}
+          <div className="grid grid-cols-2 gap-3 mb-8">
+            {[
+              { value: "trader", label: "Trader", icon: Storefront, color: COLORS.role.trader },
+              { value: "lender", label: "Lender", icon: AccountBalance, color: COLORS.role.lender },
+            ].map((type) => {
+              const Icon = type.icon;
+              const isActive = userType === type.value;
+              return (
+                <button
+                  key={type.value}
+                  type="button"
+                  onClick={() => setUserType(type.value as "trader" | "lender")}
+                  className="flex flex-col items-center gap-2 rounded-2xl px-4 py-4 text-sm font-bold transition-all duration-200"
+                  style={isActive
+                    ? { backgroundColor: `${type.color}20`, border: `1.5px solid ${type.color}`, color: type.color }
+                    : { backgroundColor: "#141420", border: "1.5px solid #2A2A40", color: "#5C5A78" }
+                  }
+                >
+                  <Icon sx={{ fontSize: "22px" }} />
+                  {type.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="mb-2 block text-sm font-bold text-[#0f172a]">
-                Email
-              </label>
+              <label className="mb-2 block text-sm font-bold text-[#9B99B5]">Email address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-[#64748b]" />
+                <Mail sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
-                  placeholder="user@example.com"
+                  placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-xl border border-[#e2e8f0] bg-white py-3 pl-10 pr-4 text-sm text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                  className="w-full rounded-xl py-3.5 pl-11 pr-4 text-sm text-[#F0EFE8] outline-none transition placeholder:text-[#3A3A58]"
+                  style={{ backgroundColor: "#141420", border: "1.5px solid #2A2A40" }}
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-bold text-[#0f172a]">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-bold text-[#9B99B5]">Password</label>
+                <a href="#" className="text-xs font-semibold" style={{ color: COLORS.primary }}>Forgot?</a>
+              </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-[#64748b]" />
+                <Lock sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-[#e2e8f0] bg-white py-3 pl-10 pr-4 text-sm text-[#0f172a] outline-none transition placeholder:text-[#94a3b8] focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                  className="w-full rounded-xl py-3.5 pl-11 pr-4 text-sm text-[#F0EFE8] outline-none transition"
+                  style={{ backgroundColor: "#141420", border: "1.5px solid #2A2A40" }}
                   required
                 />
               </div>
@@ -143,27 +140,22 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full rounded-xl py-3 text-sm font-black text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-0.5"
-              style={{ backgroundColor: COLORS.primary }}
+              className="group w-full flex items-center justify-center gap-3 rounded-xl py-4 text-sm font-black text-white transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              style={{ backgroundColor: COLORS.primary, boxShadow: "0 4px 24px rgba(255,107,53,0.35)" }}
             >
               Sign In
+              <ArrowForward sx={{ fontSize: "18px" }} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-[#64748b]">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/register"
-                className="font-bold hover:underline"
-                style={{ color: COLORS.primary }}
-              >
-                Sign up
-              </Link>
-            </p>
-          </div>
+          <p className="mt-8 text-center text-sm text-[#5C5A78]">
+            No account?{" "}
+            <Link href="/auth/register" className="font-bold hover:underline" style={{ color: COLORS.primary }}>
+              Create one free
+            </Link>
+          </p>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

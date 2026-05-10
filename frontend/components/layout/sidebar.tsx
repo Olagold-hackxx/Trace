@@ -9,10 +9,13 @@ import {
   Wallet,
   TrendingUp,
   Work,
-  People,
   Storefront,
   BarChart,
   Logout,
+  ChevronRight,
+  Gavel,
+  Settings,
+  People,
 } from "@mui/icons-material";
 
 interface SidebarProps {
@@ -22,31 +25,8 @@ interface SidebarProps {
 export function Sidebar({ role = "trader" }: SidebarProps) {
   const pathname = usePathname();
 
-  const getRoleColor = () => {
-    switch (role) {
-      case "trader":
-        return COLORS.role.trader;
-      case "lender":
-        return COLORS.role.lender;
-      case "admin":
-        return COLORS.role.admin;
-      default:
-        return COLORS.role.trader;
-    }
-  };
-
-  const getRoleLabel = () => {
-    switch (role) {
-      case "trader":
-        return "Trader";
-      case "lender":
-        return "Lender";
-      case "admin":
-        return "Admin";
-      default:
-        return "Dashboard";
-    }
-  };
+  // All roles use orange as the active/accent color — no blue
+  const accentColor = "#FF6B35";
 
   const getMenuItems = () => {
     switch (role) {
@@ -60,78 +40,163 @@ export function Sidebar({ role = "trader" }: SidebarProps) {
       case "lender":
         return [
           { label: "Dashboard", href: "/lender", icon: Dashboard },
-          { label: "Traders", href: "/lender", icon: Storefront },
-          { label: "Approvals", href: "/lender", icon: TrendingUp },
-          { label: "Jobs", href: "/marketplace", icon: Work },
+          { label: "Traders", href: "/lender/traders", icon: Storefront },
+          { label: "Approvals", href: "/lender/approvals", icon: Gavel },
+          { label: "Settings", href: "/lender/settings", icon: Settings },
         ];
       case "admin":
         return [
           { label: "Dashboard", href: "/admin", icon: Dashboard },
           { label: "Analytics", href: "/admin", icon: BarChart },
           { label: "Traders", href: "/admin", icon: Storefront },
+          { label: "Workers", href: "/admin", icon: People },
+        ];
+      case "worker":
+        return [
+          { label: "Dashboard", href: "/worker", icon: Dashboard },
+          { label: "Marketplace", href: "/marketplace", icon: Work },
+          { label: "Earnings", href: "/worker", icon: Wallet },
+          { label: "Settings", href: "/worker/settings", icon: Settings },
         ];
       default:
         return [];
     }
   };
 
+  const getRoleLabel = () => {
+    switch (role) {
+      case "trader": return "Trader";
+      case "lender": return "Lender";
+      case "admin":  return "Admin";
+      case "worker": return "Worker";
+      default:       return "User";
+    }
+  };
+
+  const getUserName = () => {
+    switch (role) {
+      case "trader": return "Amaka Foods";
+      case "lender": return "Zenith Capital";
+      case "admin":  return "Admin";
+      case "worker": return "Tobi Ade";
+      default:       return "User";
+    }
+  };
+
   const menuItems = getMenuItems();
-  const roleColor = getRoleColor();
 
   return (
-    <aside className="w-64 hidden md:flex flex-col border-r" style={{ backgroundColor: "#0f172a", borderColor: "#e2e8f0" }}>
+    <aside
+      className="w-64 hidden md:flex flex-col"
+      style={{ backgroundColor: "#0A0A0F", borderRight: "1px solid #1C1C2E" }}
+    >
       {/* Logo */}
-      <div className="p-6 border-b" style={{ borderColor: "#1e293b" }}>
-        <Link href="/" className="flex items-center gap-2">
+      <div className="px-6 py-6" style={{ borderBottom: "1px solid #1C1C2E" }}>
+        <Link href="/" className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-lg"
-            style={{ backgroundColor: roleColor }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg"
+            style={{ backgroundColor: accentColor, boxShadow: `0 4px 16px ${accentColor}40` }}
           >
             T
           </div>
-          <span className="font-bold text-lg text-white">Trace</span>
+          <div>
+            <span className="font-black text-lg text-[#F0EFE8] tracking-tight">Trace</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E]" />
+              <span className="text-[10px] font-semibold text-[#5C5A78] uppercase tracking-widest">{getRoleLabel()}</span>
+            </div>
+          </div>
         </Link>
       </div>
 
-      {/* Role Badge */}
-      <div className="px-6 py-4">
-        <div
-          className="px-3 py-2 rounded-lg text-sm font-medium text-white text-center"
-          style={{ backgroundColor: roleColor }}
-        >
-          {getRoleLabel()}
+      {/* User card */}
+      <div className="mx-4 mt-4 rounded-2xl p-4" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-black flex-none"
+            style={{ backgroundColor: accentColor }}
+          >
+            {getUserName()[0]}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-black text-[#F0EFE8] truncate">{getUserName()}</p>
+            <p className="text-xs text-[#5C5A78] truncate">{getRoleLabel()} Account</p>
+          </div>
         </div>
       </div>
 
+      {/* Nav label */}
+      <div className="px-6 pt-6 pb-2">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#3A3A58]">Menu</p>
+      </div>
+
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
+      <nav className="flex-1 px-3 space-y-1">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/lender" && pathname.startsWith(item.href + "/")) ||
+            (item.href === "/lender" && pathname === "/lender");
           const Icon = item.icon;
           return (
             <Link
-              key={item.href}
+              key={item.href + item.label}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium",
+                "group flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 text-sm font-semibold",
                 isActive
                   ? "text-white"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  : "text-[#5C5A78] hover:text-[#F0EFE8] hover:bg-[#141420]"
               )}
-              style={isActive ? { backgroundColor: roleColor } : {}}
+              style={
+                isActive
+                  ? { backgroundColor: accentColor, boxShadow: `0 4px 20px ${accentColor}40` }
+                  : {}
+              }
             >
-              <Icon sx={{ fontSize: "20px" }} />
-              <span>{item.label}</span>
+              <div className="flex items-center gap-3">
+                <Icon sx={{ fontSize: "20px" }} />
+                <span>{item.label}</span>
+              </div>
+              {isActive && <ChevronRight sx={{ fontSize: "16px", opacity: 0.7 }} />}
             </Link>
           );
         })}
       </nav>
 
-      {/* Logout */}
-      <div className="p-4 border-t" style={{ borderColor: "#1e293b" }}>
-        <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">
+      {/* Bottom */}
+      <div className="p-4" style={{ borderTop: "1px solid #1C1C2E" }}>
+        {/* Score teaser for trader */}
+        {role === "trader" && (
+          <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+            <p className="text-xs text-[#5C5A78] mb-1">TraceScore</p>
+            <div className="flex items-center justify-between">
+              <p className="text-2xl font-black" style={{ color: "#F5A623" }}>742</p>
+              <span className="text-xs font-semibold text-[#22C55E] bg-[#22C55E]/10 px-2 py-1 rounded-full">Excellent</span>
+            </div>
+            <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#2A2A40" }}>
+              <div className="h-full rounded-full" style={{ width: "82%", background: "linear-gradient(90deg, #FF6B35, #F5A623)" }} />
+            </div>
+          </div>
+        )}
+
+        {/* Approval rate teaser for lender */}
+        {role === "lender" && (
+          <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+            <p className="text-xs text-[#5C5A78] mb-1">Approval Rate</p>
+            <div className="flex items-center justify-between">
+              <p className="text-2xl font-black" style={{ color: "#F5A623" }}>90%</p>
+              <span className="text-xs font-semibold text-[#22C55E] bg-[#22C55E]/10 px-2 py-1 rounded-full">18 approved</span>
+            </div>
+            <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#2A2A40" }}>
+              <div className="h-full rounded-full" style={{ width: "90%", background: "linear-gradient(90deg, #FF6B35, #F5A623)" }} />
+            </div>
+          </div>
+        )}
+
+        <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-[#5C5A78] hover:text-[#F0EFE8] hover:bg-[#141420] transition-all text-sm font-semibold">
           <Logout sx={{ fontSize: "20px" }} />
-          <span>Logout</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

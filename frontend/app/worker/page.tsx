@@ -7,7 +7,6 @@ import { WORKERS } from "@/lib/constants";
 import { formatNaira } from "@/lib/utils";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { TrendingUp, People, CheckCircle, EmojiEvents, Work } from "@mui/icons-material";
-import { COLORS } from "@/lib/constants";
 
 const earningsData = [
   { week: "Week 1", earnings: 35000 },
@@ -19,87 +18,70 @@ const earningsData = [
 ];
 
 export default function WorkerDashboardPage() {
-  // Get first worker as current user
   const currentWorker = WORKERS[0];
   const recommendedJobs = JOBS.slice(0, 3);
 
   return (
-    <AppShell role="trader">
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-navy mb-2">Dashboard</h1>
-          <p className="text-text-secondary">Welcome back, {currentWorker.name}! Here&apos;s your overview.</p>
+    <AppShell role="worker">
+      <div className="min-h-screen p-6 md:p-8 space-y-8" style={{ backgroundColor: "#0A0A0F" }}>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5C5A78] mb-2">Worker Portal</p>
+          <h1 className="text-3xl font-black text-[#F0EFE8]">Welcome back, {currentWorker.name} 👋</h1>
+          <p className="text-[#5C5A78] mt-1">{currentWorker.school} · {currentWorker.location}</p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <MetricCard
-            label="Total Earnings"
-            value={formatNaira(currentWorker.totalEarnings)}
-            icon={TrendingUp}
-            color={COLORS.primary}
-          />
-          <MetricCard
-            label="Jobs Completed"
-            value={currentWorker.jobsCompleted}
-            icon={CheckCircle}
-            color={COLORS.status.success}
-          />
-          <MetricCard
-            label="Reliability Score"
-            value={`${currentWorker.reliabilityScore}%`}
-            icon={EmojiEvents}
-            color={COLORS.role.lender}
-          />
-          <MetricCard
-            label="Available Jobs"
-            value={JOBS.length}
-            icon={Work}
-            color={COLORS.primary}
-          />
-          <MetricCard
-            label="Active Applications"
-            value="2"
-            icon={<People sx={{ fontSize: "28px" }} />}
-            color={COLORS.role.worker}
-          />
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          {[
+            { label: "Total Earnings", value: formatNaira(currentWorker.totalEarnings), icon: TrendingUp, color: "#A855F7" },
+            { label: "Jobs Completed", value: currentWorker.jobsCompleted, icon: CheckCircle, color: "#22C55E" },
+            { label: "Reliability Score", value: `${currentWorker.reliabilityScore}%`, icon: EmojiEvents, color: "#F5A623" },
+            { label: "Available Jobs", value: JOBS.length, icon: Work, color: "#FF6B35" },
+            { label: "Active Applications", value: "2", icon: People, color: "#3B82F6" },
+          ].map((s) => {
+            const Icon = s.icon;
+            return (
+              <MetricCard
+                key={s.label}
+                label={s.label}
+                value={s.value}
+                icon={<Icon sx={{ fontSize: "22px", color: s.color }} />}
+                color={s.color}
+              />
+            );
+          })}
         </div>
 
-        {/* Earnings Chart and Recommended Jobs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Chart */}
-          <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-navy mb-6">Earnings (Last 6 Weeks)</h3>
-            <ResponsiveContainer width="100%" height={300}>
+          <div className="lg:col-span-2 rounded-3xl p-6" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+            <h3 className="text-lg font-black text-[#F0EFE8] mb-6">Earnings (Last 6 Weeks)</h3>
+            <ResponsiveContainer width="100%" height={280}>
               <BarChart data={earningsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border} />
-                <XAxis dataKey="week" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1C1C2E" vertical={false} />
+                <XAxis dataKey="week" tick={{ fill: "#5C5A78", fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#5C5A78", fontSize: 11 }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}k`} />
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: COLORS.card,
-                    border: `1px solid ${COLORS.border}`,
-                  }}
-                  formatter={(value) => formatNaira(value as number)}
+                  contentStyle={{ backgroundColor: "#1C1C2E", border: "1px solid #2A2A40", borderRadius: "12px", color: "#F0EFE8" }}
+                  formatter={(value) => [formatNaira(value as number), "Earnings"]}
+                  cursor={{ fill: "rgba(168,85,247,0.08)" }}
                 />
-                <Bar dataKey="earnings" fill={COLORS.role.worker} radius={[8, 8, 0, 0]} />
+                <Bar dataKey="earnings" fill="#A855F7" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Recommended Jobs */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-navy mb-4">Recommended Jobs</h3>
+          <div className="rounded-3xl p-6" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+            <h3 className="text-lg font-black text-[#F0EFE8] mb-4">Recommended Jobs</h3>
             <div className="space-y-3">
               {recommendedJobs.map((job) => (
                 <a
                   key={job.id}
                   href={`/marketplace/${job.id}`}
-                  className="block p-3 rounded-lg border border-gray-200 hover:bg-blue-50 transition-colors"
+                  className="block rounded-2xl p-4 transition-all hover:bg-[#0F0F1A]"
+                  style={{ border: "1px solid #2A2A40" }}
                 >
-                  <p className="font-semibold text-sm text-navy">{job.title}</p>
-                  <p className="text-xs text-text-secondary mt-1">{job.traderName}</p>
-                  <p className="text-sm font-bold text-primary mt-2">{formatNaira(job.pay)}/day</p>
+                  <p className="font-black text-sm text-[#F0EFE8]">{job.title}</p>
+                  <p className="text-xs text-[#5C5A78] mt-0.5">{job.traderName}</p>
+                  <p className="text-base font-black mt-2" style={{ color: "#A855F7" }}>{formatNaira(job.pay)}/day</p>
                 </a>
               ))}
             </div>

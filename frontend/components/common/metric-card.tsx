@@ -18,32 +18,33 @@ export function MetricCard({
   trendLabel = "vs last week",
   color = COLORS.primary,
 }: MetricCardProps) {
-  const isPositive = trend && trend >= 0;
+  const isPositive = trend !== undefined && trend >= 0;
   const iconNode = isValidElement(icon)
     ? icon
     : icon && (typeof icon === "function" || typeof icon === "object")
-      ? createElement(icon as ElementType, {
-          sx: { fontSize: "28px", color },
-        })
+      ? createElement(icon as ElementType, { sx: { fontSize: "24px", color } })
       : null;
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-shadow" style={{ borderColor: "#e2e8f0" }}>
+    <div
+      className="rounded-2xl p-5 transition-all hover:-translate-y-0.5"
+      style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-3">{label}</p>
-          <p className="text-3xl font-bold text-navy">{value}</p>
+          <p className="text-sm text-[#5C5A78] mb-3">{label}</p>
+          <p className="text-2xl font-black text-[#F0EFE8]">{value}</p>
           {trend !== undefined && (
-            <div className="flex items-center gap-1 mt-3">
-              <p className={`text-sm font-semibold ${isPositive ? "text-green-600" : "text-red-600"}`}>
+            <div className="flex items-center gap-1.5 mt-2">
+              <span className={`text-xs font-bold ${isPositive ? "text-[#22C55E]" : "text-[#EF4444]"}`}>
                 {isPositive ? "↑" : "↓"} {Math.abs(trend)}%
-              </p>
-              <p className="text-xs text-gray-500">{trendLabel}</p>
+              </span>
+              <span className="text-xs text-[#3A3A58]">{trendLabel}</span>
             </div>
           )}
         </div>
         {iconNode && (
-          <div className="p-3 rounded-lg flex-shrink-0" style={{ backgroundColor: `${color}15` }}>
+          <div className="p-3 rounded-xl flex-shrink-0" style={{ backgroundColor: `${color}20` }}>
             {iconNode}
           </div>
         )}

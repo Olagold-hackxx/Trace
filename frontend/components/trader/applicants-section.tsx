@@ -5,40 +5,43 @@ import { WORKERS } from "@/lib/constants";
 import { getRelativeTime } from "@/lib/utils";
 
 export function ApplicantsSection() {
-  // Get top applicants from job-1
   const applicants = JOB_APPLICANTS["job-1"] || [];
   const topApplicants = applicants.slice(0, 4);
 
   return (
-    <div className="bg-white rounded-lg border border-border p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-navy mb-6">Top Applicants</h3>
+    <div className="rounded-3xl p-6 h-full" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-lg font-black text-[#F0EFE8]">Top Applicants</h3>
+          <p className="text-sm text-[#5C5A78] mt-0.5">For your latest job post</p>
+        </div>
+        <span className="text-xs font-bold text-[#5C5A78]">{topApplicants.length} pending</span>
+      </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {topApplicants.map((applicant) => {
           const worker = WORKERS.find((w) => w.id === applicant.id);
           if (!worker) return null;
-
           return (
-            <div key={applicant.id} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-gray-50 transition-colors cursor-pointer">
-              <div className="flex items-center gap-3 flex-1">
-                <img
-                  src={worker.image}
-                  alt={worker.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-navy text-sm">{worker.name}</p>
-                  <p className="text-xs text-text-secondary">
-                    Reliability: {worker.reliabilityScore}%
-                  </p>
-                </div>
+            <div
+              key={applicant.id}
+              className="flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all hover:bg-[#0F0F1A]"
+              style={{ border: "1px solid #2A2A40" }}
+            >
+              <img
+                src={worker.image}
+                alt={worker.name}
+                className="w-10 h-10 rounded-xl object-cover object-top flex-none"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-[#F0EFE8] truncate">{worker.name}</p>
+                <p className="text-xs text-[#5C5A78]">Reliability {worker.reliabilityScore}% · {worker.school}</p>
               </div>
-
-              <div className="text-right">
-                <div className="inline-block px-3 py-1 rounded-full bg-blue-50 border border-blue-200">
-                  <span className="text-sm font-semibold text-blue-700">{applicant.match}% Match</span>
-                </div>
-                <p className="text-xs text-text-secondary mt-1">{getRelativeTime(applicant.applied)}</p>
+              <div
+                className="text-xs font-black px-2.5 py-1 rounded-full flex-none"
+                style={{ backgroundColor: "#FF6B3520", color: "#FF6B35" }}
+              >
+                {applicant.match}%
               </div>
             </div>
           );

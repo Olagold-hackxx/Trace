@@ -10,7 +10,7 @@ interface AppShellProps {
 
 export function AppShell({ children, role = "trader" }: AppShellProps) {
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen" style={{ backgroundColor: "#0A0A0F" }}>
       <Sidebar role={role} />
       <div className="flex flex-col flex-1 overflow-hidden">
         <AppHeader role={role} />

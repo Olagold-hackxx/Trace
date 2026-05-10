@@ -1,39 +1,43 @@
-// Trace Brand Colors
-// Trace Brand Colors
+// Trace Brand Colors — Redesigned Dark African Theme
 export const COLORS = {
-  primary: "#ff6b00",
-  primaryDark: "#d95700",
-  primarySoft: "#fff1e8",
+  primary: "#FF6B35",
+  primaryDark: "#E5501A",
+  primarySoft: "#2A1A10",
+  gold: "#F5A623",
+  goldSoft: "#1E1A0E",
 
-  navy: "#0f172a",
-  navy2: "#111827",
-  slate: "#1e293b",
+  navy: "#0A0A0F",
+  navy2: "#0F0F1A",
+  slate: "#1A1A2E",
+  surface: "#141420",
+  surfaceElevated: "#1C1C2E",
 
-  background: "#f8f6f1",
-  backgroundCool: "#f8fafc",
-  card: "#ffffff",
-  border: "#e2e8f0",
+  background: "#0A0A0F",
+  backgroundCool: "#0F0F1A",
+  card: "#141420",
+  border: "#2A2A40",
+  borderLight: "#333350",
 
   text: {
-    primary: "#0f172a",
-    secondary: "#64748b",
-    muted: "#94a3b8",
-    inverse: "#ffffff",
-    inverseSoft: "#cbd5e1",
+    primary: "#F0EFE8",
+    secondary: "#9B99B5",
+    muted: "#5C5A78",
+    inverse: "#0A0A0F",
+    inverseSoft: "#1A1A2E",
   },
 
   status: {
-    success: "#10b981",
-    error: "#ef4444",
-    warning: "#f59e0b",
-    pending: "#f59e0b",
+    success: "#22C55E",
+    error: "#EF4444",
+    warning: "#F59E0B",
+    pending: "#F59E0B",
   },
 
   role: {
-    trader: "#ff6b00",
-    worker: "#7c3aed",
-    lender: "#2563eb",
-    admin: "#0f172a",
+    trader: "#FF6B35",
+    worker: "#A855F7",
+    lender: "#3B82F6",
+    admin: "#F5A623",
   },
 };
 
@@ -44,7 +48,7 @@ export const TRADERS = [
     name: "Amaka Foods",
     owner: "Amaka Okonkwo",
     location: "Yaba, Lagos",
-    image: "https://images.unsplash.com/photo-1556742212-5b321f3c261d?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=face",
     category: "Food & Beverages",
   },
   {
@@ -52,7 +56,7 @@ export const TRADERS = [
     name: "Bola Stores",
     owner: "Bola Adeyemi",
     location: "Ikeja, Lagos",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1506634572416-47a77e0e3557?w=400&h=400&fit=crop&crop=face",
     category: "Retail",
   },
   {
@@ -60,7 +64,7 @@ export const TRADERS = [
     name: "Kemi Snacks",
     owner: "Kemi Solanke",
     location: "Surulere, Lagos",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=face",
     category: "Food & Beverages",
   },
   {
@@ -68,7 +72,7 @@ export const TRADERS = [
     name: "Yaba Fresh Mart",
     owner: "Chioma Ejiofor",
     location: "Akoka, Lagos",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1523477800337-966dbabe060b?w=400&h=400&fit=crop&crop=face",
     category: "Wholesale",
   },
   {
@@ -76,7 +80,7 @@ export const TRADERS = [
     name: "Chinedu Provisions",
     owner: "Chinedu Nwosu",
     location: "Victoria Island, Lagos",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?w=400&h=400&fit=crop&crop=face",
     category: "General Store",
   },
 ];
@@ -86,7 +90,7 @@ export const WORKERS = [
   {
     id: "worker-1",
     name: "Tobi Ade",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+    image: "https://images.unsplash.com/photo-1506634572416-47a77e0e3557?w=100&h=100&fit=crop&crop=face",
     location: "Yaba",
     skills: ["Stocktaking", "Cleaning", "Customer Service"],
     reliabilityScore: 92,
@@ -97,7 +101,7 @@ export const WORKERS = [
   {
     id: "worker-2",
     name: "Zainab Yusuf",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face",
     location: "Akoka",
     skills: ["Packing", "Organization", "Inventory"],
     reliabilityScore: 88,
@@ -108,7 +112,7 @@ export const WORKERS = [
   {
     id: "worker-3",
     name: "Mariam Bello",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
+    image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=100&h=100&fit=crop&crop=face",
     location: "Ikeja",
     skills: ["Delivery", "Loading", "Setup"],
     reliabilityScore: 85,
@@ -119,7 +123,7 @@ export const WORKERS = [
   {
     id: "worker-4",
     name: "David Eze",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
+    image: "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?w=100&h=100&fit=crop&crop=face",
     location: "Lekki",
     skills: ["Data Entry", "Admin", "Support"],
     reliabilityScore: 90,
@@ -130,7 +134,7 @@ export const WORKERS = [
   {
     id: "worker-5",
     name: "Aisha Lawal",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+    image: "https://images.unsplash.com/photo-1523477800337-966dbabe060b?w=100&h=100&fit=crop&crop=face",
     location: "Bariga",
     skills: ["Cleaning", "Organization", "Food Service"],
     reliabilityScore: 87,
@@ -141,7 +145,7 @@ export const WORKERS = [
   {
     id: "worker-6",
     name: "Chioma Obi",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&h=100&fit=crop&crop=face",
     location: "Surulere",
     skills: ["Cashier", "Sales", "Customer Support"],
     reliabilityScore: 91,
@@ -154,10 +158,15 @@ export const WORKERS = [
 // Lagos Neighborhoods
 export const LOCATIONS = ["Yaba", "Akoka", "Ikeja", "Surulere", "Lekki", "Victoria Island", "Bariga", "Mushin"];
 
-// Image URLs
+// Image URLs — African / Black people imagery
 export const IMAGES = {
-  hero: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&h=600&fit=crop",
-  marketplace: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=600&fit=crop",
-  payment: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=1200&h=600&fit=crop",
-  jobs: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=1200&h=600&fit=crop",
+  hero: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&h=900&fit=crop",
+  hero2: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&h=1000&fit=crop&crop=top",
+  marketplace: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&h=600&fit=crop",
+  payment: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=600&fit=crop",
+  jobs: "https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?w=1200&h=600&fit=crop",
+  market: "https://images.unsplash.com/photo-1523477800337-966dbabe060b?w=800&h=600&fit=crop",
+  trader1: "https://images.unsplash.com/photo-1506634572416-47a77e0e3557?w=600&h=700&fit=crop&crop=top",
+  trader2: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=600&h=700&fit=crop&crop=top",
+  trader3: "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?w=600&h=700&fit=crop&crop=top",
 };

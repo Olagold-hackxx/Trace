@@ -3,59 +3,57 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { JobCard } from "@/components/jobs/job-card";
 import { JOBS } from "@/lib/mock-data";
-import { MetricCard } from "@/components/common/metric-card";
-import { Work, People, CheckCircle } from "@mui/icons-material";
-import { COLORS } from "@/lib/constants";
-import { Button } from "@/components/ui/button";
+import { Work, People, CheckCircle, Add } from "@mui/icons-material";
 
 export default function JobsPage() {
-  // Filter jobs for current trader
   const traderJobs = JOBS.filter((job) => job.traderId === "trader-1");
   const totalApplicants = traderJobs.reduce((sum, job) => sum + job.applicants, 0);
-  const hiredCount = 24;
 
   return (
     <AppShell role="trader">
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+      <div className="min-h-screen p-6 md:p-8 space-y-8" style={{ backgroundColor: "#0A0A0F" }}>
+        {/* Header */}
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-navy mb-2">Jobs</h1>
-            <p className="text-text-secondary">Post jobs and manage your worker hiring.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5C5A78] mb-2">Trace Jobs</p>
+            <h1 className="text-3xl font-black text-[#F0EFE8]">Job Postings</h1>
+            <p className="text-[#5C5A78] mt-1">Post jobs, review applicants, hire reliable workers.</p>
           </div>
-          <Button
-            className="text-white"
-            style={{ backgroundColor: COLORS.primary }}
+          <button
+            className="flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-black text-white transition-all hover:-translate-y-0.5"
+            style={{ backgroundColor: "#FF6B35", boxShadow: "0 4px 20px rgba(255,107,53,0.35)" }}
           >
+            <Add sx={{ fontSize: "20px" }} />
             Post New Job
-          </Button>
+          </button>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <MetricCard
-            label="Active Jobs"
-            value={traderJobs.length}
-            icon={Work}
-            color={COLORS.primary}
-          />
-          <MetricCard
-            label="Total Applicants"
-            value={totalApplicants}
-            icon={<People sx={{ fontSize: "28px" }} />}
-            color={COLORS.role.worker}
-          />
-          <MetricCard
-            label="Successfully Hired"
-            value={hiredCount}
-            icon={CheckCircle}
-            color={COLORS.status.success}
-          />
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { label: "Active Jobs", value: traderJobs.length, icon: Work, color: "#FF6B35" },
+            { label: "Total Applicants", value: totalApplicants, icon: People, color: "#A855F7" },
+            { label: "Successfully Hired", value: 24, icon: CheckCircle, color: "#22C55E" },
+          ].map((s) => {
+            const Icon = s.icon;
+            return (
+              <div key={s.label} className="rounded-2xl p-5" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+                <div className="flex items-start justify-between mb-3">
+                  <p className="text-sm text-[#5C5A78]">{s.label}</p>
+                  <div className="p-2 rounded-xl" style={{ backgroundColor: `${s.color}20` }}>
+                    <Icon sx={{ fontSize: "18px", color: s.color }} />
+                  </div>
+                </div>
+                <p className="text-3xl font-black text-[#F0EFE8]">{s.value}</p>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Jobs List */}
+        {/* Jobs grid */}
         <div>
-          <h2 className="text-xl font-semibold text-navy mb-4">Active Job Postings</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <h2 className="text-lg font-black text-[#F0EFE8] mb-4">Your Active Postings</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {traderJobs.map((job) => (
               <JobCard
                 key={job.id}
