@@ -24,7 +24,7 @@ const repaymentTrend = [
 
 const sectorData = [
   { name: "Food & Bev", value: 14, color: "#ff6b00" },
-  { name: "Retail", value: 5, color: "#2563eb" },
+  { name: "Retail", value: 5, color: "#ff6b00" },
   { name: "Logistics", value: 2, color: "#7c3aed" },
   { name: "Fashion", value: 1, color: "#d97706" },
   { name: "Services", value: 1, color: "#16a34a" },
@@ -58,7 +58,7 @@ const topMerchants = [
 
 const statusStyle: Record<string, { color: string; bg: string }> = {
   Pending: { color: "#d97706", bg: "#fef3c7" },
-  "Under Review": { color: "#2563eb", bg: "#dae2fd" },
+  "Under Review": { color: "#ff6b00", bg: "#3b1d09" },
   "Info Needed": { color: "#dc2626", bg: "#fee2e2" },
   Approved: { color: "#16a34a", bg: "#dcfce7" },
 };
@@ -85,8 +85,8 @@ export default function LenderDashboardPage() {
 
         {/* Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MetricCard label="Total AUM" value="₦45,000,000" icon={AccountBalance} trend={12.4} color="#2563eb" />
-          <MetricCard label="Active Loans" value="23" icon={TrendingUp} sub="8 pending review" color="#2563eb" />
+          <MetricCard label="Total AUM" value="₦45,000,000" icon={AccountBalance} trend={12.4} color="#ff6b00" />
+          <MetricCard label="Active Loans" value="23" icon={TrendingUp} sub="8 pending review" color="#ff6b00" />
           <MetricCard label="Avg TraceScore" value="718" icon={TrendingUp} trend={3.2} trendLabel="this quarter" color="#ff6b00" />
           <MetricCard label="NPL Rate" value="2.3%" icon={Warning} trend={-0.4} trendLabel="improving" color="#dc2626" />
         </div>
@@ -103,7 +103,7 @@ export default function LenderDashboardPage() {
                 <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }} formatter={(v: number) => `₦${v.toLocaleString()}`} />
                 <Legend />
                 <Bar dataKey="disbursed" fill="#334155" name="Disbursed" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="repaid" fill="#2563eb" name="Repaid" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="repaid" fill="#ff6b00" name="Repaid" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -144,7 +144,7 @@ export default function LenderDashboardPage() {
                 <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{b.count}</p>
                 <p className="text-xs text-[#94a3b8] mt-1">Score {b.band}</p>
                 <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
-                  <div className="h-full rounded-full" style={{ width: `${(b.count / 23) * 100}%`, backgroundColor: "#2563eb" }} />
+                  <div className="h-full rounded-full" style={{ width: `${(b.count / 23) * 100}%`, backgroundColor: "#ff6b00" }} />
                 </div>
               </div>
             ))}
@@ -159,7 +159,7 @@ export default function LenderDashboardPage() {
         <div className="bg-[#111111] rounded-2xl overflow-hidden mb-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
           <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: "#1e1e1e" }}>
             <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Pipeline</h2>
-            <Link href="/lender/approvals" className="text-sm font-semibold" style={{ color: "#2563eb" }}>View all →</Link>
+            <Link href="/lender/approvals" className="text-sm font-semibold" style={{ color: "#ff6b00" }}>View all →</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -175,7 +175,7 @@ export default function LenderDashboardPage() {
                   <tr key={app.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#2563eb" }}>{app.name[0]}</div>
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#ff6b00" }}>{app.name[0]}</div>
                         <div>
                           <p className="font-semibold text-[#f0f0f0]">{app.name}</p>
                           <p className="text-xs text-[#94a3b8]">{app.id}</p>
@@ -193,7 +193,7 @@ export default function LenderDashboardPage() {
                     <td className="px-5 py-4"><Badge label={app.status} style={statusStyle[app.status] || statusStyle.Pending} /></td>
                     <td className="px-5 py-4 text-[#94a3b8] text-xs">{app.days}d</td>
                     <td className="px-5 py-4">
-                      <Link href={`/lender/merchants/${app.id}`} className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#2563eb" }}>
+                      <Link href={`/lender/merchants/${app.id}`} className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#ff6b00" }}>
                         Review <ChevronRight style={{ fontSize: 14 }} />
                       </Link>
                     </td>
@@ -208,13 +208,13 @@ export default function LenderDashboardPage() {
         <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Top Performing Merchants</h2>
-            <Link href="/lender/traders" className="text-sm font-semibold" style={{ color: "#2563eb" }}>View all →</Link>
+            <Link href="/lender/traders" className="text-sm font-semibold" style={{ color: "#ff6b00" }}>View all →</Link>
           </div>
           <div className="space-y-3">
             {topMerchants.map((m, i) => (
               <div key={m.name} className="flex items-center gap-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 <span className="text-sm font-bold text-[#94a3b8] w-5">{i + 1}</span>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#2563eb" }}>{m.name[0]}</div>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#ff6b00" }}>{m.name[0]}</div>
                 <div className="flex-1">
                   <p className="font-semibold text-[#f0f0f0] text-sm">{m.name}</p>
                   <p className="text-xs text-[#94a3b8]">Loan: {m.loan} · Repaid: {m.repaid}</p>

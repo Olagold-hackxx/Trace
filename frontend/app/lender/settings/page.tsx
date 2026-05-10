@@ -61,7 +61,7 @@ export default function LenderSettingsPage() {
               className="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all"
               style={
                 activeTab === t
-                  ? { backgroundColor: "#2563eb", color: "#fff" }
+                  ? { backgroundColor: "#ff6b00", color: "#fff" }
                   : { color: "#cbd5e1" }
               }
             >
@@ -74,8 +74,8 @@ export default function LenderSettingsPage() {
         {activeTab === "Institution" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
-                <Business style={{ fontSize: 20, color: "#2563eb" }} />
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#3b1d09" }}>
+                <Business style={{ fontSize: 20, color: "#ff6b00" }} />
               </div>
               <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Institution Details</h2>
             </div>
@@ -102,10 +102,10 @@ export default function LenderSettingsPage() {
             <div className="mt-6 pt-6 border-t" style={{ borderColor: "#1e1e1e" }}>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-[#f0f0f0] text-sm">Settlement Account</h3>
-                <button className="text-sm font-semibold" style={{ color: "#2563eb" }}>Add account</button>
+                <button className="text-sm font-semibold" style={{ color: "#ff6b00" }}>Add account</button>
               </div>
               <div className="p-4 rounded-xl flex items-center gap-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                <AccountBalance style={{ fontSize: 24, color: "#2563eb" }} />
+                <AccountBalance style={{ fontSize: 24, color: "#ff6b00" }} />
                 <div>
                   <p className="text-sm font-semibold text-[#f0f0f0]">Zenith Bank — 1234567890</p>
                   <p className="text-xs text-[#94a3b8]">Primary disbursement & repayment account</p>
@@ -113,7 +113,7 @@ export default function LenderSettingsPage() {
                 <span className="ml-auto text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Verified</span>
               </div>
             </div>
-            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#2563eb" }}>
+            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
               <Save style={{ fontSize: 18 }} />Save Changes
             </button>
           </div>
@@ -123,8 +123,8 @@ export default function LenderSettingsPage() {
         {activeTab === "Underwriting Rules" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
-                <AccountBalance style={{ fontSize: 20, color: "#2563eb" }} />
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#3b1d09" }}>
+                <AccountBalance style={{ fontSize: 20, color: "#ff6b00" }} />
               </div>
               <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Underwriting Rules</h2>
             </div>
@@ -160,7 +160,7 @@ export default function LenderSettingsPage() {
                     className="py-3 rounded-xl text-sm font-semibold capitalize border transition-all"
                     style={
                       settings.riskTolerance === r
-                        ? { backgroundColor: "#2563eb", color: "#fff", borderColor: "#2563eb" }
+                        ? { backgroundColor: "#ff6b00", color: "#fff", borderColor: "#ff6b00" }
                         : { backgroundColor: "#161616", color: "#cbd5e1", borderColor: "#1e1e1e" }
                     }
                   >
@@ -173,13 +173,13 @@ export default function LenderSettingsPage() {
               <p className="text-xs font-semibold text-[#cbd5e1] mb-2">Auto-approval Threshold</p>
               <p className="text-sm text-[#94a3b8]">Applications with TraceScore ≥ 750 and amount ≤ ₦500,000 will be auto-approved.</p>
               <label className="flex items-center gap-3 mt-3 cursor-pointer">
-                <div className="relative w-10 h-5 rounded-full transition-all" style={{ backgroundColor: "#2563eb" }}>
+                <div className="relative w-10 h-5 rounded-full transition-all" style={{ backgroundColor: "#ff6b00" }}>
                   <div className="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-[#111111]" />
                 </div>
                 <span className="text-sm font-medium text-[#f0f0f0]">Auto-approve enabled</span>
               </label>
             </div>
-            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#2563eb" }}>
+            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
               <Save style={{ fontSize: 18 }} />Save Rules
             </button>
           </div>
@@ -189,8 +189,8 @@ export default function LenderSettingsPage() {
         {activeTab === "Notifications" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
-                <Notifications style={{ fontSize: 20, color: "#2563eb" }} />
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#3b1d09" }}>
+                <Notifications style={{ fontSize: 20, color: "#ff6b00" }} />
               </div>
               <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Notification Preferences</h2>
             </div>
@@ -209,7 +209,7 @@ export default function LenderSettingsPage() {
                   <button
                     onClick={() => setSettings({ ...settings, [key]: !(settings as Record<string, boolean>)[key] })}
                     className="relative w-11 h-6 rounded-full transition-all"
-                    style={{ backgroundColor: (settings as Record<string, boolean>)[key] ? "#2563eb" : "#1e1e1e" }}
+                    style={{ backgroundColor: (settings as Record<string, boolean>)[key] ? "#ff6b00" : "#1e1e1e" }}
                   >
                     <div
                       className="absolute top-0.5 w-5 h-5 rounded-full bg-[#111111] transition-all"
@@ -219,7 +219,7 @@ export default function LenderSettingsPage() {
                 </div>
               ))}
             </div>
-            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#2563eb" }}>
+            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
               <Save style={{ fontSize: 18 }} />Save Preferences
             </button>
           </div>
@@ -229,8 +229,8 @@ export default function LenderSettingsPage() {
         {activeTab === "API Access" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
-                <Lock style={{ fontSize: 20, color: "#2563eb" }} />
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#3b1d09" }}>
+                <Lock style={{ fontSize: 20, color: "#ff6b00" }} />
               </div>
               <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>API Access</h2>
             </div>

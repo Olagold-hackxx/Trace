@@ -10,7 +10,7 @@ interface AppHeaderProps {
 export function AppHeader({ role = "user", title }: AppHeaderProps) {
   const user =
     role === "lender"
-      ? { name: "Zenith Capital", sub: "Partner Institution", initials: "ZC", color: "#2563eb" }
+      ? { name: "Zenith Capital", sub: "Partner Institution", initials: "ZC", color: "#ff6b00" }
       : { name: "Amaka Okonkwo", sub: "Business Account", initials: "AO", color: "#ff6b00" };
   const borderColor = "#1e1e1e";
   const surfaceColor = "#111111";

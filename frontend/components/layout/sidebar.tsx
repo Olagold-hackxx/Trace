@@ -9,7 +9,6 @@ import {
   TrendingUp,
   Work,
   Storefront,
-  Settings,
   Logout,
   AccountBalanceWallet,
   Groups,
@@ -34,15 +33,14 @@ const lenderNav = [
   { label: "Merchants", href: "/lender/traders", icon: Groups },
   { label: "Jobs & Hiring", href: "/lender/jobs", icon: Work },
   { label: "Marketplace", href: "/lender/marketplace", icon: Storefront },
-  { label: "Analytics", href: "/lender/settings", icon: BarChart },
-  { label: "Settings", href: "/lender/settings", icon: Settings },
+  { label: "Analytics", href: "/lender/analytics", icon: BarChart },
 ];
 
 export function Sidebar({ role = "user" }: SidebarProps) {
   const pathname = usePathname();
   const nav = role === "lender" ? lenderNav : userNav;
-  const accentColor = role === "lender" ? "#2563eb" : "#ff6b00";
-  const accentSoft = role === "lender" ? "#172554" : "#3b1d09";
+  const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
+  const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
 
   return (
     <aside
@@ -68,7 +66,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
         {role === "lender" && (
           <span
             className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ backgroundColor: "#172554", color: "#93c5fd" }}
+            style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}
           >
             Lender
           </span>
@@ -82,7 +80,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
           const Icon = item.icon;
           const isActive =
             pathname === item.href ||
-            (item.href.length > 1 && pathname.startsWith(item.href));
+            (item.href.length > 1 && pathname.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href + item.label}

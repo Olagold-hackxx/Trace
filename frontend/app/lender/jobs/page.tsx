@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { People, Work, CheckCircle, AccessTime, Warning, ArrowOutward } from "@mui/icons-material";
 
 const hiringSignals = [
-  { label: "Active Borrower Jobs", value: "38", color: "#2563eb" },
+  { label: "Active Borrower Jobs", value: "38", color: "#ff6b00" },
   { label: "Workers Hired", value: "112", color: "#16a34a" },
   { label: "Urgent Roles", value: "9", color: "#ff6b00" },
   { label: "At-Risk Staffing", value: "4", color: "#dc2626" },
@@ -20,7 +20,7 @@ const jobs = [
 
 const signalStyle: Record<string, { bg: string; color: string; icon: React.ElementType }> = {
   Healthy: { bg: "#dcfce7", color: "#16a34a", icon: CheckCircle },
-  "Strong demand": { bg: "#dae2fd", color: "#2563eb", icon: People },
+  "Strong demand": { bg: "#3b1d09", color: "#ff6b00", icon: People },
   "Slow fill": { bg: "#fef3c7", color: "#d97706", icon: AccessTime },
   "Weak demand": { bg: "#fee2e2", color: "#dc2626", icon: Warning },
 };
@@ -85,7 +85,7 @@ export default function LenderJobsPage() {
                     <tr key={job.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#2563eb" }}>
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00" }}>
                             {job.merchant[0]}
                           </div>
                           <div>
@@ -103,8 +103,8 @@ export default function LenderJobsPage() {
                         <span
                           className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
                           style={{
-                            backgroundColor: job.status === "Urgent" ? "#3b1d09" : "#172554",
-                            color: job.status === "Urgent" ? "#ff6b00" : "#93c5fd",
+                            backgroundColor: job.status === "Urgent" ? "#3b1d09" : "#3b1d09",
+                            color: job.status === "Urgent" ? "#ff6b00" : "#ff6b00",
                           }}
                         >
                           <Work style={{ fontSize: 12 }} />
@@ -130,7 +130,7 @@ export default function LenderJobsPage() {
             <p className="text-sm font-semibold text-[#f0f0f0]">Hiring strength is increasingly a credit signal.</p>
             <p className="text-sm text-[#94a3b8] mt-1">Merchants filling roles quickly tend to sustain revenue continuity and repayment discipline.</p>
           </div>
-          <button className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white" style={{ backgroundColor: "#2563eb" }}>
+          <button className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white" style={{ backgroundColor: "#ff6b00" }}>
             Review borrower patterns
             <ArrowOutward style={{ fontSize: 16 }} />
           </button>

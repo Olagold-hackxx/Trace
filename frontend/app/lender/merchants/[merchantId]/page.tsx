@@ -54,7 +54,7 @@ const scoreFactors = [
   { label: "Revenue Consistency", score: 74, weight: "25%", color: "#ff6b00" },
   { label: "Business Longevity", score: 68, weight: "20%", color: "#ff6b00" },
   { label: "Employment Record", score: 55, weight: "10%", color: "#7c3aed" },
-  { label: "Lender Trust", score: 82, weight: "10%", color: "#2563eb" },
+  { label: "Lender Trust", score: 82, weight: "10%", color: "#ff6b00" },
 ];
 
 const revenueHistory = [
@@ -161,7 +161,7 @@ export default function MerchantCreditFilePage() {
             <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
               <p className="text-xs text-[#94a3b8] mb-1">Avg Monthly</p>
               <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦547K</p>
-              <Badge label="Revenue" color="#2563eb" bg="#dae2fd" />
+              <Badge label="Revenue" color="#ff6b00" bg="#3b1d09" />
             </div>
           </div>
         </div>
@@ -212,7 +212,7 @@ export default function MerchantCreditFilePage() {
                     contentStyle={{ backgroundColor: "#fff", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12 }}
                     labelStyle={{ color: "#f0f0f0", fontWeight: 600 }}
                   />
-                  <Line type="monotone" dataKey="score" stroke="#2563eb" strokeWidth={2.5} dot={{ fill: "#2563eb", r: 4 }} />
+                  <Line type="monotone" dataKey="score" stroke="#ff6b00" strokeWidth={2.5} dot={{ fill: "#ff6b00", r: 4 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -258,8 +258,8 @@ export default function MerchantCreditFilePage() {
                         <td className="py-3 pr-4">
                           <Badge
                             label={loan.status}
-                            color={loan.status === "Repaid" ? "#16a34a" : "#2563eb"}
-                            bg={loan.status === "Repaid" ? "#dcfce7" : "#dae2fd"}
+                            color={loan.status === "Repaid" ? "#16a34a" : "#ff6b00"}
+                            bg={loan.status === "Repaid" ? "#dcfce7" : "#3b1d09"}
                           />
                         </td>
                         <td className="py-3 text-[#94a3b8]">{loan.date}</td>

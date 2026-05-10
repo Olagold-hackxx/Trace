@@ -31,7 +31,7 @@ const riskStyle: Record<string, { color: string; bg: string }> = {
 
 const statusStyle: Record<string, { color: string; bg: string }> = {
   Pending: { color: "#d97706", bg: "#fef3c7" },
-  "Under Review": { color: "#2563eb", bg: "#dae2fd" },
+  "Under Review": { color: "#ff6b00", bg: "#3b1d09" },
   "Info Needed": { color: "#dc2626", bg: "#fee2e2" },
 };
 
@@ -67,7 +67,7 @@ export default function ApprovalsPage() {
         {/* Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
-            { label: "Total Pending", val: filtered.length.toString(), color: "#2563eb" },
+            { label: "Total Pending", val: filtered.length.toString(), color: "#ff6b00" },
             { label: "High Risk", val: highRiskCount.toString(), color: "#dc2626" },
             { label: "Total Requested", val: `₦${(totalRequested / 1000000).toFixed(1)}M`, color: "#ff6b00" },
             { label: "Avg Score", val: Math.round(filtered.reduce((s, a) => s + a.score, 0) / filtered.length).toString(), color: "#16a34a" },
@@ -92,7 +92,7 @@ export default function ApprovalsPage() {
             {["All", "Low", "Medium", "High"].map((r) => (
               <button key={r} onClick={() => setRiskFilter(r)}
                 className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
-                style={riskFilter === r ? { backgroundColor: "#2563eb", color: "#fff" } : { backgroundColor: "#161616", color: "#cbd5e1", border: "1px solid #1e1e1e" }}>
+                style={riskFilter === r ? { backgroundColor: "#ff6b00", color: "#fff" } : { backgroundColor: "#161616", color: "#cbd5e1", border: "1px solid #1e1e1e" }}>
                 {r}
               </button>
             ))}
@@ -122,7 +122,7 @@ export default function ApprovalsPage() {
                     <tr key={app.id} className={`hover:bg-[#161616] transition-colors ${dec ? "opacity-60" : ""}`} style={{ borderBottom: "1px solid #1e1e1e" }}>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#2563eb" }}>{app.name[0]}</div>
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#ff6b00" }}>{app.name[0]}</div>
                           <div>
                             <p className="font-semibold text-[#f0f0f0] text-xs">{app.name}</p>
                             <p className="text-xs text-[#94a3b8]">{app.owner}</p>

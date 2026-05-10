@@ -22,7 +22,7 @@ const merchants = [
 
 const statusStyle: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
   "On Track": { color: "#16a34a", bg: "#dcfce7", icon: CheckCircle },
-  "Completed": { color: "#2563eb", bg: "#dae2fd", icon: CheckCircle },
+  "Completed": { color: "#ff6b00", bg: "#3b1d09", icon: CheckCircle },
   "Upcoming": { color: "#d97706", bg: "#fef3c7", icon: AccessTime },
   "At Risk": { color: "#dc2626", bg: "#fee2e2", icon: Warning },
   "Watch": { color: "#7c3aed", bg: "#ede9fe", icon: Warning },
@@ -60,7 +60,7 @@ export default function TradersPage() {
         {/* Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
-            { label: "Total Merchants", val: merchants.length.toString(), color: "#2563eb" },
+            { label: "Total Merchants", val: merchants.length.toString(), color: "#ff6b00" },
             { label: "Active Loans", val: merchants.filter(m => m.repaid < m.loanAmount).length.toString(), color: "#ff6b00" },
             { label: "At Risk / Watch", val: merchants.filter(m => ["At Risk","Watch"].includes(m.status)).length.toString(), color: "#dc2626" },
             { label: "Completed Loans", val: merchants.filter(m => m.status === "Completed").length.toString(), color: "#16a34a" },
@@ -78,7 +78,7 @@ export default function TradersPage() {
             {tabs.map((t) => (
               <button key={t} onClick={() => setActiveTab(t)}
                 className="px-4 py-2 text-sm font-semibold rounded-lg transition-all"
-                style={activeTab === t ? { backgroundColor: "#2563eb", color: "#fff" } : { color: "#cbd5e1" }}>
+                style={activeTab === t ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#cbd5e1" }}>
                 {t}
               </button>
             ))}
@@ -110,7 +110,7 @@ export default function TradersPage() {
                     <tr key={m.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#2563eb" }}>{m.name[0]}</div>
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#ff6b00" }}>{m.name[0]}</div>
                           <div>
                             <p className="font-semibold text-[#f0f0f0] text-sm">{m.name}</p>
                             <p className="text-xs text-[#94a3b8]">{m.owner}</p>
@@ -123,7 +123,7 @@ export default function TradersPage() {
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-sm" style={{ color: m.score >= 700 ? "#16a34a" : m.score >= 600 ? "#d97706" : "#dc2626" }}>{m.score}</span>
                           <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
-                            <div className="h-full rounded-full" style={{ width: `${(m.score / 900) * 100}%`, backgroundColor: "#2563eb" }} />
+                            <div className="h-full rounded-full" style={{ width: `${(m.score / 900) * 100}%`, backgroundColor: "#ff6b00" }} />
                           </div>
                         </div>
                       </td>
@@ -143,7 +143,7 @@ export default function TradersPage() {
                         </span>
                       </td>
                       <td className="px-5 py-4">
-                        <Link href={`/lender/merchants/${m.id}`} className="text-xs font-semibold" style={{ color: "#2563eb" }}>
+                        <Link href={`/lender/merchants/${m.id}`} className="text-xs font-semibold" style={{ color: "#ff6b00" }}>
                           View →
                         </Link>
                       </td>

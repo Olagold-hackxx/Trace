@@ -14,7 +14,7 @@ const jobs = [
 ];
 
 const statusColor: Record<string, { bg: string; color: string }> = {
-  "Balanced demand": { bg: "#172554", color: "#93c5fd" },
+  "Balanced demand": { bg: "#3b1d09", color: "#ff6b00" },
   "High demand": { bg: "#dcfce7", color: "#16a34a" },
   "Low demand": { bg: "#3b1d09", color: "#ff6b00" },
   "Specialized demand": { bg: "#ede9fe", color: "#7c3aed" },
@@ -96,7 +96,7 @@ export default function LenderMarketplacePage() {
                     <p className="text-xs uppercase tracking-[0.18em] text-[#64748b] mb-1">Compensation</p>
                     <p className="text-xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}</p>
                   </div>
-                  <button className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white" style={{ backgroundColor: "#2563eb" }}>
+                  <button className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white" style={{ backgroundColor: "#ff6b00" }}>
                     View signal
                   </button>
                 </div>
