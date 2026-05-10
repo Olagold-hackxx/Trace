@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { MetricCard } from "@/components/common/metric-card";
@@ -122,27 +123,62 @@ export default function PaymentsPage() {
           <MetricCard label="Pending" value="₦45,200" icon={AccessTime} color="#d97706" sub="2 transactions" />
         </div>
 
-        {/* Payment link bar */}
-        <div className="rounded-2xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-          <div className="flex items-center gap-2 flex-none">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#161616" }}>
-              <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
+        {/* Payment link + QR */}
+        <div className="grid lg:grid-cols-[minmax(0,1.7fr)_320px] gap-6 mb-6">
+          <div className="rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+            <div className="flex items-center gap-2 flex-none">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#161616" }}>
+                <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[#f0f0f0]">Your Trace Pay Link</p>
+                <p className="text-xs text-[#94a3b8]">Share to accept payments instantly</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-[#f0f0f0]">Your Trace Pay Link</p>
-              <p className="text-xs text-[#94a3b8]">Share to accept payments instantly</p>
+            <div className="flex-1 flex items-center gap-2 w-full">
+              <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#f0f0f0]" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                {mainLink}
+              </div>
+              <button onClick={() => copy(mainLink, "main")}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] whitespace-nowrap"
+                style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}>
+                <ContentCopy style={{ fontSize: 16 }} />
+                {copiedId === "main" ? "Copied!" : "Copy"}
+              </button>
             </div>
           </div>
-          <div className="flex-1 flex items-center gap-2">
-            <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#f0f0f0]" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-              {mainLink}
+
+          <div className="rounded-2xl p-5" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <div>
+                <p className="text-sm font-semibold text-[#f0f0f0]">Scan to Pay</p>
+                <p className="text-xs text-[#94a3b8] mt-1">Customers can scan this QR code at your stall.</p>
+              </div>
+              <div className="px-2.5 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}>
+                Live
+              </div>
             </div>
-            <button onClick={() => copy(mainLink, "main")}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] whitespace-nowrap"
-              style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}>
-              <ContentCopy style={{ fontSize: 16 }} />
-              {copiedId === "main" ? "Copied!" : "Copy"}
-            </button>
+
+            <div className="rounded-2xl p-4 flex items-center justify-center" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+              <Image
+                src="/trace-pay-qr-demo.svg"
+                alt="Trace payment QR code"
+                width={220}
+                height={220}
+                className="w-full max-w-[220px] h-auto"
+              />
+            </div>
+
+            <div className="mt-4 flex items-center justify-between gap-3 text-xs text-[#94a3b8]">
+              <span>Linked to `{mainLink}`</span>
+              <button
+                onClick={() => copy(mainLink, "qr")}
+                className="px-3 py-2 rounded-xl text-xs font-semibold border transition-all hover:bg-[#161616]"
+                style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}
+              >
+                {copiedId === "qr" ? "Copied!" : "Copy link"}
+              </button>
+            </div>
           </div>
         </div>
 
