@@ -49,10 +49,10 @@ export default function TradersPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Merchant Portfolio</h1>
-            <p className="text-sm text-[#8e7164] mt-1">{merchants.length} merchants in your portfolio</p>
+            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Merchant Portfolio</h1>
+            <p className="text-sm text-[#94a3b8] mt-1">{merchants.length} merchants in your portfolio</p>
           </div>
-          <button className="px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]" style={{ borderColor: "#e2bfb0" }}>
+          <button className="px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
             Export CSV
           </button>
         </div>
@@ -65,39 +65,39 @@ export default function TradersPage() {
             { label: "At Risk / Watch", val: merchants.filter(m => ["At Risk","Watch"].includes(m.status)).length.toString(), color: "#dc2626" },
             { label: "Completed Loans", val: merchants.filter(m => m.status === "Completed").length.toString(), color: "#16a34a" },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl p-4 text-center" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div key={s.label} className="bg-[#111111] rounded-2xl p-4 text-center" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
               <p className="text-2xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: s.color }}>{s.val}</p>
-              <p className="text-xs text-[#8e7164] mt-1">{s.label}</p>
+              <p className="text-xs text-[#94a3b8] mt-1">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* Tabs + Search */}
         <div className="flex flex-wrap items-center gap-4 mb-5">
-          <div className="flex gap-1 p-1 rounded-xl" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+          <div className="flex gap-1 p-1 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
             {tabs.map((t) => (
               <button key={t} onClick={() => setActiveTab(t)}
                 className="px-4 py-2 text-sm font-semibold rounded-lg transition-all"
-                style={activeTab === t ? { backgroundColor: "#2563eb", color: "#fff" } : { color: "#5a4136" }}>
+                style={activeTab === t ? { backgroundColor: "#2563eb", color: "#fff" } : { color: "#cbd5e1" }}>
                 {t}
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2 flex-1 min-w-48 px-3 py-2 rounded-xl" style={{ backgroundColor: "#fff", border: "1px solid #e2bfb0" }}>
-            <Search style={{ fontSize: 18, color: "#8e7164" }} />
+          <div className="flex items-center gap-2 flex-1 min-w-48 px-3 py-2 rounded-xl" style={{ backgroundColor: "#fff", border: "1px solid #1e1e1e" }}>
+            <Search style={{ fontSize: 18, color: "#94a3b8" }} />
             <input type="text" placeholder="Search merchants..." value={search} onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 text-sm bg-transparent outline-none text-[#261812] placeholder-[#8e7164]" />
+              className="flex-1 text-sm bg-transparent outline-none text-[#f0f0f0] placeholder-[#94a3b8]" />
           </div>
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl overflow-hidden" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+        <div className="bg-[#111111] rounded-2xl overflow-hidden" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ backgroundColor: "#fff8f6", borderBottom: "1px solid #e2bfb0" }}>
+                <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
                   {["Merchant", "Type", "Location", "TraceScore", "Loan Amount", "Repaid", "Next Payment", "Status", ""].map((h) => (
-                    <th key={h} className="text-left px-5 py-3.5 font-semibold text-xs text-[#8e7164] whitespace-nowrap">{h}</th>
+                    <th key={h} className="text-left px-5 py-3.5 font-semibold text-xs text-[#94a3b8] whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -107,36 +107,36 @@ export default function TradersPage() {
                   const Icon = s.icon;
                   const repaidPct = m.loanAmount > 0 ? (m.repaid / m.loanAmount) * 100 : 100;
                   return (
-                    <tr key={m.id} className="hover:bg-[#fff8f6] transition-colors" style={{ borderBottom: "1px solid #f8ddd2" }}>
+                    <tr key={m.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#2563eb" }}>{m.name[0]}</div>
                           <div>
-                            <p className="font-semibold text-[#261812] text-sm">{m.name}</p>
-                            <p className="text-xs text-[#8e7164]">{m.owner}</p>
+                            <p className="font-semibold text-[#f0f0f0] text-sm">{m.name}</p>
+                            <p className="text-xs text-[#94a3b8]">{m.owner}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-[#5a4136] text-xs">{m.type}</td>
-                      <td className="px-5 py-4 text-[#5a4136] text-xs">{m.location}</td>
+                      <td className="px-5 py-4 text-[#cbd5e1] text-xs">{m.type}</td>
+                      <td className="px-5 py-4 text-[#cbd5e1] text-xs">{m.location}</td>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-sm" style={{ color: m.score >= 700 ? "#16a34a" : m.score >= 600 ? "#d97706" : "#dc2626" }}>{m.score}</span>
-                          <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+                          <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
                             <div className="h-full rounded-full" style={{ width: `${(m.score / 900) * 100}%`, backgroundColor: "#2563eb" }} />
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-4 font-semibold text-[#261812] text-sm">₦{(m.loanAmount / 1000).toFixed(0)}K</td>
+                      <td className="px-5 py-4 font-semibold text-[#f0f0f0] text-sm">₦{(m.loanAmount / 1000).toFixed(0)}K</td>
                       <td className="px-5 py-4">
                         <div>
-                          <p className="text-sm font-semibold text-[#261812]">₦{(m.repaid / 1000).toFixed(0)}K</p>
-                          <div className="mt-1 w-20 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+                          <p className="text-sm font-semibold text-[#f0f0f0]">₦{(m.repaid / 1000).toFixed(0)}K</p>
+                          <div className="mt-1 w-20 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
                             <div className="h-full rounded-full" style={{ width: `${repaidPct}%`, backgroundColor: "#16a34a" }} />
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-xs text-[#5a4136]">{m.nextPayment}</td>
+                      <td className="px-5 py-4 text-xs text-[#cbd5e1]">{m.nextPayment}</td>
                       <td className="px-5 py-4">
                         <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full" style={{ color: s.color, backgroundColor: s.bg }}>
                           <Icon style={{ fontSize: 12 }} />{m.status}
@@ -155,7 +155,7 @@ export default function TradersPage() {
           </div>
         </div>
 
-        <p className="text-xs text-[#8e7164] mt-4 text-center">{filtered.length} of {merchants.length} merchants shown</p>
+        <p className="text-xs text-[#94a3b8] mt-4 text-center">{filtered.length} of {merchants.length} merchants shown</p>
       </div>
     </AppShell>
   );

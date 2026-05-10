@@ -7,39 +7,39 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Trace Editorial Fintech — Warm Cream palette */
-  --background: #fff8f6;
-  --foreground: #261812;
-  --card: #ffffff;
-  --card-foreground: #261812;
-  --popover: #ffffff;
-  --popover-foreground: #261812;
+  /* Trace Landing palette */
+  --background: #0d0d0d;
+  --foreground: #f0f0f0;
+  --card: #111111;
+  --card-foreground: #f0f0f0;
+  --popover: #111111;
+  --popover-foreground: #f0f0f0;
 
   --primary: #ff6b00;
   --primary-foreground: #ffffff;
 
-  --secondary: #f8ddd2;
-  --secondary-foreground: #261812;
+  --secondary: #161616;
+  --secondary-foreground: #f0f0f0;
 
-  --muted: #ffeae1;
-  --muted-foreground: #5a4136;
+  --muted: #161616;
+  --muted-foreground: #94a3b8;
 
-  --accent: #fee3d8;
-  --accent-foreground: #261812;
+  --accent: #161616;
+  --accent-foreground: #f0f0f0;
 
   --destructive: #ba1a1a;
   --destructive-foreground: #ffffff;
 
-  --border: #e2bfb0;
-  --input: #ffffff;
+  --border: #1e1e1e;
+  --input: #111111;
   --ring: #ff6b00;
 
   /* Semantic / vertical colors */
   --navy: #0f172a;
   --navy-light: #1e293b;
-  --cream: #fff8ed;
+  --cream: #111111;
   --orange: #ff6b00;
-  --orange-soft: #fff1e8;
+  --orange-soft: #161616;
   --orange-dark: #a04100;
   --blue-lender: #2563eb;
   --blue-lender-soft: #dae2fd;
@@ -53,16 +53,16 @@
   --red-risk-soft: #fee2e2;
 
   /* Surface layers */
-  --surface-0: #fff8f6;
-  --surface-1: #ffffff;
-  --surface-2: #fff1eb;
-  --surface-3: #ffeae1;
-  --surface-4: #fee3d8;
-  --surface-5: #f8ddd2;
+  --surface-0: #0d0d0d;
+  --surface-1: #111111;
+  --surface-2: #161616;
+  --surface-3: #1b1b1b;
+  --surface-4: #202020;
+  --surface-5: #252525;
 
-  --outline: #8e7164;
-  --outline-variant: #e2bfb0;
-  --on-surface-variant: #5a4136;
+  --outline: #64748b;
+  --outline-variant: #1e1e1e;
+  --on-surface-variant: #cbd5e1;
 
   /* Charts */
   --chart-1: #ff6b00;
@@ -74,13 +74,13 @@
   --radius: 0.5rem;
 
   /* Sidebar tokens */
-  --sidebar: #ffffff;
-  --sidebar-foreground: #261812;
+  --sidebar: #0d0d0d;
+  --sidebar-foreground: #f0f0f0;
   --sidebar-primary: #ff6b00;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #fff1eb;
-  --sidebar-accent-foreground: #261812;
-  --sidebar-border: #e2bfb0;
+  --sidebar-accent: #161616;
+  --sidebar-accent-foreground: #f0f0f0;
+  --sidebar-border: #1e1e1e;
   --sidebar-ring: #ff6b00;
 
   /* Admin sidebar */
@@ -158,5 +158,5 @@
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #e2bfb0; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #8e7164; }
+::-webkit-scrollbar-thumb { background: #1e1e1e; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }

@@ -55,7 +55,7 @@ export default function JobDetailPage() {
       <div className="p-6 max-w-6xl mx-auto">
         {/* Back */}
         <div className="mb-6">
-          <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm font-medium text-[#5a4136] hover:text-[#261812] transition-colors">
+          <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm font-medium text-[#cbd5e1] hover:text-[#f0f0f0] transition-colors">
             <ArrowBack style={{ fontSize: 18 }} />
             Back to Marketplace
           </Link>
@@ -65,19 +65,19 @@ export default function JobDetailPage() {
           {/* Main content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header card */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#7c3aed", fontFamily: "Epilogue, sans-serif" }}>
                     {job.company[0]}
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.title}</h1>
-                    <p className="text-[#5a4136] mt-1">{job.company}</p>
+                    <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.title}</h1>
+                    <p className="text-[#cbd5e1] mt-1">{job.company}</p>
                     <div className="flex items-center gap-4 mt-2 flex-wrap">
-                      <span className="flex items-center gap-1 text-xs text-[#8e7164]"><LocationOn style={{ fontSize: 14 }} />{job.location}</span>
-                      <span className="flex items-center gap-1 text-xs text-[#8e7164]"><AccessTime style={{ fontSize: 14 }} />Posted {job.posted}</span>
-                      <span className="flex items-center gap-1 text-xs text-[#8e7164]"><People style={{ fontSize: 14 }} />{job.applicants} applicants</span>
+                      <span className="flex items-center gap-1 text-xs text-[#94a3b8]"><LocationOn style={{ fontSize: 14 }} />{job.location}</span>
+                      <span className="flex items-center gap-1 text-xs text-[#94a3b8]"><AccessTime style={{ fontSize: 14 }} />Posted {job.posted}</span>
+                      <span className="flex items-center gap-1 text-xs text-[#94a3b8]"><People style={{ fontSize: 14 }} />{job.applicants} applicants</span>
                     </div>
                   </div>
                 </div>
@@ -87,41 +87,41 @@ export default function JobDetailPage() {
               </div>
 
               <div className="flex flex-wrap gap-3 mb-5">
-                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                  <p className="text-xs text-[#8e7164]">Pay</p>
-                  <p className="text-xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}</p>
-                  <p className="text-xs text-[#8e7164]">per {job.period}</p>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                  <p className="text-xs text-[#94a3b8]">Pay</p>
+                  <p className="text-xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}</p>
+                  <p className="text-xs text-[#94a3b8]">per {job.period}</p>
                 </div>
-                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                  <p className="text-xs text-[#8e7164]">Duration</p>
-                  <p className="text-xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.duration}</p>
-                  <p className="text-xs text-[#8e7164]">{job.type}</p>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                  <p className="text-xs text-[#94a3b8]">Duration</p>
+                  <p className="text-xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.duration}</p>
+                  <p className="text-xs text-[#94a3b8]">{job.type}</p>
                 </div>
-                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                  <p className="text-xs text-[#8e7164]">Min Score</p>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                  <p className="text-xs text-[#94a3b8]">Min Score</p>
                   <p className="text-xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: "#ff6b00" }}>{job.minScore}</p>
-                  <p className="text-xs text-[#8e7164]">TraceScore</p>
+                  <p className="text-xs text-[#94a3b8]">TraceScore</p>
                 </div>
-                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                  <p className="text-xs text-[#8e7164]">Location</p>
-                  <p className="text-base font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Yaba</p>
-                  <p className="text-xs text-[#8e7164]">Main market</p>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                  <p className="text-xs text-[#94a3b8]">Location</p>
+                  <p className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Yaba</p>
+                  <p className="text-xs text-[#94a3b8]">Main market</p>
                 </div>
               </div>
             </div>
 
             {/* Description */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About this Job</h2>
-              <p className="text-sm text-[#5a4136] leading-relaxed whitespace-pre-line">{job.description}</p>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About this Job</h2>
+              <p className="text-sm text-[#cbd5e1] leading-relaxed whitespace-pre-line">{job.description}</p>
             </div>
 
             {/* Responsibilities */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>What You&#39;ll Do</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>What You&#39;ll Do</h2>
               <ul className="space-y-2.5">
                 {job.responsibilities.map((r, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-[#5a4136]">
+                  <li key={i} className="flex items-start gap-3 text-sm text-[#cbd5e1]">
                     <CheckCircle style={{ fontSize: 18, color: "#7c3aed", marginTop: 1 }} />
                     {r}
                   </li>
@@ -130,21 +130,21 @@ export default function JobDetailPage() {
             </div>
 
             {/* Requirements */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Requirements</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Requirements</h2>
               <ul className="space-y-2.5">
                 {job.requirements.map((r, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-[#5a4136]">
+                  <li key={i} className="flex items-start gap-3 text-sm text-[#cbd5e1]">
                     <span className="w-1.5 h-1.5 rounded-full mt-2 flex-none" style={{ backgroundColor: "#ff6b00" }} />
                     {r}
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
-                <p className="text-xs font-semibold text-[#5a4136] mb-2">What to bring</p>
+              <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                <p className="text-xs font-semibold text-[#cbd5e1] mb-2">What to bring</p>
                 <ul className="space-y-1">
                   {job.bring.map((b, i) => (
-                    <li key={i} className="text-xs text-[#5a4136]">· {b}</li>
+                    <li key={i} className="text-xs text-[#cbd5e1]">· {b}</li>
                   ))}
                 </ul>
               </div>
@@ -161,27 +161,27 @@ export default function JobDetailPage() {
                   Apply for this Job
                 </button>
               ) : (
-                <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-                  <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Your Application</h2>
+                <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+                  <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Your Application</h2>
                   <form onSubmit={handleApply} className="space-y-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Cover Note <span className="text-[#8e7164] font-normal">(optional)</span></label>
+                      <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Cover Note <span className="text-[#94a3b8] font-normal">(optional)</span></label>
                       <textarea
                         value={coverNote} onChange={(e) => setCoverNote(e.target.value)} rows={4}
                         placeholder="Tell the employer why you&#39;re a great fit for this role..."
                         className="w-full px-3 py-3 text-sm rounded-xl border outline-none resize-none"
-                        style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                        style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
                       />
                     </div>
-                    <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                    <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                       <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)}
                         className="w-4 h-4 rounded" style={{ accentColor: "#7c3aed" }} />
-                      <span className="text-sm text-[#5a4136]">I confirm I am available for the full duration of this job</span>
+                      <span className="text-sm text-[#cbd5e1]">I confirm I am available for the full duration of this job</span>
                     </label>
                     <div className="grid grid-cols-2 gap-3">
                       <button type="button" onClick={() => setShowForm(false)}
-                        className="py-3 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]"
-                        style={{ borderColor: "#e2bfb0" }}>
+                        className="py-3 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]"
+                        style={{ borderColor: "#1e1e1e" }}>
                         Cancel
                       </button>
                       <button type="submit" disabled={!available}
@@ -194,10 +194,10 @@ export default function JobDetailPage() {
                 </div>
               )
             ) : (
-              <div className="bg-white rounded-2xl p-8 text-center" style={{ border: "1px solid #e2bfb0" }}>
+              <div className="bg-[#111111] rounded-2xl p-8 text-center" style={{ border: "1px solid #1e1e1e" }}>
                 <CheckCircle style={{ fontSize: 48, color: "#16a34a" }} />
-                <h2 className="text-xl font-bold text-[#261812] mt-3" style={{ fontFamily: "Epilogue, sans-serif" }}>Application Submitted!</h2>
-                <p className="text-sm text-[#5a4136] mt-2">Amaka Foods will review your profile and contact you if selected.</p>
+                <h2 className="text-xl font-bold text-[#f0f0f0] mt-3" style={{ fontFamily: "Epilogue, sans-serif" }}>Application Submitted!</h2>
+                <p className="text-sm text-[#cbd5e1] mt-2">Amaka Foods will review your profile and contact you if selected.</p>
                 <Link href="/jobs" className="mt-5 inline-block px-6 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#7c3aed" }}>
                   View My Applications
                 </Link>
@@ -208,70 +208,70 @@ export default function JobDetailPage() {
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Company card */}
-            <div className="bg-white rounded-2xl p-5" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About {job.company}</h2>
+            <div className="bg-[#111111] rounded-2xl p-5" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About {job.company}</h2>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#7c3aed" }}>
                   {job.company[0]}
                 </div>
                 <div>
-                  <p className="font-semibold text-[#261812] text-sm">{job.company}</p>
+                  <p className="font-semibold text-[#f0f0f0] text-sm">{job.company}</p>
                   <div className="flex items-center gap-1 mt-0.5">
                     <Star style={{ fontSize: 14, color: "#d97706" }} />
-                    <span className="text-xs font-semibold text-[#261812]">{job.companyRating}</span>
-                    <span className="text-xs text-[#8e7164]">employer rating</span>
+                    <span className="text-xs font-semibold text-[#f0f0f0]">{job.companyRating}</span>
+                    <span className="text-xs text-[#94a3b8]">employer rating</span>
                   </div>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[#8e7164]">Jobs posted</span>
-                  <span className="font-semibold text-[#261812]">{job.companyJobs}</span>
+                  <span className="text-[#94a3b8]">Jobs posted</span>
+                  <span className="font-semibold text-[#f0f0f0]">{job.companyJobs}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8e7164]">Workers hired</span>
-                  <span className="font-semibold text-[#261812]">{job.companyWorkers}</span>
+                  <span className="text-[#94a3b8]">Workers hired</span>
+                  <span className="font-semibold text-[#f0f0f0]">{job.companyWorkers}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8e7164]">Payout rate</span>
+                  <span className="text-[#94a3b8]">Payout rate</span>
                   <span className="font-semibold" style={{ color: "#16a34a" }}>100%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#8e7164]">Location</span>
-                  <span className="font-semibold text-[#261812]">Yaba, Lagos</span>
+                  <span className="text-[#94a3b8]">Location</span>
+                  <span className="font-semibold text-[#f0f0f0]">Yaba, Lagos</span>
                 </div>
               </div>
             </div>
 
             {/* Your score */}
-            <div className="bg-white rounded-2xl p-5" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <p className="text-xs font-semibold text-[#8e7164] mb-2">Your TraceScore</p>
+            <div className="bg-[#111111] rounded-2xl p-5" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <p className="text-xs font-semibold text-[#94a3b8] mb-2">Your TraceScore</p>
               <div className="flex items-center justify-between">
                 <p className="text-3xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: "#ff6b00" }}>742</p>
                 <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Exceeds min.</span>
               </div>
-              <p className="text-xs text-[#8e7164] mt-1">Minimum required: {job.minScore}</p>
-              <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+              <p className="text-xs text-[#94a3b8] mt-1">Minimum required: {job.minScore}</p>
+              <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
                 <div className="h-full rounded-full" style={{ width: "82%", backgroundColor: "#ff6b00" }} />
               </div>
             </div>
 
             {/* Similar jobs */}
-            <div className="bg-white rounded-2xl p-5" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Similar Jobs</h2>
+            <div className="bg-[#111111] rounded-2xl p-5" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Similar Jobs</h2>
               <div className="space-y-3">
                 {similarJobs.map((j) => (
-                  <Link key={j.id} href={`/marketplace/${j.id}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-[#fff8f6] transition-colors" style={{ border: "1px solid #e2bfb0" }}>
+                  <Link key={j.id} href={`/marketplace/${j.id}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-[#161616] transition-colors" style={{ border: "1px solid #1e1e1e" }}>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#7c3aed" }}>
                         <Work style={{ fontSize: 16 }} />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-[#261812]">{j.title}</p>
-                        <p className="text-xs text-[#8e7164]">{j.company}</p>
+                        <p className="text-sm font-semibold text-[#f0f0f0]">{j.title}</p>
+                        <p className="text-xs text-[#94a3b8]">{j.company}</p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-[#261812]">{j.pay}</span>
+                    <span className="text-xs font-bold text-[#f0f0f0]">{j.pay}</span>
                   </Link>
                 ))}
               </div>

@@ -79,8 +79,8 @@ export default function LenderDashboardPage() {
       <div className="p-6 max-w-7xl mx-auto">
         {/* Greeting */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Welcome back, Zenith Capital</h1>
-          <p className="text-sm text-[#8e7164] mt-1">Saturday, May 10, 2026 · Lender Dashboard</p>
+          <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Welcome back, Zenith Capital</h1>
+          <p className="text-sm text-[#94a3b8] mt-1">Saturday, May 10, 2026 · Lender Dashboard</p>
         </div>
 
         {/* Metrics */}
@@ -93,24 +93,24 @@ export default function LenderDashboardPage() {
 
         <div className="grid lg:grid-cols-3 gap-6 mb-6">
           {/* Repayment trend */}
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-            <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Disbursement vs Repayment</h2>
+          <div className="lg:col-span-2 rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+            <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Disbursement vs Repayment</h2>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={repaymentTrend} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f8ddd2" />
-                <XAxis dataKey="month" tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tickFormatter={(v) => `₦${(v / 1000000).toFixed(1)}M`} tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2bfb0", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => `₦${v.toLocaleString()}`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
+                <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tickFormatter={(v) => `₦${(v / 1000000).toFixed(1)}M`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }} formatter={(v: number) => `₦${v.toLocaleString()}`} />
                 <Legend />
-                <Bar dataKey="disbursed" fill="#dae2fd" name="Disbursed" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="disbursed" fill="#334155" name="Disbursed" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="repaid" fill="#2563eb" name="Repaid" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Portfolio mix */}
-          <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-            <h2 className="text-base font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Portfolio by Sector</h2>
+          <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+            <h2 className="text-base font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Portfolio by Sector</h2>
             <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie data={sectorData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value">
@@ -118,7 +118,7 @@ export default function LenderDashboardPage() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2bfb0", borderRadius: 8, fontSize: 12 }} />
+                <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 8, fontSize: 12, color: "#f0f0f0" }} />
               </PieChart>
             </ResponsiveContainer>
             <div className="space-y-2 mt-2">
@@ -126,9 +126,9 @@ export default function LenderDashboardPage() {
                 <div key={s.name} className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.color }} />
-                    <span className="text-[#5a4136]">{s.name}</span>
+                    <span className="text-[#cbd5e1]">{s.name}</span>
                   </div>
-                  <span className="font-semibold text-[#261812]">{s.value} loans</span>
+                  <span className="font-semibold text-[#f0f0f0]">{s.value} loans</span>
                 </div>
               ))}
             </div>
@@ -136,14 +136,14 @@ export default function LenderDashboardPage() {
         </div>
 
         {/* Score distribution */}
-        <div className="bg-white rounded-2xl p-6 mb-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-          <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Portfolio Score Distribution</h2>
+        <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+          <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Portfolio Score Distribution</h2>
           <div className="grid grid-cols-4 gap-4">
             {scoreDistribution.map((b) => (
-              <div key={b.band} className="text-center p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                <p className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{b.count}</p>
-                <p className="text-xs text-[#8e7164] mt-1">Score {b.band}</p>
-                <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+              <div key={b.band} className="text-center p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{b.count}</p>
+                <p className="text-xs text-[#94a3b8] mt-1">Score {b.band}</p>
+                <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
                   <div className="h-full rounded-full" style={{ width: `${(b.count / 23) * 100}%`, backgroundColor: "#2563eb" }} />
                 </div>
               </div>
@@ -156,42 +156,42 @@ export default function LenderDashboardPage() {
         </div>
 
         {/* Loan pipeline */}
-        <div className="bg-white rounded-2xl overflow-hidden mb-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-          <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: "#e2bfb0" }}>
-            <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Pipeline</h2>
+        <div className="bg-[#111111] rounded-2xl overflow-hidden mb-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+          <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: "#1e1e1e" }}>
+            <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Pipeline</h2>
             <Link href="/lender/approvals" className="text-sm font-semibold" style={{ color: "#2563eb" }}>View all →</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr style={{ backgroundColor: "#fff8f6", borderBottom: "1px solid #e2bfb0" }}>
+                <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
                   {["Merchant", "Type", "Score", "Amount", "Risk", "Status", "Days", ""].map((h) => (
-                    <th key={h} className="text-left px-5 py-3 font-semibold text-xs text-[#8e7164]">{h}</th>
+                    <th key={h} className="text-left px-5 py-3 font-semibold text-xs text-[#94a3b8]">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {pipeline.map((app) => (
-                  <tr key={app.id} className="hover:bg-[#fff8f6] transition-colors" style={{ borderBottom: "1px solid #f8ddd2" }}>
+                  <tr key={app.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#2563eb" }}>{app.name[0]}</div>
                         <div>
-                          <p className="font-semibold text-[#261812]">{app.name}</p>
-                          <p className="text-xs text-[#8e7164]">{app.id}</p>
+                          <p className="font-semibold text-[#f0f0f0]">{app.name}</p>
+                          <p className="text-xs text-[#94a3b8]">{app.id}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-[#5a4136]">{app.type}</td>
+                    <td className="px-5 py-4 text-[#cbd5e1]">{app.type}</td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
                         <span className="font-bold" style={{ color: app.score >= 700 ? "#16a34a" : app.score >= 500 ? "#d97706" : "#dc2626" }}>{app.score}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 font-semibold text-[#261812]">₦{app.amount.toLocaleString()}</td>
+                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">₦{app.amount.toLocaleString()}</td>
                     <td className="px-5 py-4"><Badge label={app.risk} style={riskStyle[app.risk]} /></td>
                     <td className="px-5 py-4"><Badge label={app.status} style={statusStyle[app.status] || statusStyle.Pending} /></td>
-                    <td className="px-5 py-4 text-[#8e7164] text-xs">{app.days}d</td>
+                    <td className="px-5 py-4 text-[#94a3b8] text-xs">{app.days}d</td>
                     <td className="px-5 py-4">
                       <Link href={`/lender/merchants/${app.id}`} className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#2563eb" }}>
                         Review <ChevronRight style={{ fontSize: 14 }} />
@@ -205,24 +205,24 @@ export default function LenderDashboardPage() {
         </div>
 
         {/* Top merchants */}
-        <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+        <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Top Performing Merchants</h2>
+            <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Top Performing Merchants</h2>
             <Link href="/lender/traders" className="text-sm font-semibold" style={{ color: "#2563eb" }}>View all →</Link>
           </div>
           <div className="space-y-3">
             {topMerchants.map((m, i) => (
-              <div key={m.name} className="flex items-center gap-4 p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                <span className="text-sm font-bold text-[#8e7164] w-5">{i + 1}</span>
+              <div key={m.name} className="flex items-center gap-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                <span className="text-sm font-bold text-[#94a3b8] w-5">{i + 1}</span>
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#2563eb" }}>{m.name[0]}</div>
                 <div className="flex-1">
-                  <p className="font-semibold text-[#261812] text-sm">{m.name}</p>
-                  <p className="text-xs text-[#8e7164]">Loan: {m.loan} · Repaid: {m.repaid}</p>
+                  <p className="font-semibold text-[#f0f0f0] text-sm">{m.name}</p>
+                  <p className="text-xs text-[#94a3b8]">Loan: {m.loan} · Repaid: {m.repaid}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div>
-                    <p className="text-xs text-[#8e7164]">Score</p>
-                    <p className="font-bold text-[#261812]">{m.score}</p>
+                    <p className="text-xs text-[#94a3b8]">Score</p>
+                    <p className="font-bold text-[#f0f0f0]">{m.score}</p>
                   </div>
                   {m.onTime && <CheckCircle style={{ fontSize: 20, color: "#16a34a" }} />}
                 </div>

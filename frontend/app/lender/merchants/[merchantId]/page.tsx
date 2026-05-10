@@ -122,45 +122,45 @@ export default function MerchantCreditFilePage() {
       <div className="p-6 max-w-7xl mx-auto">
         {/* Back */}
         <div className="mb-6">
-          <Link href="/lender/traders" className="inline-flex items-center gap-2 text-sm font-medium text-[#5a4136] hover:text-[#261812] transition-colors">
+          <Link href="/lender/traders" className="inline-flex items-center gap-2 text-sm font-medium text-[#cbd5e1] hover:text-[#f0f0f0] transition-colors">
             <ArrowBack style={{ fontSize: 18 }} />
             Back to Merchants
           </Link>
         </div>
 
         {/* Header */}
-        <div className="bg-white rounded-2xl p-6 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+        <div className="bg-[#111111] rounded-2xl p-6 mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
           <div className="flex items-start gap-4">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style={{ backgroundColor: "#ff6b00", fontFamily: "Epilogue, sans-serif" }}>
               {merchant.name[0]}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{merchant.name}</h1>
-              <p className="text-[#5a4136] text-sm mt-1">{merchant.owner} · {merchant.type}</p>
+              <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{merchant.name}</h1>
+              <p className="text-[#cbd5e1] text-sm mt-1">{merchant.owner} · {merchant.type}</p>
               <div className="flex items-center gap-2 mt-2 flex-wrap">
-                <span className="flex items-center gap-1 text-xs text-[#8e7164]">
+                <span className="flex items-center gap-1 text-xs text-[#94a3b8]">
                   <LocationOn style={{ fontSize: 14 }} />{merchant.location}
                 </span>
-                <span className="flex items-center gap-1 text-xs text-[#8e7164]">
+                <span className="flex items-center gap-1 text-xs text-[#94a3b8]">
                   <CalendarToday style={{ fontSize: 14 }} />Member since {merchant.since}
                 </span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4 flex-wrap">
-            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-              <p className="text-xs text-[#8e7164] mb-1">TraceScore</p>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+              <p className="text-xs text-[#94a3b8] mb-1">TraceScore</p>
               <p className="text-3xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: scoreColor }}>{merchant.traceScore}</p>
               <Badge label={merchant.scoreGrade} color={scoreColor} bg={scoreBg} />
             </div>
-            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-              <p className="text-xs text-[#8e7164] mb-1">Requested</p>
-              <p className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦2.5M</p>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+              <p className="text-xs text-[#94a3b8] mb-1">Requested</p>
+              <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦2.5M</p>
               <Badge label={merchant.riskBand + " Risk"} color="#16a34a" bg="#dcfce7" />
             </div>
-            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-              <p className="text-xs text-[#8e7164] mb-1">Avg Monthly</p>
-              <p className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦547K</p>
+            <div className="text-center p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+              <p className="text-xs text-[#94a3b8] mb-1">Avg Monthly</p>
+              <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦547K</p>
               <Badge label="Revenue" color="#2563eb" bg="#dae2fd" />
             </div>
           </div>
@@ -170,47 +170,47 @@ export default function MerchantCreditFilePage() {
           {/* Main content */}
           <div className="lg:col-span-2 space-y-6">
             {/* TraceScore Breakdown */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>TraceScore Breakdown</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>TraceScore Breakdown</h2>
               <div className="space-y-4">
                 {scoreFactors.map((f) => (
                   <div key={f.label}>
                     <div className="flex items-center justify-between text-sm mb-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-[#261812]">{f.label}</span>
-                        <span className="text-xs text-[#8e7164]">(weight: {f.weight})</span>
+                        <span className="font-medium text-[#f0f0f0]">{f.label}</span>
+                        <span className="text-xs text-[#94a3b8]">(weight: {f.weight})</span>
                       </div>
-                      <span className="font-bold text-[#261812]">{f.score}/100</span>
+                      <span className="font-bold text-[#f0f0f0]">{f.score}/100</span>
                     </div>
-                    <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+                    <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
                       <div className="h-full rounded-full" style={{ width: `${f.score}%`, backgroundColor: f.color }} />
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="mt-5 pt-5 border-t flex items-center justify-between" style={{ borderColor: "#e2bfb0" }}>
+              <div className="mt-5 pt-5 border-t flex items-center justify-between" style={{ borderColor: "#1e1e1e" }}>
                 <div>
-                  <p className="text-sm text-[#8e7164]">Composite Score</p>
+                  <p className="text-sm text-[#94a3b8]">Composite Score</p>
                   <p className="text-3xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: "#ff6b00" }}>742 / 900</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-[#8e7164]">Score Trend (30d)</p>
+                  <p className="text-sm text-[#94a3b8]">Score Trend (30d)</p>
                   <p className="text-lg font-bold" style={{ color: "#16a34a" }}>+7 points ↑</p>
                 </div>
               </div>
             </div>
 
             {/* Score History Chart */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Score History — 7 Months</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Score History — 7 Months</h2>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={scoreHistory}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f8ddd2" />
-                  <XAxis dataKey="month" tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[680, 760]} tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
+                  <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[680, 760]} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2bfb0", borderRadius: 12, fontSize: 12 }}
-                    labelStyle={{ color: "#261812", fontWeight: 600 }}
+                    contentStyle={{ backgroundColor: "#fff", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12 }}
+                    labelStyle={{ color: "#f0f0f0", fontWeight: 600 }}
                   />
                   <Line type="monotone" dataKey="score" stroke="#2563eb" strokeWidth={2.5} dot={{ fill: "#2563eb", r: 4 }} />
                 </LineChart>
@@ -218,43 +218,43 @@ export default function MerchantCreditFilePage() {
             </div>
 
             {/* Revenue Chart */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Revenue & Payment Volume</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Revenue & Payment Volume</h2>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={revenueHistory} barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f8ddd2" />
-                  <XAxis dataKey="month" tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}K`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
+                  <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}K`} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2bfb0", borderRadius: 12, fontSize: 12 }}
+                    contentStyle={{ backgroundColor: "#fff", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12 }}
                     formatter={(v: number) => [`₦${v.toLocaleString()}`, ""]}
                   />
                   <Legend />
                   <Bar dataKey="revenue" fill="#ff6b00" name="Revenue (₦)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="payments" fill="#fee3d8" name="No. of Payments" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="payments" fill="#1e1e1e" name="No. of Payments" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Loan History */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan History</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan History</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr style={{ borderBottom: "1px solid #e2bfb0" }}>
+                    <tr style={{ borderBottom: "1px solid #1e1e1e" }}>
                       {["Loan ID", "Amount", "Lender", "Rate", "Status", "Date"].map((h) => (
-                        <th key={h} className="text-left pb-3 font-semibold text-[#8e7164] pr-4">{h}</th>
+                        <th key={h} className="text-left pb-3 font-semibold text-[#94a3b8] pr-4">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {loanHistory.map((loan) => (
-                      <tr key={loan.id} style={{ borderBottom: "1px solid #f8ddd2" }}>
-                        <td className="py-3 pr-4 font-mono text-[#5a4136] text-xs">{loan.id}</td>
-                        <td className="py-3 pr-4 font-semibold text-[#261812]">{loan.amount}</td>
-                        <td className="py-3 pr-4 text-[#5a4136]">{loan.lender}</td>
-                        <td className="py-3 pr-4 text-[#5a4136]">{loan.rate}</td>
+                      <tr key={loan.id} style={{ borderBottom: "1px solid #1e1e1e" }}>
+                        <td className="py-3 pr-4 font-mono text-[#cbd5e1] text-xs">{loan.id}</td>
+                        <td className="py-3 pr-4 font-semibold text-[#f0f0f0]">{loan.amount}</td>
+                        <td className="py-3 pr-4 text-[#cbd5e1]">{loan.lender}</td>
+                        <td className="py-3 pr-4 text-[#cbd5e1]">{loan.rate}</td>
                         <td className="py-3 pr-4">
                           <Badge
                             label={loan.status}
@@ -262,7 +262,7 @@ export default function MerchantCreditFilePage() {
                             bg={loan.status === "Repaid" ? "#dcfce7" : "#dae2fd"}
                           />
                         </td>
-                        <td className="py-3 text-[#8e7164]">{loan.date}</td>
+                        <td className="py-3 text-[#94a3b8]">{loan.date}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -275,11 +275,11 @@ export default function MerchantCreditFilePage() {
             </div>
 
             {/* Recent Transactions */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Recent Transactions (Last 30 Days)</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Recent Transactions (Last 30 Days)</h2>
               <div className="space-y-2">
                 {recentTransactions.map((t, i) => (
-                  <div key={i} className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ backgroundColor: "#fff8f6" }}>
+                  <div key={i} className="flex items-center justify-between py-3 px-4 rounded-xl" style={{ backgroundColor: "#161616" }}>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: t.type === "Credit" ? "#dcfce7" : "#fee2e2" }}>
                         {t.type === "Credit"
@@ -287,8 +287,8 @@ export default function MerchantCreditFilePage() {
                           : <Wallet style={{ fontSize: 16, color: "#dc2626" }} />}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[#261812]">{t.desc}</p>
-                        <p className="text-xs text-[#8e7164]">{t.date}</p>
+                        <p className="text-sm font-medium text-[#f0f0f0]">{t.desc}</p>
+                        <p className="text-xs text-[#94a3b8]">{t.date}</p>
                       </div>
                     </div>
                     <p className="text-sm font-bold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
@@ -303,8 +303,8 @@ export default function MerchantCreditFilePage() {
           {/* Right panel */}
           <div className="space-y-6">
             {/* Business Info */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Business Profile</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Business Profile</h2>
               <div className="space-y-3 text-sm">
                 {[
                   { icon: Business, label: "Business Type", val: merchant.type },
@@ -315,10 +315,10 @@ export default function MerchantCreditFilePage() {
                   { icon: Work, label: "Jobs Posted", val: "12 jobs, 38 workers hired" },
                 ].map(({ icon: Icon, label, val }) => (
                   <div key={label} className="flex items-start gap-3">
-                    <Icon style={{ fontSize: 16, color: "#8e7164", marginTop: 2 }} />
+                    <Icon style={{ fontSize: 16, color: "#94a3b8", marginTop: 2 }} />
                     <div>
-                      <p className="text-[#8e7164] text-xs">{label}</p>
-                      <p className="text-[#261812] font-medium">{val}</p>
+                      <p className="text-[#94a3b8] text-xs">{label}</p>
+                      <p className="text-[#f0f0f0] font-medium">{val}</p>
                     </div>
                   </div>
                 ))}
@@ -326,8 +326,8 @@ export default function MerchantCreditFilePage() {
             </div>
 
             {/* Risk Summary */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Risk Summary</h2>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Risk Summary</h2>
               <div className="space-y-3">
                 {[
                   { label: "Risk Band", val: "Low", color: "#16a34a", bg: "#dcfce7" },
@@ -337,23 +337,23 @@ export default function MerchantCreditFilePage() {
                   { label: "Fraud Risk", val: "Minimal", color: "#16a34a", bg: "#dcfce7" },
                 ].map((r) => (
                   <div key={r.label} className="flex items-center justify-between">
-                    <span className="text-sm text-[#5a4136]">{r.label}</span>
+                    <span className="text-sm text-[#cbd5e1]">{r.label}</span>
                     <Badge label={r.val} color={r.color} bg={r.bg} />
                   </div>
                 ))}
               </div>
-              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 <div className="flex items-start gap-2">
                   <Warning style={{ fontSize: 16, color: "#d97706", marginTop: 1 }} />
-                  <p className="text-xs text-[#5a4136]">Debt-to-revenue slightly elevated due to active ₦800K loan. Within acceptable threshold.</p>
+                  <p className="text-xs text-[#cbd5e1]">Debt-to-revenue slightly elevated due to active ₦800K loan. Within acceptable threshold.</p>
                 </div>
               </div>
             </div>
 
             {/* Loan Application */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-base font-bold text-[#261812] mb-1" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Application</h2>
-              <p className="text-xs text-[#8e7164] mb-4">Purpose: {merchant.purpose}</p>
+            <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#f0f0f0] mb-1" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Application</h2>
+              <p className="text-xs text-[#94a3b8] mb-4">Purpose: {merchant.purpose}</p>
 
               {submitted ? (
                 <div className="p-4 rounded-xl text-center" style={{ backgroundColor: decision === "approve" ? "#dcfce7" : "#fee2e2", border: `1px solid ${decision === "approve" ? "#bbf7d0" : "#fecaca"}` }}>
@@ -361,39 +361,39 @@ export default function MerchantCreditFilePage() {
                   <p className="text-sm font-bold mt-2" style={{ color: decision === "approve" ? "#16a34a" : "#dc2626" }}>
                     {decision === "approve" ? "Loan Approved!" : "Application Declined"}
                   </p>
-                  <p className="text-xs text-[#5a4136] mt-1">
+                  <p className="text-xs text-[#cbd5e1] mt-1">
                     {decision === "approve" ? `₦${parseInt(loanAmount).toLocaleString()} at ${interestRate}% p.a. for ${tenor} months.` : "Merchant will be notified."}
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-[#5a4136] mb-1">Loan Amount (₦)</label>
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1">Loan Amount (₦)</label>
                     <input
                       type="number"
                       value={loanAmount}
                       onChange={(e) => setLoanAmount(e.target.value)}
                       className="w-full px-3 py-2.5 text-sm rounded-xl border outline-none"
-                      style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                      style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#5a4136] mb-1">Interest Rate (% p.a.)</label>
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1">Interest Rate (% p.a.)</label>
                     <input
                       type="number"
                       value={interestRate}
                       onChange={(e) => setInterestRate(e.target.value)}
                       className="w-full px-3 py-2.5 text-sm rounded-xl border outline-none"
-                      style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                      style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#5a4136] mb-1">Tenor (months)</label>
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1">Tenor (months)</label>
                     <select
                       value={tenor}
                       onChange={(e) => setTenor(e.target.value)}
                       className="w-full px-3 py-2.5 text-sm rounded-xl border outline-none"
-                      style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                      style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
                     >
                       {["3", "6", "9", "12", "18", "24"].map((m) => (
                         <option key={m} value={m}>{m} months</option>
@@ -401,14 +401,14 @@ export default function MerchantCreditFilePage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#5a4136] mb-1">Decision Note</label>
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1">Decision Note</label>
                     <textarea
                       value={note}
                       onChange={(e) => setNote(e.target.value)}
                       rows={3}
                       placeholder="Add internal notes..."
                       className="w-full px-3 py-2.5 text-sm rounded-xl border outline-none resize-none"
-                      style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                      style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -429,7 +429,7 @@ export default function MerchantCreditFilePage() {
                       Decline
                     </button>
                   </div>
-                  <button className="w-full py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]" style={{ borderColor: "#e2bfb0" }}>
+                  <button className="w-full py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
                     <AccessTime style={{ fontSize: 16, marginRight: 6 }} />
                     Request More Info
                   </button>

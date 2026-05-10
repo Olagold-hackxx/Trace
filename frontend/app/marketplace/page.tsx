@@ -24,7 +24,7 @@ const jobs = [
 
 const tagColors: Record<string, { color: string; bg: string }> = {
   Urgent: { color: "#dc2626", bg: "#fee2e2" },
-  Featured: { color: "#7c3aed", bg: "#ede9fe" },
+  Featured: { color: "#ff6b00", bg: "#3b1d09" },
   Open: { color: "#16a34a", bg: "#dcfce7" },
 };
 
@@ -34,45 +34,45 @@ function JobCard({ job }: { job: typeof jobs[0] }) {
   const tc = tagColors[tag] || tagColors.Open;
 
   return (
-    <div className="bg-white rounded-2xl p-5 flex flex-col gap-4 hover:shadow-md transition-all" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+    <div className="rounded-2xl p-5 flex flex-col gap-4 hover:shadow-md transition-all" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-none" style={{ backgroundColor: "#7c3aed" }}>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-none" style={{ backgroundColor: "#ff6b00" }}>
             {job.company[0]}
           </div>
           <div>
-            <p className="text-sm font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.title}</p>
-            <p className="text-xs text-[#5a4136]">{job.company}</p>
+            <p className="text-sm font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.title}</p>
+            <p className="text-xs text-[#cbd5e1]">{job.company}</p>
           </div>
         </div>
-        <button onClick={() => setSaved(!saved)} className="text-[#8e7164] hover:text-[#7c3aed] transition-colors flex-none">
-          {saved ? <Bookmark style={{ fontSize: 20, color: "#7c3aed" }} /> : <BookmarkBorder style={{ fontSize: 20 }} />}
+        <button onClick={() => setSaved(!saved)} className="text-[#94a3b8] hover:text-[#ff6b00] transition-colors flex-none">
+          {saved ? <Bookmark style={{ fontSize: 20, color: "#ff6b00" }} /> : <BookmarkBorder style={{ fontSize: 20 }} />}
         </button>
       </div>
 
-      <p className="text-xs text-[#5a4136] leading-relaxed">{job.desc}</p>
+      <p className="text-xs text-[#cbd5e1] leading-relaxed">{job.desc}</p>
 
       <div className="flex flex-wrap gap-2">
         <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: tc.bg, color: tc.color }}>{tag}</span>
-        <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: "#fff1eb", color: "#ff6b00" }}>{job.type}</span>
+        <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: "#161616", color: "#ff6b00" }}>{job.type}</span>
         {job.minScore > 0 && (
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: "#f8ddd2", color: "#8e7164" }}>
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: "#161616", color: "#94a3b8" }}>
             Score ≥ {job.minScore}
           </span>
         )}
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "#f8ddd2" }}>
+      <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: "#1e1e1e" }}>
         <div>
-          <p className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}<span className="text-xs font-normal text-[#8e7164]">/{job.period}</span></p>
-          <div className="flex items-center gap-3 text-xs text-[#8e7164] mt-0.5">
+          <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}<span className="text-xs font-normal text-[#94a3b8]">/{job.period}</span></p>
+          <div className="flex items-center gap-3 text-xs text-[#94a3b8] mt-0.5">
             <span className="flex items-center gap-1"><LocationOn style={{ fontSize: 12 }} />{job.location}</span>
             <span className="flex items-center gap-1"><People style={{ fontSize: 12 }} />{job.applicants} applied</span>
           </div>
         </div>
         <Link href={`/marketplace/${job.id}`}
           className="px-4 py-2 rounded-xl text-xs font-semibold text-white transition-all hover:opacity-90"
-          style={{ backgroundColor: "#7c3aed" }}>
+          style={{ backgroundColor: "#ff6b00" }}>
           View →
         </Link>
       </div>
@@ -98,13 +98,13 @@ export default function MarketplacePage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Job Marketplace</h1>
-            <p className="text-sm text-[#8e7164] mt-1">{jobs.length} jobs available across Lagos</p>
+            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Job Marketplace</h1>
+            <p className="text-sm text-[#94a3b8] mt-1">{jobs.length} jobs available across Lagos</p>
           </div>
           <button
             onClick={() => setPostingMode(!postingMode)}
             className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
-            style={postingMode ? { backgroundColor: "#7c3aed", color: "#fff" } : { backgroundColor: "#ede9fe", color: "#7c3aed" }}
+            style={postingMode ? { backgroundColor: "#ff6b00", color: "#fff" } : { backgroundColor: "#161616", color: "#ff6b00" }}
           >
             {postingMode ? "Browse Jobs" : "Post a Job"}
           </button>
@@ -113,14 +113,14 @@ export default function MarketplacePage() {
         {/* Featured banner */}
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           {jobs.filter(j => j.tags.includes("Featured")).slice(0, 2).map((job) => (
-            <div key={job.id} className="rounded-2xl p-5 flex items-center justify-between" style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)", color: "#fff" }}>
+            <div key={job.id} className="rounded-2xl p-5 flex items-center justify-between" style={{ background: "linear-gradient(135deg, #ff6b00, #ff8a33)", color: "#fff" }}>
               <div>
                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full mb-2 inline-block" style={{ backgroundColor: "rgba(255,255,255,0.2)" }}>⭐ Featured</span>
                 <p className="text-lg font-bold" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.title}</p>
                 <p className="text-sm opacity-80">{job.company} · {job.location}</p>
                 <p className="text-xl font-bold mt-2" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}/{job.period}</p>
               </div>
-              <Link href={`/marketplace/${job.id}`} className="px-4 py-2 rounded-xl text-sm font-semibold bg-white text-[#7c3aed] hover:bg-opacity-90 transition-all flex-none">
+              <Link href={`/marketplace/${job.id}`} className="px-4 py-2 rounded-xl text-sm font-semibold bg-white text-[#ff6b00] hover:bg-opacity-90 transition-all flex-none">
                 Apply →
               </Link>
             </div>
@@ -128,22 +128,22 @@ export default function MarketplacePage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl p-4 mb-6 flex flex-wrap gap-3 items-center" style={{ border: "1px solid #e2bfb0" }}>
-          <div className="flex items-center gap-2 flex-1 min-w-48 px-3 py-2 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-            <Search style={{ fontSize: 18, color: "#8e7164" }} />
+        <div className="rounded-2xl p-4 mb-6 flex flex-wrap gap-3 items-center" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
+          <div className="flex items-center gap-2 flex-1 min-w-48 px-3 py-2 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+            <Search style={{ fontSize: 18, color: "#94a3b8" }} />
             <input
               type="text" placeholder="Search jobs or companies..."
               value={search} onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 text-sm bg-transparent outline-none text-[#261812] placeholder-[#8e7164]"
+              className="flex-1 text-sm bg-transparent outline-none text-[#f0f0f0] placeholder-[#64748b]"
             />
           </div>
           <select value={location} onChange={(e) => setLocation(e.target.value)}
-            className="px-3 py-2 rounded-xl text-sm border outline-none" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}>
+            className="px-3 py-2 rounded-xl text-sm border outline-none" style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}>
             {["All Lagos", "Yaba", "Surulere", "Lekki", "Ikeja", "Victoria Island", "Oshodi"].map(l => <option key={l}>{l}</option>)}
           </select>
           <div className="flex items-center gap-1">
-            <FilterList style={{ fontSize: 18, color: "#8e7164" }} />
-            <span className="text-sm text-[#8e7164]">Filter</span>
+            <FilterList style={{ fontSize: 18, color: "#94a3b8" }} />
+            <span className="text-sm text-[#94a3b8]">Filter</span>
           </div>
         </div>
 
@@ -152,7 +152,7 @@ export default function MarketplacePage() {
           {categories.map((cat) => (
             <button key={cat} onClick={() => setCategory(cat)}
               className="px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={category === cat ? { backgroundColor: "#7c3aed", color: "#fff" } : { backgroundColor: "#fff", color: "#5a4136", border: "1px solid #e2bfb0" }}>
+              style={category === cat ? { backgroundColor: "#ff6b00", color: "#fff" } : { backgroundColor: "#111111", color: "#cbd5e1", border: "1px solid #1e1e1e" }}>
               {cat}
             </button>
           ))}
@@ -160,8 +160,8 @@ export default function MarketplacePage() {
 
         {/* Results */}
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm text-[#8e7164]"><span className="font-semibold text-[#261812]">{filtered.length}</span> jobs found</p>
-          <select className="text-sm px-3 py-1.5 rounded-xl border outline-none" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}>
+          <p className="text-sm text-[#94a3b8]"><span className="font-semibold text-[#f0f0f0]">{filtered.length}</span> jobs found</p>
+          <select className="text-sm px-3 py-1.5 rounded-xl border outline-none" style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}>
             <option>Most Recent</option>
             <option>Highest Pay</option>
             <option>Most Applicants</option>
@@ -176,7 +176,7 @@ export default function MarketplacePage() {
         <div className="flex items-center justify-center gap-2 mt-8">
           {[1, 2, 3].map((p) => (
             <button key={p} className="w-10 h-10 rounded-xl text-sm font-semibold transition-all"
-              style={p === 1 ? { backgroundColor: "#7c3aed", color: "#fff" } : { backgroundColor: "#fff", color: "#5a4136", border: "1px solid #e2bfb0" }}>
+              style={p === 1 ? { backgroundColor: "#ff6b00", color: "#fff" } : { backgroundColor: "#111111", color: "#cbd5e1", border: "1px solid #1e1e1e" }}>
               {p}
             </button>
           ))}

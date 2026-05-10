@@ -97,10 +97,10 @@ export default function DashboardPage() {
         {/* Greeting */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>
+            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
               Good morning, Amaka 👋
             </h1>
-            <p className="text-[#8e7164] text-sm mt-1">Saturday, May 10, 2026 · Amaka Foods</p>
+            <p className="text-[#94a3b8] text-sm mt-1">Saturday, May 10, 2026 · Amaka Foods</p>
           </div>
           <Link
             href="/payments"
@@ -121,27 +121,27 @@ export default function DashboardPage() {
         </div>
 
         {/* Payment link bar */}
-        <div className="bg-white rounded-2xl p-4 mb-6 flex items-center gap-4" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-          <div className="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-            <span className="text-sm text-[#261812] font-mono">{paymentLink}</span>
+        <div className="rounded-2xl p-4 mb-6 flex items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+          <div className="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+            <span className="text-sm text-[#f0f0f0] font-mono">{paymentLink}</span>
           </div>
-          <button onClick={copy} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb]" style={{ borderColor: "#e2bfb0", color: "#261812" }}>
+          <button onClick={copy} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616]" style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}>
             <ContentCopy style={{ fontSize: 16 }} />
             {copied ? "Copied!" : "Copy link"}
           </button>
-          <div className="hidden lg:block text-xs text-[#8e7164]">Your Trace payment link · share with anyone</div>
+          <div className="hidden lg:block text-xs text-[#94a3b8]">Your Trace payment link · share with anyone</div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left — main content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Revenue chart */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Revenue Overview</h2>
-                <div className="flex gap-4 text-xs text-[#8e7164]">
+                <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Revenue Overview</h2>
+                <div className="flex gap-4 text-xs text-[#94a3b8]">
                   <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Revenue</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#fee3d8" }} />Expenses</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#334155" }} />Expenses</span>
                 </div>
               </div>
               <ResponsiveContainer width="100%" height={220}>
@@ -152,39 +152,39 @@ export default function DashboardPage() {
                       <stop offset="95%" stopColor="#ff6b00" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f8ddd2" />
-                  <XAxis dataKey="month" tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}K`} tick={{ fill: "#8e7164", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
+                  <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}K`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#fff", border: "1px solid #e2bfb0", borderRadius: 12, fontSize: 12 }}
+                    contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }}
                     formatter={(v: number) => `₦${v.toLocaleString()}`}
                   />
                   <Area type="monotone" dataKey="revenue" stroke="#ff6b00" strokeWidth={2.5} fill="url(#revGrad)" />
-                  <Area type="monotone" dataKey="expenses" stroke="#fee3d8" strokeWidth={2} fill="none" strokeDasharray="4 2" />
+                  <Area type="monotone" dataKey="expenses" stroke="#334155" strokeWidth={2} fill="none" strokeDasharray="4 2" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
             {/* Transactions */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Recent Transactions</h2>
+                <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Recent Transactions</h2>
                 <Link href="/payments" className="text-sm font-semibold" style={{ color: "#ff6b00" }}>View all →</Link>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr style={{ borderBottom: "1px solid #e2bfb0" }}>
+                    <tr style={{ borderBottom: "1px solid #1e1e1e" }}>
                       {["Date", "Description", "Type", "Amount", "Status"].map((h) => (
-                        <th key={h} className="text-left pb-3 font-semibold text-[#8e7164] pr-4 text-xs">{h}</th>
+                        <th key={h} className="text-left pb-3 font-semibold text-[#94a3b8] pr-4 text-xs">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {transactions.map((t) => (
-                      <tr key={t.id} className="hover:bg-[#fff8f6] transition-colors" style={{ borderBottom: "1px solid #f8ddd2" }}>
-                        <td className="py-3 pr-4 text-xs text-[#8e7164] whitespace-nowrap">{t.date}</td>
-                        <td className="py-3 pr-4 font-medium text-[#261812]">{t.desc}</td>
+                      <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
+                        <td className="py-3 pr-4 text-xs text-[#94a3b8] whitespace-nowrap">{t.date}</td>
+                        <td className="py-3 pr-4 font-medium text-[#f0f0f0]">{t.desc}</td>
                         <td className="py-3 pr-4">
                           <span className="flex items-center gap-1 text-xs">
                             {t.type === "Credit"
@@ -208,83 +208,83 @@ export default function DashboardPage() {
           {/* Right — widgets */}
           <div className="space-y-6">
             {/* TraceScore widget */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>TraceScore</h2>
+                <h2 className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>TraceScore</h2>
                 <Link href="/tracescore" className="text-xs font-semibold" style={{ color: "#ff6b00" }}>Full report →</Link>
               </div>
               {/* Gauge */}
               <div className="flex flex-col items-center mb-5">
                 <div className="relative w-36 h-36">
                   <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="#fee3d8" strokeWidth="14" />
+                    <circle cx="100" cy="100" r="75" fill="none" stroke="#1e1e1e" strokeWidth="14" />
                     <circle cx="100" cy="100" r="75" fill="none" stroke="#ff6b00" strokeWidth="14"
                       strokeDasharray={`${2 * Math.PI * 75 * 0.742} ${2 * Math.PI * 75}`} strokeLinecap="round" />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <p className="text-3xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>742</p>
+                    <p className="text-3xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>742</p>
                     <p className="text-xs font-semibold" style={{ color: "#ff6b00" }}>Excellent</p>
                   </div>
                 </div>
-                <p className="text-xs text-[#8e7164] mt-2">+7 points this month</p>
+                <p className="text-xs text-[#94a3b8] mt-2">+7 points this month</p>
               </div>
               {/* Factors */}
               <div className="space-y-3">
                 {scoreFactors.map((f) => (
                   <div key={f.label}>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-[#5a4136]">{f.label}</span>
-                      <span className="font-semibold text-[#261812]">{f.pct}%</span>
+                      <span className="text-[#cbd5e1]">{f.label}</span>
+                      <span className="font-semibold text-[#f0f0f0]">{f.pct}%</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
                       <div className="h-full rounded-full" style={{ width: `${f.pct}%`, backgroundColor: f.color }} />
                     </div>
                   </div>
                 ))}
               </div>
               {/* Pre-qualified */}
-              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
-                <p className="text-xs text-[#8e7164]">Pre-qualified for</p>
-                <p className="text-xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦2,500,000</p>
-                <p className="text-xs text-[#8e7164]">from 3 verified lenders</p>
+              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                <p className="text-xs text-[#94a3b8]">Pre-qualified for</p>
+                <p className="text-xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦2,500,000</p>
+                <p className="text-xs text-[#94a3b8]">from 3 verified lenders</p>
               </div>
             </div>
 
             {/* Active jobs */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Active Jobs</h2>
+                <h2 className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Active Jobs</h2>
                 <Link href="/jobs" className="text-xs font-semibold" style={{ color: "#ff6b00" }}>View all →</Link>
               </div>
               <div className="space-y-3">
                 {activeJobs.map((j) => (
-                  <div key={j.title} className="p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                  <div key={j.title} className="p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-semibold text-[#261812]">{j.title}</p>
+                      <p className="text-sm font-semibold text-[#f0f0f0]">{j.title}</p>
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: j.status === "Active" ? "#dcfce7" : "#f8ddd2", color: j.status === "Active" ? "#16a34a" : "#8e7164" }}>
+                        style={{ backgroundColor: j.status === "Active" ? "#dcfce7" : "#161616", color: j.status === "Active" ? "#16a34a" : "#94a3b8" }}>
                         {j.status}
                       </span>
                     </div>
-                    <p className="text-xs text-[#8e7164]">{j.workers} worker{j.workers !== 1 ? "s" : ""} · {j.pay}</p>
+                    <p className="text-xs text-[#94a3b8]">{j.workers} worker{j.workers !== 1 ? "s" : ""} · {j.pay}</p>
                     {j.daysLeft > 0 && <p className="text-xs text-[#d97706] mt-1">{j.daysLeft} day{j.daysLeft !== 1 ? "s" : ""} left</p>}
                   </div>
                 ))}
               </div>
-              <Link href="/jobs" className="mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]" style={{ borderColor: "#e2bfb0" }}>
+              <Link href="/jobs" className="mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
                 <Add style={{ fontSize: 18 }} />Post a Job
               </Link>
             </div>
 
             {/* Quick actions */}
-            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
-              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Quick Actions</h2>
+            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+              <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Quick Actions</h2>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Request Payment", href: "/payments", icon: Wallet, color: "#ff6b00", bg: "#fff1eb" },
-                  { label: "Post a Job", href: "/jobs", icon: Work, color: "#7c3aed", bg: "#ede9fe" },
+                  { label: "Request Payment", href: "/payments", icon: Wallet, color: "#ff6b00", bg: "#3b1d09" },
+                  { label: "Post a Job", href: "/jobs", icon: Work, color: "#ff6b00", bg: "#3b1d09" },
                   { label: "View Score", href: "/tracescore", icon: TrendingUp, color: "#16a34a", bg: "#dcfce7" },
-                  { label: "Find Workers", href: "/marketplace", icon: People, color: "#2563eb", bg: "#dae2fd" },
+                  { label: "Find Workers", href: "/marketplace", icon: People, color: "#2563eb", bg: "#172554" },
                 ].map((a) => {
                   const Icon = a.icon;
                   return (

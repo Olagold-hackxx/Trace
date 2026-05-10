@@ -67,8 +67,8 @@ export default function PaymentsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Payments</h1>
-            <p className="text-sm text-[#8e7164] mt-1">Collect, track, and manage all your transactions</p>
+            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Payments</h1>
+            <p className="text-sm text-[#94a3b8] mt-1">Collect, track, and manage all your transactions</p>
           </div>
           <button
             onClick={() => setShowRequestForm(true)}
@@ -81,24 +81,24 @@ export default function PaymentsPage() {
 
         {/* Request Payment Form */}
         {showRequestForm && (
-          <div className="bg-white rounded-2xl p-6 mb-6" style={{ border: "1px solid #ff6b00", boxShadow: "0px 4px 20px rgba(255,107,0,0.1)" }}>
-            <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Request a Payment</h2>
+          <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+            <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Request a Payment</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Amount (₦)</label>
+                <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Amount (₦)</label>
                 <input type="number" placeholder="e.g. 50000" value={requestAmount} onChange={(e) => setRequestAmount(e.target.value)}
-                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }} />
+                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none" style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }} />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Description</label>
+                <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Description</label>
                 <input type="text" placeholder="e.g. Market sale, Catering deposit" value={requestDesc} onChange={(e) => setRequestDesc(e.target.value)}
-                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }} />
+                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none" style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }} />
               </div>
             </div>
             {requestAmount && (
-              <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
-                <p className="text-xs text-[#8e7164] mb-1">Generated payment link</p>
-                <p className="text-sm font-mono font-semibold text-[#261812]">
+              <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                <p className="text-xs text-[#94a3b8] mb-1">Generated payment link</p>
+                <p className="text-sm font-mono font-semibold text-[#f0f0f0]">
                   trace.co/pay/amaka-foods?amount={requestAmount}{requestDesc ? `&desc=${encodeURIComponent(requestDesc)}` : ""}
                 </p>
               </div>
@@ -107,7 +107,7 @@ export default function PaymentsPage() {
               <button className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
                 Generate Link
               </button>
-              <button onClick={() => setShowRequestForm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]" style={{ borderColor: "#e2bfb0" }}>
+              <button onClick={() => setShowRequestForm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
                 Cancel
               </button>
             </div>
@@ -123,23 +123,23 @@ export default function PaymentsPage() {
         </div>
 
         {/* Payment link bar */}
-        <div className="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+        <div className="rounded-2xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
           <div className="flex items-center gap-2 flex-none">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#fff1eb" }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#161616" }}>
               <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#261812]">Your Trace Pay Link</p>
-              <p className="text-xs text-[#8e7164]">Share to accept payments instantly</p>
+              <p className="text-sm font-semibold text-[#f0f0f0]">Your Trace Pay Link</p>
+              <p className="text-xs text-[#94a3b8]">Share to accept payments instantly</p>
             </div>
           </div>
           <div className="flex-1 flex items-center gap-2">
-            <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#261812]" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+            <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#f0f0f0]" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
               {mainLink}
             </div>
             <button onClick={() => copy(mainLink, "main")}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] whitespace-nowrap"
-              style={{ borderColor: "#e2bfb0", color: "#261812" }}>
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] whitespace-nowrap"
+              style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}>
               <ContentCopy style={{ fontSize: 16 }} />
               {copiedId === "main" ? "Copied!" : "Copy"}
             </button>
@@ -147,39 +147,39 @@ export default function PaymentsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 rounded-xl mb-5 w-fit" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+        <div className="flex gap-1 p-1 rounded-xl mb-5 w-fit" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
           <button onClick={() => setTab("transactions")} className="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all"
-            style={tab === "transactions" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#5a4136" }}>
+            style={tab === "transactions" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#cbd5e1" }}>
             Transactions ({transactions.length})
           </button>
           <button onClick={() => setTab("links")} className="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all"
-            style={tab === "links" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#5a4136" }}>
+            style={tab === "links" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#cbd5e1" }}>
             Payment Links ({paymentLinks.length})
           </button>
         </div>
 
         {/* Transactions */}
         {tab === "transactions" && (
-          <div className="bg-white rounded-2xl overflow-hidden" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ backgroundColor: "#fff8f6", borderBottom: "1px solid #e2bfb0" }}>
+                  <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
                     {["Date & Time", "Description", "Reference", "Method", "Type", "Amount", "Status"].map((h) => (
-                      <th key={h} className="text-left px-5 py-3.5 font-semibold text-xs text-[#8e7164] whitespace-nowrap">{h}</th>
+                      <th key={h} className="text-left px-5 py-3.5 font-semibold text-xs text-[#94a3b8] whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {transactions.map((t) => (
-                    <tr key={t.id} className="hover:bg-[#fff8f6] transition-colors" style={{ borderBottom: "1px solid #f8ddd2" }}>
+                    <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                       <td className="px-5 py-4 whitespace-nowrap">
-                        <p className="text-xs font-semibold text-[#261812]">{t.date}</p>
-                        <p className="text-xs text-[#8e7164]">{t.time}</p>
+                        <p className="text-xs font-semibold text-[#f0f0f0]">{t.date}</p>
+                        <p className="text-xs text-[#94a3b8]">{t.time}</p>
                       </td>
-                      <td className="px-5 py-4 font-medium text-[#261812] max-w-48 truncate">{t.desc}</td>
-                      <td className="px-5 py-4 font-mono text-xs text-[#8e7164]">{t.ref}</td>
-                      <td className="px-5 py-4 text-xs text-[#5a4136]">{t.method}</td>
+                      <td className="px-5 py-4 font-medium text-[#f0f0f0] max-w-48 truncate">{t.desc}</td>
+                      <td className="px-5 py-4 font-mono text-xs text-[#94a3b8]">{t.ref}</td>
+                      <td className="px-5 py-4 text-xs text-[#cbd5e1]">{t.method}</td>
                       <td className="px-5 py-4">
                         <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
                           {t.type === "Credit" ? <ArrowDownward style={{ fontSize: 14 }} /> : <ArrowUpward style={{ fontSize: 14 }} />}
@@ -202,27 +202,27 @@ export default function PaymentsPage() {
         {tab === "links" && (
           <div className="space-y-4">
             {paymentLinks.map((link) => (
-              <div key={link.id} className="bg-white rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <div key={link.id} className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-none" style={{ backgroundColor: link.active ? "#fff1eb" : "#f8ddd2" }}>
-                    <LinkOutlined style={{ fontSize: 20, color: link.active ? "#ff6b00" : "#8e7164" }} />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-none" style={{ backgroundColor: "#161616" }}>
+                    <LinkOutlined style={{ fontSize: 20, color: link.active ? "#ff6b00" : "#94a3b8" }} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="font-semibold text-[#261812] text-sm">{link.name}</p>
+                      <p className="font-semibold text-[#f0f0f0] text-sm">{link.name}</p>
                       {link.active
                         ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Active</span>
-                        : <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#f8ddd2", color: "#8e7164" }}>Inactive</span>}
+                        : <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#161616", color: "#94a3b8" }}>Inactive</span>}
                     </div>
-                    <p className="text-xs font-mono text-[#5a4136]">{link.url}</p>
-                    <p className="text-xs text-[#8e7164] mt-1">Created {link.created} · {link.uses} uses · {link.total} total</p>
+                    <p className="text-xs font-mono text-[#cbd5e1]">{link.url}</p>
+                    <p className="text-xs text-[#94a3b8] mt-1">Created {link.created} · {link.uses} uses · {link.total} total</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-none">
                   <button onClick={() => copy(link.url, link.id)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold border transition-all hover:bg-[#fff1eb]"
-                    style={{ borderColor: "#e2bfb0", color: "#261812" }}>
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold border transition-all hover:bg-[#161616]"
+                    style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}>
                     <ContentCopy style={{ fontSize: 14 }} />
                     {copiedId === link.id ? "Copied!" : "Copy"}
                   </button>
@@ -231,8 +231,8 @@ export default function PaymentsPage() {
             ))}
             <button
               onClick={() => setShowRequestForm(true)}
-              className="w-full py-4 rounded-2xl border-2 border-dashed text-sm font-semibold transition-all hover:bg-[#fff1eb]"
-              style={{ borderColor: "#e2bfb0", color: "#8e7164" }}
+              className="w-full py-4 rounded-2xl border-2 border-dashed text-sm font-semibold transition-all hover:bg-[#161616]"
+              style={{ borderColor: "#1e1e1e", color: "#94a3b8" }}
             >
               <Add style={{ fontSize: 18, verticalAlign: "middle", marginRight: 8 }} />
               Generate New Payment Link
