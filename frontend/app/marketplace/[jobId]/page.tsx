@@ -1,122 +1,282 @@
 "use client";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { JOBS } from "@/lib/mock-data";
-import { TRADERS } from "@/lib/constants";
-import { StatusBadge } from "@/components/common/status-badge";
-import { Button } from "@/components/ui/button";
-import { formatNaira } from "@/lib/utils";
-import { LocationOn , AccessTime, Business } from "@mui/icons-material";
-import { COLORS } from "@/lib/constants";
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowBack, LocationOn, AccessTime, People, Star, CheckCircle, Work } from "@mui/icons-material";
 
-export default function MarketplaceJobDetailPage({
-  params,
-}: {
-  params: { jobId: string };
-}) {
-  const job = JOBS.find((j) => j.id === params.jobId);
-  const trader = job ? TRADERS.find((t) => t.id === job.traderId) : null;
+const job = {
+  id: "1", title: "Sales Assistant", company: "Amaka Foods", companyRating: 4.7, companyJobs: 12, companyWorkers: 38,
+  location: "Yaba, Lagos", area: "Market stall — Yaba main market",
+  pay: "₦8,500", period: "day", type: "Full-day", duration: "3 days",
+  minScore: 500, applicants: 14, posted: "2 hours ago",
+  urgent: true,
+  description: `We are looking for a reliable and personable Sales Assistant to help manage our food stall at Yaba main market. Amaka Foods is one of the most popular food vendors in Yaba, serving hundreds of customers daily with fresh Nigerian meals.
 
-  if (!job || !trader) {
-    return (
-      <AppShell role="trader">
-        <div className="p-6 md:p-8 max-w-4xl mx-auto">
-          <p className="text-navy text-lg">Job not found</p>
-        </div>
-      </AppShell>
-    );
-  }
+You will work directly alongside our team, assist customers with their orders, handle cash and POS payments, and help maintain the stall throughout the day. This is a great opportunity to earn good pay while building your work history on Trace.`,
+  responsibilities: [
+    "Greet customers and take food orders accurately",
+    "Handle cash, POS, and Trace payment link transactions",
+    "Help pack and serve food promptly",
+    "Maintain cleanliness of the stall throughout the shift",
+    "Report sales totals at the end of each day",
+    "Assist with restocking and inventory when required",
+  ],
+  requirements: [
+    "Must be reliable and punctual — shift starts at 7:30am",
+    "Good communication skills in English and/or Yoruba",
+    "Basic numeracy for handling cash",
+    "TraceScore of 500 or above preferred",
+    "Verifiable ID (NIN or student ID)",
+  ],
+  bring: ["Personal protective clothing or apron", "Phone for Trace work app", "Willingness to work in an outdoor market environment"],
+};
+
+const similarJobs = [
+  { id: "4", title: "Cashier", company: "Buka Hub", pay: "₦5,500/day", tag: "Open", tagColor: "#16a34a", tagBg: "#dcfce7" },
+  { id: "9", title: "Kitchen Assistant", company: "Eko Buka", pay: "₦5,000/day", tag: "Open", tagColor: "#16a34a", tagBg: "#dcfce7" },
+  { id: "5", title: "Event Caterer", company: "Mama Cooks", pay: "₦15,000/event", tag: "Open", tagColor: "#16a34a", tagBg: "#dcfce7" },
+];
+
+export default function JobDetailPage() {
+  const [applied, setApplied] = useState(false);
+  const [coverNote, setCoverNote] = useState("");
+  const [available, setAvailable] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
+  const handleApply = (e: React.FormEvent) => {
+    e.preventDefault();
+    setApplied(true);
+    setShowForm(false);
+  };
 
   return (
-    <AppShell role="trader">
-      <div className="p-6 md:p-8 max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-navy mb-2">{job.title}</h1>
-              <p className="text-lg text-text-secondary">{job.traderName}</p>
-            </div>
-            <StatusBadge status={job.status} />
-          </div>
+    <AppShell role="user">
+      <div className="p-6 max-w-6xl mx-auto">
+        {/* Back */}
+        <div className="mb-6">
+          <Link href="/marketplace" className="inline-flex items-center gap-2 text-sm font-medium text-[#5a4136] hover:text-[#261812] transition-colors">
+            <ArrowBack style={{ fontSize: 18 }} />
+            Back to Marketplace
+          </Link>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div>
-              <p className="text-xs text-text-secondary mb-1">Location</p>
-              <div className="flex items-center gap-2 text-navy font-semibold">
-                <LocationOn sx={{ fontSize: "18px" }} />
-                {job.location}
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Main content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Header card */}
+            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <div className="flex items-start justify-between gap-4 mb-5">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#7c3aed", fontFamily: "Epilogue, sans-serif" }}>
+                    {job.company[0]}
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.title}</h1>
+                    <p className="text-[#5a4136] mt-1">{job.company}</p>
+                    <div className="flex items-center gap-4 mt-2 flex-wrap">
+                      <span className="flex items-center gap-1 text-xs text-[#8e7164]"><LocationOn style={{ fontSize: 14 }} />{job.location}</span>
+                      <span className="flex items-center gap-1 text-xs text-[#8e7164]"><AccessTime style={{ fontSize: 14 }} />Posted {job.posted}</span>
+                      <span className="flex items-center gap-1 text-xs text-[#8e7164]"><People style={{ fontSize: 14 }} />{job.applicants} applicants</span>
+                    </div>
+                  </div>
+                </div>
+                {job.urgent && (
+                  <span className="text-xs font-semibold px-3 py-1.5 rounded-full flex-none" style={{ backgroundColor: "#fee2e2", color: "#dc2626" }}>🔴 Urgent</span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-3 mb-5">
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                  <p className="text-xs text-[#8e7164]">Pay</p>
+                  <p className="text-xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.pay}</p>
+                  <p className="text-xs text-[#8e7164]">per {job.period}</p>
+                </div>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                  <p className="text-xs text-[#8e7164]">Duration</p>
+                  <p className="text-xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job.duration}</p>
+                  <p className="text-xs text-[#8e7164]">{job.type}</p>
+                </div>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                  <p className="text-xs text-[#8e7164]">Min Score</p>
+                  <p className="text-xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: "#ff6b00" }}>{job.minScore}</p>
+                  <p className="text-xs text-[#8e7164]">TraceScore</p>
+                </div>
+                <div className="text-center p-3 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                  <p className="text-xs text-[#8e7164]">Location</p>
+                  <p className="text-base font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Yaba</p>
+                  <p className="text-xs text-[#8e7164]">Main market</p>
+                </div>
               </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary mb-1">Duration</p>
-              <div className="flex items-center gap-2 text-navy font-semibold">
-                <AccessTime sx={{ fontSize: "18px" }} />
-                {job.duration}
+
+            {/* Description */}
+            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About this Job</h2>
+              <p className="text-sm text-[#5a4136] leading-relaxed whitespace-pre-line">{job.description}</p>
+            </div>
+
+            {/* Responsibilities */}
+            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>What You&#39;ll Do</h2>
+              <ul className="space-y-2.5">
+                {job.responsibilities.map((r, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-[#5a4136]">
+                    <CheckCircle style={{ fontSize: 18, color: "#7c3aed", marginTop: 1 }} />
+                    {r}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Requirements */}
+            <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-lg font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Requirements</h2>
+              <ul className="space-y-2.5">
+                {job.requirements.map((r, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-[#5a4136]">
+                    <span className="w-1.5 h-1.5 rounded-full mt-2 flex-none" style={{ backgroundColor: "#ff6b00" }} />
+                    {r}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+                <p className="text-xs font-semibold text-[#5a4136] mb-2">What to bring</p>
+                <ul className="space-y-1">
+                  {job.bring.map((b, i) => (
+                    <li key={i} className="text-xs text-[#5a4136]">· {b}</li>
+                  ))}
+                </ul>
               </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary mb-1">Pay</p>
-              <p className="text-2xl font-bold text-navy">{formatNaira(job.pay)}</p>
+
+            {/* Apply form */}
+            {!applied ? (
+              !showForm ? (
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="w-full py-4 rounded-2xl text-base font-semibold text-white transition-all hover:opacity-90 shadow-lg"
+                  style={{ backgroundColor: "#7c3aed" }}
+                >
+                  Apply for this Job
+                </button>
+              ) : (
+                <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+                  <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Your Application</h2>
+                  <form onSubmit={handleApply} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Cover Note <span className="text-[#8e7164] font-normal">(optional)</span></label>
+                      <textarea
+                        value={coverNote} onChange={(e) => setCoverNote(e.target.value)} rows={4}
+                        placeholder="Tell the employer why you&#39;re a great fit for this role..."
+                        className="w-full px-3 py-3 text-sm rounded-xl border outline-none resize-none"
+                        style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                      />
+                    </div>
+                    <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                      <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)}
+                        className="w-4 h-4 rounded" style={{ accentColor: "#7c3aed" }} />
+                      <span className="text-sm text-[#5a4136]">I confirm I am available for the full duration of this job</span>
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button type="button" onClick={() => setShowForm(false)}
+                        className="py-3 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]"
+                        style={{ borderColor: "#e2bfb0" }}>
+                        Cancel
+                      </button>
+                      <button type="submit" disabled={!available}
+                        className="py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                        style={{ backgroundColor: "#7c3aed" }}>
+                        Submit Application
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )
+            ) : (
+              <div className="bg-white rounded-2xl p-8 text-center" style={{ border: "1px solid #e2bfb0" }}>
+                <CheckCircle style={{ fontSize: 48, color: "#16a34a" }} />
+                <h2 className="text-xl font-bold text-[#261812] mt-3" style={{ fontFamily: "Epilogue, sans-serif" }}>Application Submitted!</h2>
+                <p className="text-sm text-[#5a4136] mt-2">Amaka Foods will review your profile and contact you if selected.</p>
+                <Link href="/jobs" className="mt-5 inline-block px-6 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#7c3aed" }}>
+                  View My Applications
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-5">
+            {/* Company card */}
+            <div className="bg-white rounded-2xl p-5" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About {job.company}</h2>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#7c3aed" }}>
+                  {job.company[0]}
+                </div>
+                <div>
+                  <p className="font-semibold text-[#261812] text-sm">{job.company}</p>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <Star style={{ fontSize: 14, color: "#d97706" }} />
+                    <span className="text-xs font-semibold text-[#261812]">{job.companyRating}</span>
+                    <span className="text-xs text-[#8e7164]">employer rating</span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-[#8e7164]">Jobs posted</span>
+                  <span className="font-semibold text-[#261812]">{job.companyJobs}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#8e7164]">Workers hired</span>
+                  <span className="font-semibold text-[#261812]">{job.companyWorkers}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#8e7164]">Payout rate</span>
+                  <span className="font-semibold" style={{ color: "#16a34a" }}>100%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#8e7164]">Location</span>
+                  <span className="font-semibold text-[#261812]">Yaba, Lagos</span>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-text-secondary mb-1">Category</p>
-              <p className="text-navy font-semibold">{job.category}</p>
+
+            {/* Your score */}
+            <div className="bg-white rounded-2xl p-5" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <p className="text-xs font-semibold text-[#8e7164] mb-2">Your TraceScore</p>
+              <div className="flex items-center justify-between">
+                <p className="text-3xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: "#ff6b00" }}>742</p>
+                <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Exceeds min.</span>
+              </div>
+              <p className="text-xs text-[#8e7164] mt-1">Minimum required: {job.minScore}</p>
+              <div className="mt-2 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+                <div className="h-full rounded-full" style={{ width: "82%", backgroundColor: "#ff6b00" }} />
+              </div>
+            </div>
+
+            {/* Similar jobs */}
+            <div className="bg-white rounded-2xl p-5" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+              <h2 className="text-base font-bold text-[#261812] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Similar Jobs</h2>
+              <div className="space-y-3">
+                {similarJobs.map((j) => (
+                  <Link key={j.id} href={`/marketplace/${j.id}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-[#fff8f6] transition-colors" style={{ border: "1px solid #e2bfb0" }}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#7c3aed" }}>
+                        <Work style={{ fontSize: 16 }} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-[#261812]">{j.title}</p>
+                        <p className="text-xs text-[#8e7164]">{j.company}</p>
+                      </div>
+                    </div>
+                    <span className="text-xs font-bold text-[#261812]">{j.pay}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Job Description */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-navy mb-3">About This Job</h2>
-          <p className="text-text-secondary mb-6 leading-relaxed">{job.description}</p>
-
-          <h3 className="text-lg font-semibold text-navy mb-3">What We&apos;re Looking For</h3>
-          <ul className="list-disc list-inside space-y-2 text-text-secondary">
-            <li>Reliable and punctual</li>
-            <li>Strong attention to detail</li>
-            <li>Friendly and professional attitude</li>
-            <li>Previous relevant experience preferred</li>
-          </ul>
-        </div>
-
-        {/* Business Info */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
-            <Business sx={{ fontSize: "20px" }} />
-            About the Business
-          </h2>
-
-          <div className="flex items-start gap-4">
-            <img
-              src={trader.image}
-              alt={trader.name}
-              className="w-16 h-16 rounded-lg object-cover"
-            />
-            <div className="flex-1">
-              <h3 className="font-semibold text-navy text-lg">{trader.name}</h3>
-              <p className="text-sm text-text-secondary mb-2">{trader.category}</p>
-              <p className="text-sm text-text-secondary">{trader.location}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Action */}
-        <div className="flex gap-4">
-          <Button
-            size="lg"
-            className="flex-1 text-white"
-            style={{ backgroundColor: COLORS.primary }}
-          >
-            Apply Now
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="flex-1"
-          >
-            Save Job
-          </Button>
         </div>
       </div>
     </AppShell>

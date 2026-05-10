@@ -1,69 +1,70 @@
 "use client";
 
 import { Notifications, Search, KeyboardArrowDown } from "@mui/icons-material";
-import { COLORS } from "@/lib/constants";
 
 interface AppHeaderProps {
-  role?: "trader" | "worker" | "lender" | "admin";
+  role?: "user" | "lender";
+  title?: string;
 }
 
-export function AppHeader({ role = "trader" }: AppHeaderProps) {
-  const getUser = () => {
-    switch (role) {
-      case "trader": return { name: "Amaka Okonkwo", business: "Amaka Foods", avatar: "AO", color: COLORS.role.trader };
-      case "lender": return { name: "Zenith Capital", business: "Partner Institution", avatar: "ZC", color: COLORS.role.lender };
-      case "admin": return { name: "Admin", business: "Trace Platform", avatar: "AD", color: COLORS.role.admin };
-      case "worker": return { name: "Tobi Ade", business: "UNILAG · Worker", avatar: "TA", color: COLORS.role.worker };
-      default: return { name: "User", business: "Trace", avatar: "U", color: COLORS.primary };
-    }
-  };
-
-  const user = getUser();
+export function AppHeader({ role = "user", title }: AppHeaderProps) {
+  const user =
+    role === "lender"
+      ? { name: "Zenith Capital", sub: "Partner Institution", initials: "ZC", color: "#2563eb" }
+      : { name: "Amaka Okonkwo", sub: "Business Account", initials: "AO", color: "#ff6b00" };
 
   return (
     <header
-      className="h-16 flex items-center justify-between px-6 gap-4"
-      style={{ backgroundColor: "#0A0A0F", borderBottom: "1px solid #1C1C2E" }}
+      className="h-16 flex items-center justify-between px-6 gap-4 border-b shrink-0"
+      style={{ backgroundColor: "#ffffff", borderColor: "#e2bfb0" }}
     >
-      {/* Search */}
-      <div className="flex items-center gap-3 flex-1 max-w-sm">
-        <div
-          className="flex items-center gap-3 flex-1 rounded-xl px-4 py-2.5"
-          style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}
-        >
-          <Search sx={{ fontSize: "18px", color: "#5C5A78" }} />
-          <span className="text-sm text-[#3A3A58]">Search anything...</span>
-        </div>
+      {/* Left: title or search */}
+      <div className="flex items-center gap-4 flex-1">
+        {title ? (
+          <h1 className="text-xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>
+            {title}
+          </h1>
+        ) : (
+          <div
+            className="flex items-center gap-3 max-w-sm flex-1 rounded-xl px-4 py-2"
+            style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}
+          >
+            <Search sx={{ fontSize: "18px", color: "#8e7164" }} />
+            <span className="text-sm text-[#8e7164]">Search...</span>
+          </div>
+        )}
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-3">
-        {/* Notif */}
+      <div className="flex items-center gap-2">
         <button
-          className="relative p-2.5 rounded-xl transition-colors hover:bg-[#141420]"
-          style={{ border: "1px solid #2A2A40" }}
-          title="Notifications"
+          className="relative p-2.5 rounded-xl transition-colors hover:bg-[#fff1eb]"
+          style={{ border: "1px solid #e2bfb0" }}
         >
-          <Notifications sx={{ fontSize: "20px", color: "#9B99B5" }} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full border border-[#0A0A0F]" style={{ backgroundColor: COLORS.primary }} />
+          <Notifications sx={{ fontSize: "20px", color: "#5a4136" }} />
+          <span
+            className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full border-2 border-white"
+            style={{ backgroundColor: "#ff6b00" }}
+          />
         </button>
 
-        {/* Profile */}
         <button
-          className="flex items-center gap-3 px-3 py-2 rounded-xl transition-colors hover:bg-[#141420]"
-          style={{ border: "1px solid #2A2A40" }}
+          className="flex items-center gap-2.5 px-3 py-2 rounded-xl transition-colors hover:bg-[#fff1eb]"
+          style={{ border: "1px solid #e2bfb0" }}
         >
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-black"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
             style={{ backgroundColor: user.color }}
           >
-            {user.avatar}
+            {user.initials}
           </div>
           <div className="text-left hidden sm:block">
-            <p className="text-sm font-bold text-[#F0EFE8] leading-none">{user.name}</p>
-            <p className="text-xs text-[#5C5A78] mt-0.5">{user.business}</p>
+            <p className="text-sm font-semibold text-[#261812] leading-none" style={{ fontFamily: "Epilogue, sans-serif" }}>
+              {user.name}
+            </p>
+            <p className="text-xs text-[#8e7164] mt-0.5">{user.sub}</p>
           </div>
-          <KeyboardArrowDown sx={{ fontSize: "18px", color: "#5C5A78" }} />
+          <KeyboardArrowDown sx={{ fontSize: "18px", color: "#8e7164" }} />
         </button>
       </div>
     </header>

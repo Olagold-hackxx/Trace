@@ -4,231 +4,277 @@ import { AppShell } from "@/components/layout/app-shell";
 import { useState } from "react";
 import {
   Business,
+  Lock,
   Notifications,
-  Security,
   AccountBalance,
-  Edit,
+  Save,
+  Visibility,
+  VisibilityOff,
   CheckCircle,
 } from "@mui/icons-material";
 
-export default function LenderSettingsPage() {
-  const [saved, setSaved] = useState<string | null>(null);
+const tabs = ["Institution", "Underwriting Rules", "Notifications", "API Access"];
 
-  const handleSave = (section: string) => {
-    setSaved(section);
-    setTimeout(() => setSaved(null), 2000);
+export default function LenderSettingsPage() {
+  const [activeTab, setActiveTab] = useState("Institution");
+  const [showKey, setShowKey] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const [settings, setSettings] = useState({
+    institutionName: "Zenith Capital Finance",
+    contactEmail: "loans@zenithcapital.ng",
+    phone: "+234 1 234 5678",
+    address: "14 Marina Street, Lagos Island",
+    rcNumber: "RC-0012834",
+    minScore: "600",
+    maxAmount: "5000000",
+    defaultRate: "18",
+    maxTenor: "24",
+    riskTolerance: "medium",
+    emailAlerts: true,
+    newApplications: true,
+    repaymentDue: true,
+    weeklyReport: true,
+  });
+
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
   };
 
-  const inputClass = "w-full rounded-xl py-3 px-4 text-sm text-[#F0EFE8] outline-none placeholder:text-[#3A3A58]";
-  const inputStyle = { backgroundColor: "#0F0F1A", border: "1.5px solid #2A2A40" };
-
   return (
-    <AppShell role="lender">
-      <div className="min-h-screen p-6 md:p-8 space-y-8" style={{ backgroundColor: "#0A0A0F" }}>
-        {/* Header */}
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5C5A78] mb-2">Account</p>
-          <h1 className="text-3xl font-black text-[#F0EFE8]">Settings</h1>
-          <p className="text-[#5C5A78] mt-1">Manage your institution profile and preferences.</p>
-        </div>
-
-        {/* Profile preview card */}
-        <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-          <div className="h-24" style={{ background: "linear-gradient(135deg, #1C1020 0%, #0F1A1C 100%)" }} />
-          <div className="px-8 pb-8">
-            <div className="flex items-end justify-between -mt-10 mb-6">
-              <div className="flex items-end gap-5">
-                <div
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-black text-white border-4"
-                  style={{ backgroundColor: "#FF6B35", borderColor: "#0A0A0F" }}
-                >
-                  Z
-                </div>
-                <div className="pb-1">
-                  <p className="text-xl font-black text-[#F0EFE8]">Zenith Capital</p>
-                  <p className="text-sm text-[#5C5A78]">Financial Institution · Lagos, Nigeria</p>
-                </div>
-              </div>
-              <button
-                className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-[#9B99B5] hover:text-[#F0EFE8] transition-all"
-                style={{ border: "1px solid #2A2A40" }}
-              >
-                <Edit sx={{ fontSize: "16px" }} />
-                Edit Profile
-              </button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { label: "Approval Rate", value: "90%", color: "#22C55E" },
-                { label: "Total Approved", value: "18", color: "#F5A623" },
-                { label: "Capital Deployed", value: "₦9.2M", color: "#FF6B35" },
-              ].map((s) => (
-                <div key={s.label} className="rounded-2xl p-4 text-center" style={{ backgroundColor: "#0F0F1A", border: "1px solid #2A2A40" }}>
-                  <p className="text-xl font-black mb-1" style={{ color: s.color }}>{s.value}</p>
-                  <p className="text-xs text-[#5C5A78]">{s.label}</p>
-                </div>
-              ))}
-            </div>
+    <AppShell role="lender" title="Settings">
+      <div className="p-6 max-w-5xl mx-auto">
+        {saved && (
+          <div className="mb-4 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: "#dcfce7", border: "1px solid #bbf7d0" }}>
+            <CheckCircle style={{ fontSize: 20, color: "#16a34a" }} />
+            <p className="text-sm font-semibold text-[#16a34a]">Settings saved successfully.</p>
           </div>
+        )}
+
+        {/* Tabs */}
+        <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+          {tabs.map((t) => (
+            <button
+              key={t}
+              onClick={() => setActiveTab(t)}
+              className="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all"
+              style={
+                activeTab === t
+                  ? { backgroundColor: "#2563eb", color: "#fff" }
+                  : { color: "#5a4136" }
+              }
+            >
+              {t}
+            </button>
+          ))}
         </div>
 
-        {/* Settings sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          {/* Institution profile */}
-          <div className="rounded-3xl p-6" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+        {/* Institution Tab */}
+        {activeTab === "Institution" && (
+          <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-xl" style={{ backgroundColor: "#FF6B3520" }}>
-                <Business sx={{ fontSize: "20px", color: "#FF6B35" }} />
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
+                <Business style={{ fontSize: 20, color: "#2563eb" }} />
               </div>
-              <h2 className="text-lg font-black text-[#F0EFE8]">Institution Profile</h2>
+              <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Institution Details</h2>
             </div>
-            <div className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-5">
               {[
-                { label: "Institution Name", placeholder: "Zenith Capital", defaultValue: "Zenith Capital" },
-                { label: "Registration Number", placeholder: "RC-XXXXXXX", defaultValue: "RC-2019847" },
-                { label: "Contact Email", placeholder: "contact@zenith.com", defaultValue: "contact@zenith.com" },
-                { label: "Phone Number", placeholder: "+234 800 000 0000", defaultValue: "+234 803 456 7890" },
-              ].map((f) => (
-                <div key={f.label}>
-                  <label className="block text-xs font-bold text-[#9B99B5] mb-1.5 uppercase tracking-wider">{f.label}</label>
+                { label: "Institution Name", key: "institutionName", type: "text" },
+                { label: "Contact Email", key: "contactEmail", type: "email" },
+                { label: "Phone Number", key: "phone", type: "text" },
+                { label: "RC Number", key: "rcNumber", type: "text" },
+                { label: "Business Address", key: "address", type: "text" },
+              ].map(({ label, key, type }) => (
+                <div key={key}>
+                  <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">{label}</label>
                   <input
-                    type="text"
-                    placeholder={f.placeholder}
-                    defaultValue={f.defaultValue}
-                    className={inputClass}
-                    style={inputStyle}
+                    type={type}
+                    value={(settings as Record<string, string>)[key]}
+                    onChange={(e) => setSettings({ ...settings, [key]: e.target.value })}
+                    className="w-full px-3 py-2.5 text-sm rounded-xl border outline-none"
+                    style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
                   />
                 </div>
               ))}
-              <button
-                onClick={() => handleSave("profile")}
-                className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-black text-white transition-all hover:-translate-y-0.5 mt-2"
-                style={{ backgroundColor: "#FF6B35" }}
-              >
-                {saved === "profile" ? <CheckCircle sx={{ fontSize: "18px" }} /> : null}
-                {saved === "profile" ? "Saved!" : "Save Changes"}
-              </button>
             </div>
-          </div>
-
-          {/* Lending preferences */}
-          <div className="rounded-3xl p-6" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-xl" style={{ backgroundColor: "#F5A62320" }}>
-                <AccountBalance sx={{ fontSize: "20px", color: "#F5A623" }} />
+            <div className="mt-6 pt-6 border-t" style={{ borderColor: "#e2bfb0" }}>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-[#261812] text-sm">Settlement Account</h3>
+                <button className="text-sm font-semibold" style={{ color: "#2563eb" }}>Add account</button>
               </div>
-              <h2 className="text-lg font-black text-[#F0EFE8]">Lending Preferences</h2>
-            </div>
-            <div className="space-y-4">
-              {[
-                { label: "Min TraceScore", placeholder: "700", defaultValue: "700" },
-                { label: "Max Loan Amount (₦)", placeholder: "1,000,000", defaultValue: "1,000,000" },
-                { label: "Interest Rate (APR %)", placeholder: "18", defaultValue: "18" },
-                { label: "Max Repayment Months", placeholder: "12", defaultValue: "12" },
-              ].map((f) => (
-                <div key={f.label}>
-                  <label className="block text-xs font-bold text-[#9B99B5] mb-1.5 uppercase tracking-wider">{f.label}</label>
-                  <input
-                    type="text"
-                    placeholder={f.placeholder}
-                    defaultValue={f.defaultValue}
-                    className={inputClass}
-                    style={inputStyle}
-                  />
-                </div>
-              ))}
-              <button
-                onClick={() => handleSave("lending")}
-                className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-black text-white transition-all hover:-translate-y-0.5 mt-2"
-                style={{ backgroundColor: "#FF6B35" }}
-              >
-                {saved === "lending" ? <CheckCircle sx={{ fontSize: "18px" }} /> : null}
-                {saved === "lending" ? "Saved!" : "Save Preferences"}
-              </button>
-            </div>
-          </div>
-
-          {/* Notifications */}
-          <div className="rounded-3xl p-6" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-xl" style={{ backgroundColor: "#A855F720" }}>
-                <Notifications sx={{ fontSize: "20px", color: "#A855F7" }} />
-              </div>
-              <h2 className="text-lg font-black text-[#F0EFE8]">Notifications</h2>
-            </div>
-            <div className="space-y-4">
-              {[
-                { label: "New application submitted", on: true },
-                { label: "TraceScore updates for watchlist", on: true },
-                { label: "Repayment reminders", on: false },
-                { label: "Weekly portfolio summary", on: true },
-                { label: "Platform announcements", on: false },
-              ].map((item) => {
-                const [on, setOn] = useState(item.on);
-                return (
-                  <div key={item.label} className="flex items-center justify-between py-2" style={{ borderBottom: "1px solid #1C1C2E" }}>
-                    <span className="text-sm text-[#9B99B5]">{item.label}</span>
-                    <button
-                      onClick={() => setOn(!on)}
-                      className="w-11 h-6 rounded-full transition-all duration-300 relative flex-none"
-                      style={{ backgroundColor: on ? "#FF6B35" : "#2A2A40" }}
-                    >
-                      <span
-                        className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all duration-300"
-                        style={{ left: on ? "22px" : "2px" }}
-                      />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Security */}
-          <div className="rounded-3xl p-6" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-xl" style={{ backgroundColor: "#22C55E20" }}>
-                <Security sx={{ fontSize: "20px", color: "#22C55E" }} />
-              </div>
-              <h2 className="text-lg font-black text-[#F0EFE8]">Security</h2>
-            </div>
-            <div className="space-y-4">
-              {[
-                { label: "Current Password", placeholder: "••••••••", type: "password" },
-                { label: "New Password", placeholder: "••••••••", type: "password" },
-                { label: "Confirm New Password", placeholder: "••••••••", type: "password" },
-              ].map((f) => (
-                <div key={f.label}>
-                  <label className="block text-xs font-bold text-[#9B99B5] mb-1.5 uppercase tracking-wider">{f.label}</label>
-                  <input type={f.type} placeholder={f.placeholder} className={inputClass} style={inputStyle} />
-                </div>
-              ))}
-
-              {/* 2FA toggle */}
-              <div
-                className="flex items-center justify-between rounded-2xl p-4"
-                style={{ backgroundColor: "#0F0F1A", border: "1px solid #2A2A40" }}
-              >
+              <div className="p-4 rounded-xl flex items-center gap-4" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                <AccountBalance style={{ fontSize: 24, color: "#2563eb" }} />
                 <div>
-                  <p className="text-sm font-bold text-[#F0EFE8]">Two-Factor Authentication</p>
-                  <p className="text-xs text-[#5C5A78] mt-0.5">Add extra security to your account</p>
+                  <p className="text-sm font-semibold text-[#261812]">Zenith Bank — 1234567890</p>
+                  <p className="text-xs text-[#8e7164]">Primary disbursement & repayment account</p>
                 </div>
-                <span className="text-xs font-black px-3 py-1.5 rounded-full" style={{ backgroundColor: "#22C55E20", color: "#22C55E" }}>Enabled</span>
+                <span className="ml-auto text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Verified</span>
               </div>
+            </div>
+            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#2563eb" }}>
+              <Save style={{ fontSize: 18 }} />Save Changes
+            </button>
+          </div>
+        )}
 
-              <button
-                onClick={() => handleSave("security")}
-                className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-black text-white transition-all hover:-translate-y-0.5"
-                style={{ backgroundColor: "#FF6B35" }}
-              >
-                {saved === "security" ? <CheckCircle sx={{ fontSize: "18px" }} /> : null}
-                {saved === "security" ? "Saved!" : "Update Password"}
-              </button>
+        {/* Underwriting Rules Tab */}
+        {activeTab === "Underwriting Rules" && (
+          <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
+                <AccountBalance style={{ fontSize: 20, color: "#2563eb" }} />
+              </div>
+              <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Underwriting Rules</h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-5">
+              {[
+                { label: "Minimum TraceScore", key: "minScore", suffix: "/ 900" },
+                { label: "Maximum Loan Amount (₦)", key: "maxAmount", suffix: "" },
+                { label: "Default Interest Rate (%)", key: "defaultRate", suffix: "% p.a." },
+                { label: "Maximum Tenor (months)", key: "maxTenor", suffix: "months" },
+              ].map(({ label, key, suffix }) => (
+                <div key={key}>
+                  <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">{label}</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      value={(settings as Record<string, string>)[key]}
+                      onChange={(e) => setSettings({ ...settings, [key]: e.target.value })}
+                      className="flex-1 px-3 py-2.5 text-sm rounded-xl border outline-none"
+                      style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                    />
+                    {suffix && <span className="text-sm text-[#8e7164] whitespace-nowrap">{suffix}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5">
+              <label className="block text-xs font-semibold text-[#5a4136] mb-2">Risk Tolerance</label>
+              <div className="grid grid-cols-3 gap-3">
+                {["low", "medium", "high"].map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setSettings({ ...settings, riskTolerance: r })}
+                    className="py-3 rounded-xl text-sm font-semibold capitalize border transition-all"
+                    style={
+                      settings.riskTolerance === r
+                        ? { backgroundColor: "#2563eb", color: "#fff", borderColor: "#2563eb" }
+                        : { backgroundColor: "#fff8f6", color: "#5a4136", borderColor: "#e2bfb0" }
+                    }
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mt-5 p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+              <p className="text-xs font-semibold text-[#5a4136] mb-2">Auto-approval Threshold</p>
+              <p className="text-sm text-[#8e7164]">Applications with TraceScore ≥ 750 and amount ≤ ₦500,000 will be auto-approved.</p>
+              <label className="flex items-center gap-3 mt-3 cursor-pointer">
+                <div className="relative w-10 h-5 rounded-full transition-all" style={{ backgroundColor: "#2563eb" }}>
+                  <div className="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-white" />
+                </div>
+                <span className="text-sm font-medium text-[#261812]">Auto-approve enabled</span>
+              </label>
+            </div>
+            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#2563eb" }}>
+              <Save style={{ fontSize: 18 }} />Save Rules
+            </button>
+          </div>
+        )}
+
+        {/* Notifications Tab */}
+        {activeTab === "Notifications" && (
+          <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
+                <Notifications style={{ fontSize: 20, color: "#2563eb" }} />
+              </div>
+              <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Notification Preferences</h2>
+            </div>
+            <div className="space-y-4">
+              {[
+                { key: "emailAlerts", label: "Email Alerts", desc: "Receive all alerts via email" },
+                { key: "newApplications", label: "New Loan Applications", desc: "Notify when a merchant submits a new application" },
+                { key: "repaymentDue", label: "Repayment Due Reminders", desc: "3-day and 1-day reminders before repayment date" },
+                { key: "weeklyReport", label: "Weekly Portfolio Report", desc: "Portfolio summary every Monday morning" },
+              ].map(({ key, label, desc }) => (
+                <div key={key} className="flex items-center justify-between p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                  <div>
+                    <p className="text-sm font-semibold text-[#261812]">{label}</p>
+                    <p className="text-xs text-[#8e7164] mt-0.5">{desc}</p>
+                  </div>
+                  <button
+                    onClick={() => setSettings({ ...settings, [key]: !(settings as Record<string, boolean>)[key] })}
+                    className="relative w-11 h-6 rounded-full transition-all"
+                    style={{ backgroundColor: (settings as Record<string, boolean>)[key] ? "#2563eb" : "#e2bfb0" }}
+                  >
+                    <div
+                      className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all"
+                      style={{ left: (settings as Record<string, boolean>)[key] ? "calc(100% - 22px)" : "2px" }}
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#2563eb" }}>
+              <Save style={{ fontSize: 18 }} />Save Preferences
+            </button>
+          </div>
+        )}
+
+        {/* API Access Tab */}
+        {activeTab === "API Access" && (
+          <div className="bg-white rounded-2xl p-6" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 rounded-xl" style={{ backgroundColor: "#dae2fd" }}>
+                <Lock style={{ fontSize: 20, color: "#2563eb" }} />
+              </div>
+              <h2 className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>API Access</h2>
+            </div>
+            <p className="text-sm text-[#5a4136] mb-6">Use our API to integrate TraceScore directly into your loan origination system.</p>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">API Key</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type={showKey ? "text" : "password"}
+                    value="trc_live_zenith_k92mxpq4n8rlzjew"
+                    readOnly
+                    className="flex-1 px-3 py-2.5 text-sm rounded-xl border font-mono outline-none"
+                    style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }}
+                  />
+                  <button onClick={() => setShowKey(!showKey)} className="p-2.5 rounded-xl border transition-all hover:bg-[#fff1eb]" style={{ borderColor: "#e2bfb0" }}>
+                    {showKey ? <VisibilityOff style={{ fontSize: 18, color: "#5a4136" }} /> : <Visibility style={{ fontSize: 18, color: "#5a4136" }} />}
+                  </button>
+                </div>
+              </div>
+              <div className="p-4 rounded-xl" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                <p className="text-xs font-semibold text-[#5a4136] mb-3">API Endpoints</p>
+                <div className="space-y-2 font-mono text-xs text-[#261812]">
+                  <p>GET /v1/tracescore/{"{merchant_id}"}</p>
+                  <p>GET /v1/merchants/{"{merchant_id}"}/profile</p>
+                  <p>POST /v1/loans/decision</p>
+                  <p>GET /v1/loans/{"{loan_id}"}/repayments</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: "API Calls (30d)", val: "4,291" },
+                  { label: "Avg Response", val: "120ms" },
+                  { label: "Error Rate", val: "0.02%" },
+                ].map((s) => (
+                  <div key={s.label} className="p-3 rounded-xl text-center" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+                    <p className="text-lg font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>{s.val}</p>
+                    <p className="text-xs text-[#8e7164] mt-0.5">{s.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </AppShell>
   );

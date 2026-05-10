@@ -1,27 +1,9 @@
 import type { Metadata } from 'next'
-import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Trace',
-  description: 'Trace helps small businesses hire nearby workers, collect payments, and unlock lender-ready growth.',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
+  title: { default: 'Trace', template: '%s | Trace' },
+  description: 'Trace — Financial infrastructure for informal African trade. Collect payments, build credit, hire workers, unlock capital.',
 }
 
 export default function RootLayout({
@@ -30,10 +12,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-white">
-      <body className="font-sans antialiased bg-white">
+    <html lang="en">
+      <body className="antialiased" style={{ backgroundColor: '#fff8f6' }}>
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

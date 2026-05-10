@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { COLORS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import {
   Dashboard,
@@ -10,193 +9,138 @@ import {
   TrendingUp,
   Work,
   Storefront,
-  BarChart,
-  Logout,
-  ChevronRight,
   Gavel,
   Settings,
-  People,
+  Logout,
+  AccountBalanceWallet,
+  Groups,
+  BarChart,
 } from "@mui/icons-material";
 
 interface SidebarProps {
-  role?: "trader" | "worker" | "lender" | "admin";
+  role?: "user" | "lender";
 }
 
-export function Sidebar({ role = "trader" }: SidebarProps) {
+const userNav = [
+  { label: "Dashboard", href: "/dashboard", icon: Dashboard },
+  { label: "Payments", href: "/payments", icon: Wallet },
+  { label: "TraceScore", href: "/tracescore", icon: TrendingUp },
+  { label: "Jobs & Hiring", href: "/jobs", icon: Work },
+  { label: "Marketplace", href: "/marketplace", icon: Storefront },
+];
+
+const lenderNav = [
+  { label: "Dashboard", href: "/lender", icon: Dashboard },
+  { label: "Loan Pipeline", href: "/lender/approvals", icon: AccountBalanceWallet },
+  { label: "Merchants", href: "/lender/traders", icon: Groups },
+  { label: "Analytics", href: "/lender/settings", icon: BarChart },
+  { label: "Settings", href: "/lender/settings", icon: Settings },
+];
+
+export function Sidebar({ role = "user" }: SidebarProps) {
   const pathname = usePathname();
-
-  // All roles use orange as the active/accent color — no blue
-  const accentColor = "#FF6B35";
-
-  const getMenuItems = () => {
-    switch (role) {
-      case "trader":
-        return [
-          { label: "Dashboard", href: "/dashboard", icon: Dashboard },
-          { label: "Payments", href: "/payments", icon: Wallet },
-          { label: "TraceScore", href: "/tracescore", icon: TrendingUp },
-          { label: "Jobs", href: "/jobs", icon: Work },
-        ];
-      case "lender":
-        return [
-          { label: "Dashboard", href: "/lender", icon: Dashboard },
-          { label: "Traders", href: "/lender/traders", icon: Storefront },
-          { label: "Approvals", href: "/lender/approvals", icon: Gavel },
-          { label: "Settings", href: "/lender/settings", icon: Settings },
-        ];
-      case "admin":
-        return [
-          { label: "Dashboard", href: "/admin", icon: Dashboard },
-          { label: "Analytics", href: "/admin", icon: BarChart },
-          { label: "Traders", href: "/admin", icon: Storefront },
-          { label: "Workers", href: "/admin", icon: People },
-        ];
-      case "worker":
-        return [
-          { label: "Dashboard", href: "/worker", icon: Dashboard },
-          { label: "Marketplace", href: "/marketplace", icon: Work },
-          { label: "Earnings", href: "/worker", icon: Wallet },
-          { label: "Settings", href: "/worker/settings", icon: Settings },
-        ];
-      default:
-        return [];
-    }
-  };
-
-  const getRoleLabel = () => {
-    switch (role) {
-      case "trader": return "Trader";
-      case "lender": return "Lender";
-      case "admin":  return "Admin";
-      case "worker": return "Worker";
-      default:       return "User";
-    }
-  };
-
-  const getUserName = () => {
-    switch (role) {
-      case "trader": return "Amaka Foods";
-      case "lender": return "Zenith Capital";
-      case "admin":  return "Admin";
-      case "worker": return "Tobi Ade";
-      default:       return "User";
-    }
-  };
-
-  const menuItems = getMenuItems();
+  const nav = role === "lender" ? lenderNav : userNav;
+  const userName = role === "lender" ? "Zenith Capital" : "Amaka Okonkwo";
+  const userSub = role === "lender" ? "Partner Institution" : "Business Account";
+  const userInitial = userName[0];
 
   return (
     <aside
-      className="w-64 hidden md:flex flex-col"
-      style={{ backgroundColor: "#0A0A0F", borderRight: "1px solid #1C1C2E" }}
+      className="flex flex-col w-64 shrink-0 h-full border-r"
+      style={{ backgroundColor: "#ffffff", borderColor: "#e2bfb0" }}
     >
       {/* Logo */}
-      <div className="px-6 py-6" style={{ borderBottom: "1px solid #1C1C2E" }}>
+      <div className="flex items-center gap-3 px-6 py-5 border-b" style={{ borderColor: "#e2bfb0" }}>
         <Link href="/" className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg"
-            style={{ backgroundColor: accentColor, boxShadow: `0 4px 16px ${accentColor}40` }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm"
+            style={{ backgroundColor: "#ff6b00", fontFamily: "Epilogue, sans-serif" }}
           >
             T
           </div>
-          <div>
-            <span className="font-black text-lg text-[#F0EFE8] tracking-tight">Trace</span>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E]" />
-              <span className="text-[10px] font-semibold text-[#5C5A78] uppercase tracking-widest">{getRoleLabel()}</span>
-            </div>
-          </div>
+          <span
+            className="text-xl font-bold tracking-tight"
+            style={{ fontFamily: "Epilogue, sans-serif", color: "#261812" }}
+          >
+            Trace
+          </span>
         </Link>
+        {role === "lender" && (
+          <span
+            className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"
+            style={{ backgroundColor: "#dae2fd", color: "#2563eb" }}
+          >
+            Lender
+          </span>
+        )}
       </div>
 
-      {/* User card */}
-      <div className="mx-4 mt-4 rounded-2xl p-4" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
+      {/* User block */}
+      <div className="mx-4 mt-4 p-3 rounded-xl border" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff1eb" }}>
         <div className="flex items-center gap-3">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-black flex-none"
-            style={{ backgroundColor: accentColor }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-none"
+            style={{ backgroundColor: role === "lender" ? "#2563eb" : "#ff6b00" }}
           >
-            {getUserName()[0]}
+            {userInitial}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-black text-[#F0EFE8] truncate">{getUserName()}</p>
-            <p className="text-xs text-[#5C5A78] truncate">{getRoleLabel()} Account</p>
+            <p className="text-sm font-semibold text-[#261812] truncate" style={{ fontFamily: "Epilogue, sans-serif" }}>
+              {userName}
+            </p>
+            <p className="text-xs text-[#8e7164] truncate">{userSub}</p>
           </div>
         </div>
       </div>
 
-      {/* Nav label */}
-      <div className="px-6 pt-6 pb-2">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#3A3A58]">Menu</p>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-3 space-y-1">
-        {menuItems.map((item) => {
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-[#8e7164]">Navigation</p>
+        {nav.map((item) => {
+          const Icon = item.icon;
           const isActive =
             pathname === item.href ||
-            (item.href !== "/lender" && pathname.startsWith(item.href + "/")) ||
-            (item.href === "/lender" && pathname === "/lender");
-          const Icon = item.icon;
+            (item.href.length > 1 && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href + item.label}
               href={item.href}
               className={cn(
-                "group flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 text-sm font-semibold",
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                 isActive
-                  ? "text-white"
-                  : "text-[#5C5A78] hover:text-[#F0EFE8] hover:bg-[#141420]"
+                  ? "text-white shadow-sm"
+                  : "text-[#5a4136] hover:bg-[#fff1eb] hover:text-[#261812]"
               )}
-              style={
-                isActive
-                  ? { backgroundColor: accentColor, boxShadow: `0 4px 20px ${accentColor}40` }
-                  : {}
-              }
+              style={isActive ? { backgroundColor: "#ff6b00" } : {}}
             >
-              <div className="flex items-center gap-3">
-                <Icon sx={{ fontSize: "20px" }} />
-                <span>{item.label}</span>
-              </div>
-              {isActive && <ChevronRight sx={{ fontSize: "16px", opacity: 0.7 }} />}
+              <Icon style={{ fontSize: 20 }} />
+              {item.label}
             </Link>
           );
         })}
       </nav>
 
+      {/* Score teaser (user only) */}
+      {role === "user" && (
+        <div className="mx-4 mb-3 p-4 rounded-xl border" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6" }}>
+          <p className="text-xs text-[#8e7164] mb-1">Your TraceScore</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-2xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: "#ff6b00" }}>742</p>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
+              Excellent
+            </span>
+          </div>
+          <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#fee3d8" }}>
+            <div className="h-full rounded-full" style={{ width: "74%", backgroundColor: "#ff6b00" }} />
+          </div>
+        </div>
+      )}
+
       {/* Bottom */}
-      <div className="p-4" style={{ borderTop: "1px solid #1C1C2E" }}>
-        {/* Score teaser for trader */}
-        {role === "trader" && (
-          <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-            <p className="text-xs text-[#5C5A78] mb-1">TraceScore</p>
-            <div className="flex items-center justify-between">
-              <p className="text-2xl font-black" style={{ color: "#F5A623" }}>742</p>
-              <span className="text-xs font-semibold text-[#22C55E] bg-[#22C55E]/10 px-2 py-1 rounded-full">Excellent</span>
-            </div>
-            <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#2A2A40" }}>
-              <div className="h-full rounded-full" style={{ width: "82%", background: "linear-gradient(90deg, #FF6B35, #F5A623)" }} />
-            </div>
-          </div>
-        )}
-
-        {/* Approval rate teaser for lender */}
-        {role === "lender" && (
-          <div className="rounded-2xl p-4 mb-3" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-            <p className="text-xs text-[#5C5A78] mb-1">Approval Rate</p>
-            <div className="flex items-center justify-between">
-              <p className="text-2xl font-black" style={{ color: "#F5A623" }}>90%</p>
-              <span className="text-xs font-semibold text-[#22C55E] bg-[#22C55E]/10 px-2 py-1 rounded-full">18 approved</span>
-            </div>
-            <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#2A2A40" }}>
-              <div className="h-full rounded-full" style={{ width: "90%", background: "linear-gradient(90deg, #FF6B35, #F5A623)" }} />
-            </div>
-          </div>
-        )}
-
-        <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-[#5C5A78] hover:text-[#F0EFE8] hover:bg-[#141420] transition-all text-sm font-semibold">
-          <Logout sx={{ fontSize: "20px" }} />
-          <span>Sign Out</span>
+      <div className="px-3 pb-4 border-t pt-4" style={{ borderColor: "#e2bfb0" }}>
+        <button className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium transition-all text-[#5a4136] hover:bg-[#fff1eb] hover:text-[#261812]">
+          <Logout style={{ fontSize: 20 }} />
+          Sign out
         </button>
       </div>
     </aside>

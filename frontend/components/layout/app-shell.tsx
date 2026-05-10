@@ -5,16 +5,17 @@ import { AppHeader } from "./app-header";
 
 interface AppShellProps {
   children: React.ReactNode;
-  role?: "trader" | "worker" | "lender" | "admin";
+  role?: "user" | "lender";
+  title?: string;
 }
 
-export function AppShell({ children, role = "trader" }: AppShellProps) {
+export function AppShell({ children, role = "user", title }: AppShellProps) {
   return (
-    <div className="flex h-screen" style={{ backgroundColor: "#0A0A0F" }}>
+    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#fff8f6" }}>
       <Sidebar role={role} />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <AppHeader role={role} />
-        <main className="flex-1 overflow-auto">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <AppHeader role={role} title={title} />
+        <main className="flex-1 overflow-y-auto" style={{ backgroundColor: "#fff8f6" }}>
           {children}
         </main>
       </div>

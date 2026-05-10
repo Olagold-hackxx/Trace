@@ -2,164 +2,181 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { COLORS, IMAGES } from "@/lib/constants";
-import { Mail, Lock, AccountCircle, Storefront, Phone, AccountBalance, ArrowForward } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import { CheckCircle, Visibility, VisibilityOff } from "@mui/icons-material";
+
+type AccountType = "user" | "lender";
 
 export default function RegisterPage() {
-  const [userType, setUserType] = useState<"trader" | "lender">("trader");
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", password: "", shopName: "" });
+  const router = useRouter();
+  const [accountType, setAccountType] = useState<AccountType>("user");
+  const [showPass, setShowPass] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [form, setForm] = useState({
+    fullName: "", email: "", phone: "", password: "", confirmPassword: "",
+    businessName: "", institutionName: "", rcNumber: "",
+  });
 
-  const handleSignup = (e: React.FormEvent) => {
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = userType === "trader" ? "/dashboard" : "/lender";
+    router.push(accountType === "lender" ? "/lender" : "/dashboard");
   };
 
-  const inputClass = "w-full rounded-xl py-3.5 pl-11 pr-4 text-sm text-[#F0EFE8] outline-none transition placeholder:text-[#3A3A58]";
-  const inputStyle = { backgroundColor: "#141420", border: "1.5px solid #2A2A40" };
+  const isLender = accountType === "lender";
+  const accentColor = isLender ? "#2563eb" : "#ff6b00";
+  const accentBg = isLender ? "#dae2fd" : "#fff1eb";
+
+  const inputCls = "w-full px-3 py-3 text-sm rounded-xl border outline-none transition-all focus:ring-2";
+  const inputStyle = { borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" };
 
   return (
-    <div className="min-h-screen flex" style={{ backgroundColor: "#0A0A0F" }}>
+    <div className="min-h-screen flex" style={{ backgroundColor: "#fff8f6" }}>
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <img src={IMAGES.marketplace} alt="Traders" className="w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(10,10,15,0.2) 0%, rgba(10,10,15,0.9) 100%)" }} />
-        <div className="absolute inset-0 flex flex-col justify-between p-12">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg" style={{ backgroundColor: COLORS.primary }}>T</div>
-            <span className="text-xl font-black text-white">Trace</span>
-          </Link>
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#FF6B35]/30 px-4 py-2 mb-6" style={{ backgroundColor: "rgba(255,107,53,0.1)" }}>
-              <span className="text-sm font-semibold text-[#F5A623]">Free to start. No bank required.</span>
-            </div>
-            <h2 className="text-4xl font-black text-white mb-5 leading-tight">
-              Turn your hustle into<br />verifiable history.
-            </h2>
-            <p className="text-[#9B99B5] text-lg leading-8 max-w-sm">
-              Join Trace — collect payments, build your TraceScore, and get capital when your business needs to grow.
-            </p>
-            <div className="mt-10 space-y-3">
-              {["No collateral needed", "Instant payment activation", "Hire students within 24hrs"].map((f) => (
-                <div key={f} className="flex items-center gap-3">
-                  <span className="text-[#22C55E] font-black">✓</span>
-                  <span className="text-sm text-[#9B99B5]">{f}</span>
+      <div className="hidden lg:flex flex-col justify-between w-2/5 p-12" style={{ backgroundColor: "#0f172a" }}>
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00", fontFamily: "Epilogue, sans-serif" }}>T</div>
+          <span className="text-xl font-bold text-white" style={{ fontFamily: "Epilogue, sans-serif" }}>Trace</span>
+        </Link>
+
+        <div>
+          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: "Epilogue, sans-serif", lineHeight: 1.2 }}>
+            Your financial identity starts here.
+          </h2>
+          <p className="text-slate-400 text-base mb-10 leading-relaxed">
+            Join thousands of Lagos merchants and lenders building the future of informal finance.
+          </p>
+          <div className="space-y-5">
+            {[
+              { icon: "💳", title: "Collect payments instantly", desc: "Share your link, get paid in minutes" },
+              { icon: "📊", title: "Build your TraceScore", desc: "Every transaction improves your financial identity" },
+              { icon: "💰", title: "Unlock capital", desc: "Pre-qualified offers from verified lenders" },
+            ].map((b) => (
+              <div key={b.title} className="flex items-start gap-4">
+                <span className="text-2xl">{b.icon}</span>
+                <div>
+                  <p className="text-sm font-semibold text-white">{b.title}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{b.desc}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          <p className="text-sm text-[#3A3A58]">© 2026 Trace Technologies Ltd.</p>
         </div>
+
+        <p className="text-xs text-slate-600">© 2026 Trace Financial Technology Ltd.</p>
       </div>
 
-      {/* Right form */}
-      <div className="flex flex-1 items-center justify-center px-6 py-12">
+      {/* Right panel */}
+      <div className="flex-1 flex items-start justify-center py-10 px-6 overflow-y-auto">
         <div className="w-full max-w-md">
-          <div className="lg:hidden mb-10">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black" style={{ backgroundColor: COLORS.primary }}>T</div>
-              <span className="text-xl font-black text-[#F0EFE8]">Trace</span>
-            </Link>
-          </div>
-
           <div className="mb-8">
-            <h1 className="text-3xl font-black text-[#F0EFE8] mb-2">Create your account</h1>
-            <p className="text-[#5C5A78]">Join 1,200+ traders already on Trace.</p>
+            <Link href="/" className="flex items-center gap-2 mb-6 lg:hidden">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#ff6b00" }}>T</div>
+              <span className="font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Trace</span>
+            </Link>
+            <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Create your account</h1>
+            <p className="text-sm text-[#8e7164] mt-1">Get started in under 2 minutes.</p>
           </div>
 
-          {/* Role selector */}
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            {[
-              { value: "trader", label: "I'm a Trader", icon: Storefront, color: COLORS.role.trader },
-              { value: "lender", label: "I'm a Lender", icon: AccountBalance, color: COLORS.role.lender },
-            ].map((type) => {
-              const Icon = type.icon;
-              const isActive = userType === type.value;
-              return (
-                <button
-                  key={type.value}
-                  type="button"
-                  onClick={() => setUserType(type.value as "trader" | "lender")}
-                  className="flex flex-col items-center gap-2 rounded-2xl px-4 py-4 text-sm font-bold transition-all duration-200"
-                  style={isActive
-                    ? { backgroundColor: `${type.color}20`, border: `1.5px solid ${type.color}`, color: type.color }
-                    : { backgroundColor: "#141420", border: "1.5px solid #2A2A40", color: "#5C5A78" }
-                  }
-                >
-                  <Icon sx={{ fontSize: "22px" }} />
-                  {type.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <form onSubmit={handleSignup} className="space-y-4">
-            {userType === "trader" && (
-              <div>
-                <label className="mb-2 block text-sm font-bold text-[#9B99B5]">Shop Name</label>
-                <div className="relative">
-                  <Storefront sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input type="text" placeholder="e.g. Amaka Foods" value={formData.shopName}
-                    onChange={(e) => setFormData({ ...formData, shopName: e.target.value })}
-                    className={inputClass} style={inputStyle} required />
+          {/* Account type */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            {(["user", "lender"] as AccountType[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => setAccountType(t)}
+                className="p-4 rounded-xl border-2 text-left transition-all"
+                style={{
+                  borderColor: accountType === t ? (t === "lender" ? "#2563eb" : "#ff6b00") : "#e2bfb0",
+                  backgroundColor: accountType === t ? (t === "lender" ? "#dae2fd" : "#fff1eb") : "#fff",
+                }}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-lg">{t === "user" ? "🧑‍💼" : "🏦"}</span>
+                  {accountType === t && <CheckCircle style={{ fontSize: 18, color: t === "lender" ? "#2563eb" : "#ff6b00" }} />}
                 </div>
+                <p className="text-sm font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>
+                  {t === "user" ? "Normal User" : "Lender"}
+                </p>
+                <p className="text-xs text-[#8e7164] mt-0.5">
+                  {t === "user" ? "Merchant, trader, worker" : "Microfinance, bank, fund"}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Full Name</label>
+                <input type="text" placeholder="Amaka Okonkwo" required value={form.fullName} onChange={set("fullName")} className={inputCls} style={inputStyle} />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Phone Number</label>
+                <input type="tel" placeholder="+234 801 234 5678" required value={form.phone} onChange={set("phone")} className={inputCls} style={inputStyle} />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Email Address</label>
+              <input type="email" placeholder="amaka@amakafoods.ng" required value={form.email} onChange={set("email")} className={inputCls} style={inputStyle} />
+            </div>
+
+            {isLender ? (
+              <>
+                <div>
+                  <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Institution Name</label>
+                  <input type="text" placeholder="Zenith Capital Finance" required value={form.institutionName} onChange={set("institutionName")} className={inputCls} style={inputStyle} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">RC Number</label>
+                  <input type="text" placeholder="RC-0012834" value={form.rcNumber} onChange={set("rcNumber")} className={inputCls} style={inputStyle} />
+                </div>
+              </>
+            ) : (
+              <div>
+                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Business Name <span className="text-[#8e7164] font-normal">(optional)</span></label>
+                <input type="text" placeholder="Amaka Foods" value={form.businessName} onChange={set("businessName")} className={inputCls} style={inputStyle} />
               </div>
             )}
 
             <div>
-              <label className="mb-2 block text-sm font-bold text-[#9B99B5]">Full Name</label>
+              <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Password</label>
               <div className="relative">
-                <AccountCircle sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input type="text" placeholder="Your full name" value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={inputClass} style={inputStyle} required />
+                <input type={showPass ? "text" : "password"} placeholder="Min. 8 characters" required value={form.password} onChange={set("password")} className={inputCls + " pr-10"} style={inputStyle} />
+                <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-3 text-[#8e7164]">
+                  {showPass ? <VisibilityOff style={{ fontSize: 18 }} /> : <Visibility style={{ fontSize: 18 }} />}
+                </button>
               </div>
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-bold text-[#9B99B5]">Email address</label>
-              <div className="relative">
-                <Mail sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input type="email" placeholder="you@example.com" value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={inputClass} style={inputStyle} required />
-              </div>
+              <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Confirm Password</label>
+              <input type="password" placeholder="Repeat password" required value={form.confirmPassword} onChange={set("confirmPassword")} className={inputCls} style={inputStyle} />
             </div>
 
-            <div>
-              <label className="mb-2 block text-sm font-bold text-[#9B99B5]">Phone number</label>
-              <div className="relative">
-                <Phone sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input type="tel" placeholder="+234 8xx xxx xxxx" value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className={inputClass} style={inputStyle} required />
-              </div>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm font-bold text-[#9B99B5]">Password</label>
-              <div className="relative">
-                <Lock sx={{ fontSize: "18px", color: "#3A3A58" }} className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                <input type="password" placeholder="Min. 8 characters" value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className={inputClass} style={inputStyle} required />
-              </div>
-            </div>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5 w-4 h-4 rounded" style={{ accentColor }} />
+              <span className="text-xs text-[#5a4136] leading-relaxed">
+                I agree to the <Link href="#" className="underline" style={{ color: accentColor }}>Terms of Service</Link> and{" "}
+                <Link href="#" className="underline" style={{ color: accentColor }}>Privacy Policy</Link>.
+              </span>
+            </label>
 
             <button
               type="submit"
-              className="group w-full flex items-center justify-center gap-3 rounded-xl py-4 text-sm font-black text-white transition-all hover:-translate-y-0.5 hover:shadow-xl mt-2"
-              style={{ backgroundColor: COLORS.primary, boxShadow: "0 4px 24px rgba(255,107,53,0.35)" }}
+              disabled={!agreed}
+              className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+              style={{ backgroundColor: accentColor }}
             >
-              Create Account
-              <ArrowForward sx={{ fontSize: "18px" }} className="group-hover:translate-x-1 transition-transform" />
+              Create {isLender ? "Lender" : ""} Account
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-[#5C5A78]">
+          <p className="text-center text-sm text-[#8e7164] mt-6">
             Already have an account?{" "}
-            <Link href="/auth/login" className="font-bold hover:underline" style={{ color: COLORS.primary }}>
-              Sign in
-            </Link>
+            <Link href="/auth/login" className="font-semibold" style={{ color: accentColor }}>Sign in</Link>
           </p>
         </div>
       </div>

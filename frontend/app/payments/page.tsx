@@ -1,324 +1,244 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
-import {
-  ContentCopy,
-  CheckCircle,
-  FileDownload,
-  Wallet,
-  TrendingUp,
-  VerifiedUser,
-  QrCode,
-  Link as LinkIcon,
-  AccountBalance,
-  ArrowForward,
-  ChevronRight,
-} from "@mui/icons-material";
 import { AppShell } from "@/components/layout/app-shell";
-
-const paymentLink = "trace.co/pay/amaka-foods";
-const accountNumber = "8023456789";
-const qrImageSrc = "/trace-pay-qr-demo.svg";
-
-const metrics = [
-  { label: "Received Today", value: "₦18,500", sub: "+8% vs yesterday", icon: Wallet, color: "#FF6B35" },
-  { label: "Verified Payments", value: "24", sub: "6 settled last 3 hrs", icon: VerifiedUser, color: "#22C55E" },
-  { label: "Weekly Revenue", value: "₦126,400", sub: "+14% vs last week", icon: TrendingUp, color: "#F5A623" },
-  { label: "Score Impact", value: "+12pts", sub: "Inflows lifted score", icon: TrendingUp, color: "#A855F7" },
-];
+import { MetricCard } from "@/components/common/metric-card";
+import {
+  ContentCopy, CheckCircle, Wallet, TrendingUp, AccessTime, Cancel,
+  Add, ArrowUpward, ArrowDownward, LinkOutlined,
+} from "@mui/icons-material";
 
 const transactions = [
-  { customer: "Meal payment", amount: "₦2,500", channel: "Transfer", time: "10:24 AM" },
-  { customer: "Drinks payment", amount: "₦1,800", channel: "QR Code", time: "11:02 AM" },
-  { customer: "Lunch order", amount: "₦4,000", channel: "Card", time: "12:18 PM" },
-  { customer: "Bank transfer", amount: "₦3,200", channel: "Transfer", time: "1:05 PM" },
-  { customer: "Bulk order", amount: "₦7,000", channel: "Payment Link", time: "2:41 PM" },
-  { customer: "Evening sale", amount: "₦1,000", channel: "QR Code", time: "4:10 PM" },
+  { id: "TRX-001", date: "May 10", time: "09:14", desc: "Market sale — Yaba table 4", ref: "PAY/2026/00412", type: "Credit", amount: 45000, status: "Success", method: "Payment link" },
+  { id: "TRX-002", date: "May 10", time: "08:32", desc: "Supplier payment — Okafor Farms", ref: "TRF/2026/00311", type: "Debit", amount: 28000, status: "Success", method: "Bank transfer" },
+  { id: "TRX-003", date: "May 09", time: "14:55", desc: "Catering — Okeke Wedding", ref: "PAY/2026/00399", type: "Credit", amount: 120000, status: "Success", method: "Payment link" },
+  { id: "TRX-004", date: "May 09", time: "11:20", desc: "Rent — Market stall fee", ref: "TRF/2026/00288", type: "Debit", amount: 15000, status: "Success", method: "Bank transfer" },
+  { id: "TRX-005", date: "May 09", time: "09:05", desc: "Bulk food sale — Ikeja buyer", ref: "PAY/2026/00381", type: "Credit", amount: 67500, status: "Success", method: "Payment link" },
+  { id: "TRX-006", date: "May 08", time: "16:41", desc: "Payment link — Ngozi Adeyemi", ref: "PAY/2026/00366", type: "Credit", amount: 35000, status: "Pending", method: "Payment link" },
+  { id: "TRX-007", date: "May 08", time: "14:00", desc: "Staff wages — May week 1", ref: "TRF/2026/00355", type: "Debit", amount: 48000, status: "Success", method: "Bank transfer" },
+  { id: "TRX-008", date: "May 07", time: "10:30", desc: "Event catering — UNILAG dept", ref: "PAY/2026/00340", type: "Credit", amount: 95000, status: "Success", method: "Payment link" },
+  { id: "TRX-009", date: "May 07", time: "09:15", desc: "Equipment purchase", ref: "TRF/2026/00328", type: "Debit", amount: 32000, status: "Success", method: "Bank transfer" },
+  { id: "TRX-010", date: "May 06", time: "13:45", desc: "Food sale — Surulere market", ref: "PAY/2026/00312", type: "Credit", amount: 52000, status: "Success", method: "Payment link" },
+  { id: "TRX-011", date: "May 06", time: "11:00", desc: "Payment link — Failed attempt", ref: "PAY/2026/00299", type: "Credit", amount: 10000, status: "Failed", method: "Payment link" },
+  { id: "TRX-012", date: "May 05", time: "15:30", desc: "Supplier restock — Groceries", ref: "TRF/2026/00285", type: "Debit", amount: 78000, status: "Success", method: "Bank transfer" },
 ];
 
-const impactSignals = [
-  { label: "Payment consistency", value: 86 },
-  { label: "Revenue growth", value: 74 },
-  { label: "Repeat payments", value: 64 },
+const paymentLinks = [
+  { id: "L1", name: "Amaka Foods — General", url: "trace.co/pay/amaka-foods", uses: 48, total: "₦1,240,000", created: "Mar 1, 2026", active: true },
+  { id: "L2", name: "Catering Deposits", url: "trace.co/pay/amaka-catering", uses: 12, total: "₦380,000", created: "Apr 5, 2026", active: true },
+  { id: "L3", name: "Market Stall — May", url: "trace.co/pay/amaka-may", uses: 7, total: "₦132,000", created: "May 1, 2026", active: true },
+  { id: "L4", name: "Event: Okeke Wedding", url: "trace.co/pay/okeke-wed", uses: 1, total: "₦120,000", created: "May 3, 2026", active: false },
 ];
+
+const statusConfig: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
+  Success: { color: "#16a34a", bg: "#dcfce7", icon: CheckCircle },
+  Pending: { color: "#d97706", bg: "#fef3c7", icon: AccessTime },
+  Failed: { color: "#dc2626", bg: "#fee2e2", icon: Cancel },
+};
+
+function StatusBadge({ status }: { status: string }) {
+  const s = statusConfig[status] || statusConfig.Pending;
+  const Icon = s.icon;
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full" style={{ color: s.color, backgroundColor: s.bg }}>
+      <Icon style={{ fontSize: 12 }} />{status}
+    </span>
+  );
+}
 
 export default function PaymentsPage() {
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [tab, setTab] = useState<"transactions" | "links">("transactions");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showRequestForm, setShowRequestForm] = useState(false);
+  const [requestAmount, setRequestAmount] = useState("");
+  const [requestDesc, setRequestDesc] = useState("");
 
-  const handleCopy = async (value: string, key: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopiedKey(key);
-      setTimeout(() => setCopiedKey((c) => (c === key ? null : c)), 1800);
-    } catch { /* ignore */ }
+  const copy = (text: string, id: string) => {
+    navigator.clipboard.writeText("https://" + text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const mainLink = "trace.co/pay/amaka-foods";
+
   return (
-    <AppShell role="trader">
-      <div className="min-h-screen p-6 md:p-8 space-y-8" style={{ backgroundColor: "#0A0A0F" }}>
-
-        {/* Page title */}
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#5C5A78] mb-2">Trace Pay</p>
-          <h1 className="text-3xl font-black text-[#F0EFE8]">Payment Collection</h1>
-          <p className="text-[#5C5A78] mt-1">Every payment builds your TraceScore and strengthens your capital profile.</p>
+    <AppShell role="user">
+      <div className="p-6 max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-[#261812]" style={{ fontFamily: "Epilogue, sans-serif" }}>Payments</h1>
+            <p className="text-sm text-[#8e7164] mt-1">Collect, track, and manage all your transactions</p>
+          </div>
+          <button
+            onClick={() => setShowRequestForm(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+            style={{ backgroundColor: "#ff6b00" }}
+          >
+            <Add style={{ fontSize: 18 }} />Request Payment
+          </button>
         </div>
 
-        {/* Metric row */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-          {metrics.map((m) => {
-            const Icon = m.icon;
-            return (
-              <div
-                key={m.label}
-                className="rounded-2xl p-5 transition-all hover:-translate-y-0.5"
-                style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <p className="text-sm text-[#5C5A78]">{m.label}</p>
-                  <div className="p-2 rounded-xl" style={{ backgroundColor: `${m.color}20` }}>
-                    <Icon sx={{ fontSize: "18px", color: m.color }} />
-                  </div>
-                </div>
-                <p className="text-2xl font-black text-[#F0EFE8]">{m.value}</p>
-                <p className="text-xs text-[#5C5A78] mt-1">{m.sub}</p>
+        {/* Request Payment Form */}
+        {showRequestForm && (
+          <div className="bg-white rounded-2xl p-6 mb-6" style={{ border: "1px solid #ff6b00", boxShadow: "0px 4px 20px rgba(255,107,0,0.1)" }}>
+            <h2 className="text-lg font-bold text-[#261812] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Request a Payment</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Amount (₦)</label>
+                <input type="number" placeholder="e.g. 50000" value={requestAmount} onChange={(e) => setRequestAmount(e.target.value)}
+                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }} />
               </div>
-            );
-          })}
-        </div>
-
-        {/* Main 3-column layout */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-
-          {/* Col 1&2: Payment Link + Virtual Account + Transactions */}
-          <div className="xl:col-span-2 space-y-6">
-
-            {/* Payment Link card */}
-            <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-              <div className="px-6 pt-6 pb-5" style={{ borderBottom: "1px solid #1C1C2E" }}>
-                <div className="flex items-center gap-3 mb-1">
-                  <div className="p-2 rounded-xl" style={{ backgroundColor: "#FF6B3520" }}>
-                    <LinkIcon sx={{ fontSize: "20px", color: "#FF6B35" }} />
-                  </div>
-                  <h2 className="text-lg font-black text-[#F0EFE8]">Payment Link</h2>
-                  <span className="ml-auto text-xs font-bold px-3 py-1 rounded-full" style={{ backgroundColor: "#22C55E20", color: "#22C55E" }}>Live</span>
-                </div>
-                <p className="text-sm text-[#5C5A78]">Share across WhatsApp, Instagram, SMS — one link, any channel.</p>
-              </div>
-
-              <div className="px-6 py-5">
-                <div
-                  className="flex items-center justify-between rounded-2xl px-5 py-4 mb-5"
-                  style={{ backgroundColor: "#0F0F1A", border: "1px solid #2A2A40" }}
-                >
-                  <div>
-                    <p className="text-xs text-[#5C5A78] mb-1 uppercase tracking-widest font-bold">Your link</p>
-                    <p className="text-base font-bold text-[#F0EFE8]">{paymentLink}</p>
-                  </div>
-                  <ArrowForward sx={{ fontSize: "20px", color: "#FF6B35" }} />
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => handleCopy(`https://${paymentLink}`, "link")}
-                    className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5"
-                    style={{ backgroundColor: "#FF6B35", boxShadow: "0 4px 20px rgba(255,107,53,0.35)" }}
-                  >
-                    {copiedKey === "link"
-                      ? <CheckCircle sx={{ fontSize: "18px" }} />
-                      : <ContentCopy sx={{ fontSize: "18px" }} />
-                    }
-                    {copiedKey === "link" ? "Copied!" : "Copy Link"}
-                  </button>
-                  <button
-                    className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-[#9B99B5] transition-all hover:text-[#F0EFE8] hover:bg-[#1C1C2E]"
-                    style={{ border: "1px solid #2A2A40" }}
-                  >
-                    Open Checkout
-                  </button>
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#5a4136] mb-1.5">Description</label>
+                <input type="text" placeholder="e.g. Market sale, Catering deposit" value={requestDesc} onChange={(e) => setRequestDesc(e.target.value)}
+                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none" style={{ borderColor: "#e2bfb0", backgroundColor: "#fff8f6", color: "#261812" }} />
               </div>
             </div>
-
-            {/* Virtual Account */}
-            <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-              <div className="px-6 pt-6 pb-5" style={{ borderBottom: "1px solid #1C1C2E" }}>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl" style={{ backgroundColor: "#3B82F620" }}>
-                    <AccountBalance sx={{ fontSize: "20px", color: "#3B82F6" }} />
-                  </div>
-                  <h2 className="text-lg font-black text-[#F0EFE8]">Virtual Account</h2>
-                  <span className="ml-auto text-xs font-bold px-3 py-1 rounded-full" style={{ backgroundColor: "#22C55E20", color: "#22C55E" }}>Active</span>
-                </div>
+            {requestAmount && (
+              <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+                <p className="text-xs text-[#8e7164] mb-1">Generated payment link</p>
+                <p className="text-sm font-mono font-semibold text-[#261812]">
+                  trace.co/pay/amaka-foods?amount={requestAmount}{requestDesc ? `&desc=${encodeURIComponent(requestDesc)}` : ""}
+                </p>
               </div>
-
-              <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {[
-                  { label: "Bank", value: "Trace / Squad" },
-                  { label: "Account Number", value: accountNumber },
-                  { label: "Account Name", value: "Amaka Foods" },
-                ].map((f) => (
-                  <div key={f.label} className="rounded-2xl p-4" style={{ backgroundColor: "#0F0F1A", border: "1px solid #2A2A40" }}>
-                    <p className="text-xs font-bold uppercase tracking-widest text-[#5C5A78] mb-2">{f.label}</p>
-                    <p
-                      className="font-black text-[#F0EFE8]"
-                      style={{
-                        fontSize: f.label === "Account Number" ? "1.4rem" : "1rem",
-                        letterSpacing: f.label === "Account Number" ? "0.1em" : undefined,
-                      }}
-                    >
-                      {f.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="px-6 pb-6">
-                <button
-                  onClick={() => handleCopy(accountNumber, "account")}
-                  className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition-all hover:-translate-y-0.5"
-                  style={{ backgroundColor: "#1C1C2E", border: "1px solid #2A2A40", color: "#F0EFE8" }}
-                >
-                  {copiedKey === "account"
-                    ? <CheckCircle sx={{ fontSize: "18px" }} />
-                    : <ContentCopy sx={{ fontSize: "18px" }} />
-                  }
-                  Copy Account Number
-                </button>
-              </div>
-            </div>
-
-            {/* Transactions */}
-            <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-              <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: "1px solid #1C1C2E" }}>
-                <div>
-                  <h2 className="text-lg font-black text-[#F0EFE8]">Recent Transactions</h2>
-                  <p className="text-sm text-[#5C5A78] mt-0.5">Every payment in your verified activity trail</p>
-                </div>
-                <span className="text-xs font-bold text-[#5C5A78] px-3 py-1.5 rounded-full" style={{ backgroundColor: "#0F0F1A", border: "1px solid #2A2A40" }}>
-                  Today
-                </span>
-              </div>
-
-              <div className="divide-y" style={{ borderColor: "#1C1C2E" }}>
-                {transactions.map((tx, i) => (
-                  <div key={i} className="flex items-center justify-between px-6 py-4 hover:bg-[#0F0F1A] transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black" style={{ backgroundColor: "#FF6B3515", color: "#FF6B35" }}>
-                        {tx.customer[0]}
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-[#F0EFE8]">{tx.customer}</p>
-                        <p className="text-xs text-[#5C5A78]">{tx.channel} · {tx.time}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-black text-[#F0EFE8]">{tx.amount}</p>
-                      <span className="text-xs font-semibold text-[#22C55E]">Paid</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            )}
+            <div className="flex gap-3 mt-5">
+              <button className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
+                Generate Link
+              </button>
+              <button onClick={() => setShowRequestForm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] text-[#261812]" style={{ borderColor: "#e2bfb0" }}>
+                Cancel
+              </button>
             </div>
           </div>
+        )}
 
-          {/* Col 3: QR + Score Impact */}
-          <div className="space-y-6">
+        {/* Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <MetricCard label="Total Volume" value="₦2,847,500" icon={Wallet} trend={18.3} color="#ff6b00" />
+          <MetricCard label="This Month" value="₦710,000" icon={TrendingUp} trend={12.1} color="#ff6b00" />
+          <MetricCard label="Success Rate" value="98.7%" sub="2 failed in 30 days" color="#16a34a" />
+          <MetricCard label="Pending" value="₦45,200" icon={AccessTime} color="#d97706" sub="2 transactions" />
+        </div>
 
-            {/* QR Code */}
-            <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-              <div className="px-6 pt-6 pb-5" style={{ borderBottom: "1px solid #1C1C2E" }}>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl" style={{ backgroundColor: "#F5A62320" }}>
-                    <QrCode sx={{ fontSize: "20px", color: "#F5A623" }} />
-                  </div>
-                  <h2 className="text-lg font-black text-[#F0EFE8]">QR Code</h2>
-                </div>
-                <p className="text-sm text-[#5C5A78] mt-2">Display at your counter for instant in-person payments.</p>
-              </div>
-
-              <div className="p-6">
-                <div className="rounded-2xl overflow-hidden p-4 mb-5" style={{ backgroundColor: "#0F0F1A", border: "1px solid #2A2A40" }}>
-                  <div className="rounded-xl overflow-hidden bg-white p-3">
-                    <Image src={qrImageSrc} alt="QR" width={400} height={400} className="w-full h-auto" />
-                  </div>
-                  <div className="mt-3 text-center">
-                    <p className="text-sm font-black text-[#F0EFE8]">Amaka Foods</p>
-                    <p className="text-xs text-[#5C5A78] mt-0.5">{paymentLink}</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5"
-                    style={{ backgroundColor: "#FF6B35" }}
-                  >
-                    <FileDownload sx={{ fontSize: "18px" }} />
-                    Download
-                  </button>
-                  <button
-                    className="flex-1 flex items-center justify-center rounded-xl py-3 text-sm font-bold text-[#9B99B5] transition-all hover:text-[#F0EFE8]"
-                    style={{ border: "1px solid #2A2A40" }}
-                  >
-                    Print
-                  </button>
-                </div>
-              </div>
+        {/* Payment link bar */}
+        <div className="bg-white rounded-2xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+          <div className="flex items-center gap-2 flex-none">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#fff1eb" }}>
+              <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
             </div>
+            <div>
+              <p className="text-sm font-semibold text-[#261812]">Your Trace Pay Link</p>
+              <p className="text-xs text-[#8e7164]">Share to accept payments instantly</p>
+            </div>
+          </div>
+          <div className="flex-1 flex items-center gap-2">
+            <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#261812]" style={{ backgroundColor: "#fff8f6", border: "1px solid #e2bfb0" }}>
+              {mainLink}
+            </div>
+            <button onClick={() => copy(mainLink, "main")}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#fff1eb] whitespace-nowrap"
+              style={{ borderColor: "#e2bfb0", color: "#261812" }}>
+              <ContentCopy style={{ fontSize: 16 }} />
+              {copiedId === "main" ? "Copied!" : "Copy"}
+            </button>
+          </div>
+        </div>
 
-            {/* Score Impact */}
-            <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: "#141420", border: "1px solid #2A2A40" }}>
-              <div className="px-6 pt-6 pb-5" style={{ borderBottom: "1px solid #1C1C2E" }}>
-                <h2 className="text-lg font-black text-[#F0EFE8]">Payment Impact</h2>
-                <p className="text-sm text-[#5C5A78] mt-0.5">How today&apos;s activity affects your score</p>
-              </div>
+        {/* Tabs */}
+        <div className="flex gap-1 p-1 rounded-xl mb-5 w-fit" style={{ backgroundColor: "#fff1eb", border: "1px solid #e2bfb0" }}>
+          <button onClick={() => setTab("transactions")} className="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all"
+            style={tab === "transactions" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#5a4136" }}>
+            Transactions ({transactions.length})
+          </button>
+          <button onClick={() => setTab("links")} className="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all"
+            style={tab === "links" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#5a4136" }}>
+            Payment Links ({paymentLinks.length})
+          </button>
+        </div>
 
-              <div className="p-6 space-y-5">
-                <div
-                  className="rounded-2xl p-5 flex items-center justify-between"
-                  style={{ background: "linear-gradient(135deg, #1C1C2E 0%, #141420 100%)", border: "1px solid #F5A62330" }}
-                >
-                  <div>
-                    <p className="text-xs text-[#5C5A78] mb-1">Verified momentum</p>
-                    <p className="text-3xl font-black" style={{ color: "#F5A623" }}>+12pts</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-[#5C5A78] mb-1">TraceScore</p>
-                    <p className="text-2xl font-black text-[#F0EFE8]">742</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {impactSignals.map((s) => (
-                    <div key={s.label}>
-                      <div className="flex items-center justify-between text-xs mb-2">
-                        <span className="text-[#9B99B5] font-medium">{s.label}</span>
-                        <span className="font-bold text-[#F0EFE8]">{s.value}%</span>
-                      </div>
-                      <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: "#2A2A40" }}>
-                        <div
-                          className="h-full rounded-full"
-                          style={{ width: `${s.value}%`, background: "linear-gradient(90deg, #FF6B35, #F5A623)" }}
-                        />
-                      </div>
-                    </div>
+        {/* Transactions */}
+        {tab === "transactions" && (
+          <div className="bg-white rounded-2xl overflow-hidden" style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr style={{ backgroundColor: "#fff8f6", borderBottom: "1px solid #e2bfb0" }}>
+                    {["Date & Time", "Description", "Reference", "Method", "Type", "Amount", "Status"].map((h) => (
+                      <th key={h} className="text-left px-5 py-3.5 font-semibold text-xs text-[#8e7164] whitespace-nowrap">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.map((t) => (
+                    <tr key={t.id} className="hover:bg-[#fff8f6] transition-colors" style={{ borderBottom: "1px solid #f8ddd2" }}>
+                      <td className="px-5 py-4 whitespace-nowrap">
+                        <p className="text-xs font-semibold text-[#261812]">{t.date}</p>
+                        <p className="text-xs text-[#8e7164]">{t.time}</p>
+                      </td>
+                      <td className="px-5 py-4 font-medium text-[#261812] max-w-48 truncate">{t.desc}</td>
+                      <td className="px-5 py-4 font-mono text-xs text-[#8e7164]">{t.ref}</td>
+                      <td className="px-5 py-4 text-xs text-[#5a4136]">{t.method}</td>
+                      <td className="px-5 py-4">
+                        <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                          {t.type === "Credit" ? <ArrowDownward style={{ fontSize: 14 }} /> : <ArrowUpward style={{ fontSize: 14 }} />}
+                          {t.type}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 font-bold whitespace-nowrap" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                        {t.type === "Credit" ? "+" : "-"}₦{t.amount.toLocaleString()}
+                      </td>
+                      <td className="px-5 py-4"><StatusBadge status={t.status} /></td>
+                    </tr>
                   ))}
-                </div>
-
-                <Link
-                  href="/tracescore"
-                  className="flex items-center justify-between w-full rounded-xl px-5 py-3.5 text-sm font-bold transition-all hover:-translate-y-0.5"
-                  style={{ backgroundColor: "#FF6B35", color: "white" }}
-                >
-                  View Full TraceScore
-                  <ChevronRight sx={{ fontSize: "18px" }} />
-                </Link>
-              </div>
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Payment Links */}
+        {tab === "links" && (
+          <div className="space-y-4">
+            {paymentLinks.map((link) => (
+              <div key={link.id} className="bg-white rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                style={{ border: "1px solid #e2bfb0", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-none" style={{ backgroundColor: link.active ? "#fff1eb" : "#f8ddd2" }}>
+                    <LinkOutlined style={{ fontSize: 20, color: link.active ? "#ff6b00" : "#8e7164" }} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="font-semibold text-[#261812] text-sm">{link.name}</p>
+                      {link.active
+                        ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Active</span>
+                        : <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#f8ddd2", color: "#8e7164" }}>Inactive</span>}
+                    </div>
+                    <p className="text-xs font-mono text-[#5a4136]">{link.url}</p>
+                    <p className="text-xs text-[#8e7164] mt-1">Created {link.created} · {link.uses} uses · {link.total} total</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-none">
+                  <button onClick={() => copy(link.url, link.id)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold border transition-all hover:bg-[#fff1eb]"
+                    style={{ borderColor: "#e2bfb0", color: "#261812" }}>
+                    <ContentCopy style={{ fontSize: 14 }} />
+                    {copiedId === link.id ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={() => setShowRequestForm(true)}
+              className="w-full py-4 rounded-2xl border-2 border-dashed text-sm font-semibold transition-all hover:bg-[#fff1eb]"
+              style={{ borderColor: "#e2bfb0", color: "#8e7164" }}
+            >
+              <Add style={{ fontSize: 18, verticalAlign: "middle", marginRight: 8 }} />
+              Generate New Payment Link
+            </button>
+          </div>
+        )}
       </div>
     </AppShell>
   );
