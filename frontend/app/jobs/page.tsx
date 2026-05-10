@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Add, People, CheckCircle, Cancel, AccessTime, Work, ChevronRight } from "@mui/icons-material";
 
-const postedJobs = [
+const initialPostedJobs = [
   { id: "p1", title: "Sales Assistant", status: "Active", applicants: 14, hired: 2, pay: "₦8,500/day", posted: "May 8", expires: "May 15", category: "Sales" },
   { id: "p2", title: "Market Supervisor", status: "Active", applicants: 7, hired: 1, pay: "₦12,000/day", posted: "May 9", expires: "May 13", category: "Management" },
   { id: "p3", title: "Delivery Rider", status: "Completed", applicants: 22, hired: 3, pay: "₦6,000/day", posted: "May 1", expires: "May 7", category: "Delivery" },
@@ -46,13 +46,45 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function JobsPage() {
+  const [postedJobs, setPostedJobs] = useState(initialPostedJobs);
   const [tab, setTab] = useState<"posted" | "applied">("posted");
   const [showPostForm, setShowPostForm] = useState(false);
   const [form, setForm] = useState({ title: "", category: "", pay: "", duration: "", location: "", desc: "" });
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const inputStyle = { borderColor: "#1e1e1e", backgroundColor: "#111111", color: "#f0f0f0" };
+
+  const handlePostJob = () => {
+    if (!form.title || !form.category || !form.pay || !form.duration || !form.location || !form.desc) {
+      setFormError("Fill in the full job form before posting.");
+      setFormSuccess(null);
+      return;
+    }
+
+    const amount = Number(form.pay);
+    const postedLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const nextJob = {
+      id: `p${Date.now()}`,
+      title: form.title,
+      status: "Active",
+      applicants: 0,
+      hired: 0,
+      pay: Number.isFinite(amount) && amount > 0 ? `₦${amount.toLocaleString()}/day` : form.pay,
+      posted: postedLabel,
+      expires: form.duration,
+      category: form.category,
+    };
+
+    setPostedJobs((current) => [nextJob, ...current]);
+    setForm({ title: "", category: "", pay: "", duration: "", location: "", desc: "" });
+    setFormError(null);
+    setFormSuccess(`${nextJob.title} is now live in your posted jobs.`);
+    setShowPostForm(false);
+    setTab("posted");
+  };
 
   return (
     <AppShell role="user">
@@ -72,6 +104,13 @@ export default function JobsPage() {
             Post a Job
           </button>
         </div>
+
+        {formSuccess ? (
+          <div className="mb-6 rounded-2xl px-4 py-3 flex items-center gap-3" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
+            <CheckCircle style={{ fontSize: 18, color: "#16a34a" }} />
+            <p className="text-sm text-[#f0f0f0]">{formSuccess}</p>
+          </div>
+        ) : null}
 
         {/* Post job form */}
         {showPostForm && (
@@ -106,11 +145,24 @@ export default function JobsPage() {
                 <textarea rows={3} placeholder="Describe the role, responsibilities, and requirements..." value={form.desc} onChange={set("desc")} className="w-full px-3 py-2.5 text-sm rounded-xl border outline-none resize-none" style={inputStyle} />
               </div>
             </div>
+            {formError ? <p className="mt-4 text-sm text-[#f97316]">{formError}</p> : null}
             <div className="flex gap-3 mt-5">
-              <button className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
+              <button
+                type="button"
+                onClick={handlePostJob}
+                className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                style={{ backgroundColor: "#ff6b00" }}
+              >
                 Post Job
               </button>
-              <button onClick={() => setShowPostForm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
+              <button
+                onClick={() => {
+                  setShowPostForm(false);
+                  setFormError(null);
+                }}
+                className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]"
+                style={{ borderColor: "#1e1e1e" }}
+              >
                 Cancel
               </button>
             </div>
@@ -205,7 +257,7 @@ export default function JobsPage() {
         {/* Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           {[
-            { label: "Jobs Posted", val: postedJobs.length.toString(), color: "#7c3aed" },
+            { label: "Jobs Posted", val: postedJobs.length.toString(), color: "#ff6b00" },
             { label: "Workers Hired", val: "9", color: "#ff6b00" },
             { label: "Applications Sent", val: appliedJobs.length.toString(), color: "#2563eb" },
             { label: "Accepted", val: appliedJobs.filter(j => j.status === "Accepted").length.toString(), color: "#16a34a" },

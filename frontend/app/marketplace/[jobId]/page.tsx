@@ -68,7 +68,7 @@ export default function JobDetailPage() {
             <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
               <div className="flex items-start justify-between gap-4 mb-5">
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#7c3aed", fontFamily: "Epilogue, sans-serif" }}>
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#ff6b00", fontFamily: "Epilogue, sans-serif" }}>
                     {job.company[0]}
                   </div>
                   <div>
@@ -122,7 +122,7 @@ export default function JobDetailPage() {
               <ul className="space-y-2.5">
                 {job.responsibilities.map((r, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-[#cbd5e1]">
-                    <CheckCircle style={{ fontSize: 18, color: "#7c3aed", marginTop: 1 }} />
+                    <CheckCircle style={{ fontSize: 18, color: "#ff6b00", marginTop: 1 }} />
                     {r}
                   </li>
                 ))}
@@ -156,7 +156,7 @@ export default function JobDetailPage() {
                 <button
                   onClick={() => setShowForm(true)}
                   className="w-full py-4 rounded-2xl text-base font-semibold text-white transition-all hover:opacity-90 shadow-lg"
-                  style={{ backgroundColor: "#7c3aed" }}
+                  style={{ backgroundColor: "#ff6b00" }}
                 >
                   Apply for this Job
                 </button>
@@ -175,7 +175,7 @@ export default function JobDetailPage() {
                     </div>
                     <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                       <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)}
-                        className="w-4 h-4 rounded" style={{ accentColor: "#7c3aed" }} />
+                        className="w-4 h-4 rounded" style={{ accentColor: "#ff6b00" }} />
                       <span className="text-sm text-[#cbd5e1]">I confirm I am available for the full duration of this job</span>
                     </label>
                     <div className="grid grid-cols-2 gap-3">
@@ -186,7 +186,7 @@ export default function JobDetailPage() {
                       </button>
                       <button type="submit" disabled={!available}
                         className="py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                        style={{ backgroundColor: "#7c3aed" }}>
+                        style={{ backgroundColor: "#ff6b00" }}>
                         Submit Application
                       </button>
                     </div>
@@ -194,13 +194,34 @@ export default function JobDetailPage() {
                 </div>
               )
             ) : (
-              <div className="bg-[#111111] rounded-2xl p-8 text-center" style={{ border: "1px solid #1e1e1e" }}>
-                <CheckCircle style={{ fontSize: 48, color: "#16a34a" }} />
-                <h2 className="text-xl font-bold text-[#f0f0f0] mt-3" style={{ fontFamily: "Epilogue, sans-serif" }}>Application Submitted!</h2>
-                <p className="text-sm text-[#cbd5e1] mt-2">Amaka Foods will review your profile and contact you if selected.</p>
-                <Link href="/jobs" className="mt-5 inline-block px-6 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#7c3aed" }}>
-                  View My Applications
-                </Link>
+              <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: "#dcfce7" }}>
+                    <CheckCircle style={{ fontSize: 24, color: "#16a34a" }} />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Application Submitted</h2>
+                    <p className="text-sm text-[#cbd5e1] mt-2">Amaka Foods will review your profile and contact you if selected.</p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <Link href="/jobs" className="inline-flex px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#ff6b00" }}>
+                        View My Applications
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setApplied(false);
+                          setShowForm(false);
+                          setAvailable(false);
+                          setCoverNote("");
+                        }}
+                        className="inline-flex px-5 py-2.5 rounded-xl text-sm font-semibold border text-[#f0f0f0] hover:bg-[#161616]"
+                        style={{ borderColor: "#1e1e1e" }}
+                      >
+                        Apply to Another Role
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -211,7 +232,7 @@ export default function JobDetailPage() {
             <div className="bg-[#111111] rounded-2xl p-5" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
               <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>About {job.company}</h2>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#7c3aed" }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00" }}>
                   {job.company[0]}
                 </div>
                 <div>
@@ -263,7 +284,7 @@ export default function JobDetailPage() {
                 {similarJobs.map((j) => (
                   <Link key={j.id} href={`/marketplace/${j.id}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-[#161616] transition-colors" style={{ border: "1px solid #1e1e1e" }}>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#7c3aed" }}>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#ff6b00" }}>
                         <Work style={{ fontSize: 16 }} />
                       </div>
                       <div>
