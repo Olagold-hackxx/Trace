@@ -21,7 +21,7 @@ export default function LenderDashboardPage() {
     ...lender.merchants,
     ...LENDER_QUEUE[1].merchants,
     ...LENDER_QUEUE[2].merchants,
-  ].sort((a, b) => (TRACE_SCORES[b.traderId]?.score ?? 0) - (TRACE_SCORES[a.traderId]?.score ?? 0));
+  ].sort((a, b) => (TRACE_SCORES[b.traderId as keyof typeof TRACE_SCORES]?.score ?? 0) - (TRACE_SCORES[a.traderId as keyof typeof TRACE_SCORES]?.score ?? 0));
 
   return (
     <AppShell role="lender">
@@ -86,9 +86,9 @@ export default function LenderDashboardPage() {
             </div>
             <div className="divide-y" style={{ borderColor: "#1C1C2E" }}>
               {lender.merchants.map((merchant) => {
-                const traceScore = TRACE_SCORES[merchant.traderId];
+                const traceScore = TRACE_SCORES[merchant.traderId as keyof typeof TRACE_SCORES];
                 const score = traceScore?.score ?? 0;
-                const scoreColor = score >= 750 ? "#F5A623" : score >= 700 ? "#22C55E" : "#3B82F6";
+                const scoreColor = score >= 750 ? "#F5A623" : score >= 700 ? "#22C55E" : "#FF6B35";
                 return (
                   <Link
                     key={merchant.traderId}
@@ -131,10 +131,10 @@ export default function LenderDashboardPage() {
               </thead>
               <tbody>
                 {allMerchants.slice(0, 5).map((merchant) => {
-                  const traceScore = TRACE_SCORES[merchant.traderId];
+                  const traceScore = TRACE_SCORES[merchant.traderId as keyof typeof TRACE_SCORES];
                   const trader = TRADERS.find((t) => t.id === merchant.traderId);
                   const score = traceScore?.score ?? 0;
-                  const scoreColor = score >= 750 ? "#F5A623" : score >= 700 ? "#22C55E" : "#3B82F6";
+                  const scoreColor = score >= 750 ? "#F5A623" : score >= 700 ? "#22C55E" : "#FF6B35";
                   return (
                     <tr key={merchant.traderId} style={{ borderBottom: "1px solid #1C1C2E" }} className="hover:bg-[#0F0F1A] transition-colors">
                       <td className="px-6 py-4">
