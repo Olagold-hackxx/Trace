@@ -41,6 +41,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
   const nav = role === "lender" ? lenderNav : userNav;
   const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
   const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
+  const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/tracescore", "/lender/analytics"]);
 
   return (
     <aside
@@ -78,9 +79,9 @@ export function Sidebar({ role = "user" }: SidebarProps) {
         <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-[#64748b]">Navigation</p>
         {nav.map((item) => {
           const Icon = item.icon;
-          const isActive =
-            pathname === item.href ||
-            (item.href.length > 1 && pathname.startsWith(`${item.href}/`));
+          const isActive = exactMatchRoutes.has(item.href)
+            ? pathname === item.href
+            : pathname === item.href || (item.href.length > 1 && pathname.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href + item.label}
