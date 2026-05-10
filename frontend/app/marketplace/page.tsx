@@ -84,7 +84,6 @@ export default function MarketplacePage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Jobs");
   const [location, setLocation] = useState("All Lagos");
-  const [postingMode, setPostingMode] = useState(false);
 
   const filtered = jobs.filter((j) => {
     const matchSearch = j.title.toLowerCase().includes(search.toLowerCase()) || j.company.toLowerCase().includes(search.toLowerCase());
@@ -101,13 +100,13 @@ export default function MarketplacePage() {
             <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Job Marketplace</h1>
             <p className="text-sm text-[#94a3b8] mt-1">{jobs.length} jobs available across Lagos</p>
           </div>
-          <button
-            onClick={() => setPostingMode(!postingMode)}
+          <Link
+            href="/jobs?openPost=1"
             className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
-            style={postingMode ? { backgroundColor: "#ff6b00", color: "#fff" } : { backgroundColor: "#161616", color: "#ff6b00" }}
+            style={{ backgroundColor: "#161616", color: "#ff6b00" }}
           >
-            {postingMode ? "Browse Jobs" : "Post a Job"}
-          </button>
+            Post a Job
+          </Link>
         </div>
 
         {/* Featured banner */}
