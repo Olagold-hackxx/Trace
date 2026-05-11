@@ -3,10 +3,10 @@ import { MarketplaceDetailPage } from "@/components/marketplace/marketplace-deta
 export default function Page() {
   return (
     <MarketplaceDetailPage
-      role="user"
-      backHref="/marketplace"
-      applicationsHref="/jobs"
-      similarBasePath="/marketplace"
+      role="lender"
+      backHref="/lender/marketplace"
+      applicationsHref="/lender/jobs"
+      similarBasePath="/lender/marketplace"
     />
   );
 }

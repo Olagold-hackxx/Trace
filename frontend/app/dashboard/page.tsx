@@ -2,12 +2,12 @@
 
 import { AppShell } from "@/components/layout/app-shell";
 import { MetricCard } from "@/components/common/metric-card";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { toast } from "@/hooks/use-toast";
 import {
   Wallet,
   TrendingUp,
-  Work,
   Receipt,
   AccountBalance,
   ContentCopy,
@@ -17,12 +17,10 @@ import {
   CheckCircle,
   AccessTime,
   Cancel,
-  ChevronRight,
-  People,
+  GraphicEq,
+  FiberManualRecord,
 } from "@mui/icons-material";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -31,6 +29,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { baseTransactions, formatNaira, liveDashboardEvents } from "@/lib/demo-data";
 
 const revenueData = [
   { month: "Dec", revenue: 320000, expenses: 98000 },
@@ -39,31 +38,6 @@ const revenueData = [
   { month: "Mar", revenue: 520000, expenses: 142000 },
   { month: "Apr", revenue: 490000, expenses: 135000 },
   { month: "May", revenue: 710000, expenses: 180000 },
-];
-
-const transactions = [
-  { id: "TRX001", date: "May 10, 2026", desc: "Market sale — Yaba table 4", type: "Credit", amount: 45000, status: "Success" },
-  { id: "TRX002", date: "May 10, 2026", desc: "Supplier payment — Okafor Farms", type: "Debit", amount: 28000, status: "Success" },
-  { id: "TRX003", date: "May 09, 2026", desc: "Catering — Okeke Wedding", type: "Credit", amount: 120000, status: "Success" },
-  { id: "TRX004", date: "May 09, 2026", desc: "Rent — Market stall", type: "Debit", amount: 15000, status: "Success" },
-  { id: "TRX005", date: "May 08, 2026", desc: "Bulk food sale", type: "Credit", amount: 67500, status: "Success" },
-  { id: "TRX006", date: "May 08, 2026", desc: "Payment link — Ngozi Adeyemi", type: "Credit", amount: 35000, status: "Pending" },
-  { id: "TRX007", date: "May 07, 2026", desc: "Staff wages", type: "Debit", amount: 48000, status: "Success" },
-  { id: "TRX008", date: "May 07, 2026", desc: "Event catering — UNILAG dept", type: "Credit", amount: 95000, status: "Success" },
-];
-
-const activeJobs = [
-  { title: "Sales Assistant", workers: 2, status: "Active", pay: "₦8,500/day", daysLeft: 3 },
-  { title: "Market Supervisor", workers: 1, status: "Active", pay: "₦12,000/day", daysLeft: 1 },
-  { title: "Delivery Rider", workers: 3, status: "Completed", pay: "₦6,000/day", daysLeft: 0 },
-];
-
-const scoreFactors = [
-  { label: "Payment History", pct: 90, color: "#ff6b00" },
-  { label: "Revenue Consistency", pct: 74, color: "#ff6b00" },
-  { label: "Business Longevity", pct: 60, color: "#ff6b00" },
-  { label: "Employment Record", pct: 45, color: "#7c3aed" },
-  { label: "Lender Trust", pct: 82, color: "#2563eb" },
 ];
 
 function StatusBadge({ status }: { status: string }) {
@@ -83,6 +57,25 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function DashboardPage() {
   const [copied, setCopied] = useState(false);
+  const liveStarted = useRef(false);
+  const [metrics, setMetrics] = useState({
+    revenue: 710000,
+    pendingPayments: 45200,
+    score: 742,
+    scoreTrend: 1.2,
+    balance: 128450,
+    preQualifiedAmount: 2500000,
+  });
+  const [recentTransactions, setRecentTransactions] = useState(baseTransactions);
+  const [liveFeed, setLiveFeed] = useState(
+    liveDashboardEvents.map((event, index) => ({
+      id: `${event.id}-seed`,
+      label: index === 0 ? "Listening for live events" : "Queued simulation",
+      title: event.title,
+      description: event.description,
+      status: index === 0 ? "Connected" : "Waiting",
+    }))
+  );
   const paymentLink = "https://pay.trace.ng/amaka-foods";
 
   const copy = () => {
@@ -90,6 +83,48 @@ export default function DashboardPage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  useEffect(() => {
+    if (liveStarted.current) return;
+    liveStarted.current = true;
+
+    const timers = liveDashboardEvents.map((event, index) =>
+      window.setTimeout(() => {
+        setMetrics((current) => ({
+          revenue: current.revenue + (event.revenueDelta ?? 0),
+          pendingPayments: Math.max(0, current.pendingPayments + (event.pendingPaymentsDelta ?? 0)),
+          score: current.score + (event.scoreDelta ?? 0),
+          scoreTrend: current.scoreTrend + ((event.scoreDelta ?? 0) > 0 ? 0.9 : 0),
+          balance: current.balance + (event.balanceDelta ?? 0),
+          preQualifiedAmount: event.preQualifiedAmount ?? current.preQualifiedAmount,
+        }));
+
+        if (event.transaction) {
+          setRecentTransactions((current) => [event.transaction!, ...current].slice(0, 8));
+        }
+
+        setLiveFeed((current) => [
+          {
+            id: event.id,
+            label: event.label,
+            title: event.title,
+            description: event.description,
+            status: "Just now",
+          },
+          ...current,
+        ].slice(0, 5));
+
+        toast({
+          title: event.title,
+          description: event.description,
+        });
+      }, 4000 * (index + 1))
+    );
+
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, []);
 
   return (
     <AppShell role="user">
@@ -114,10 +149,10 @@ export default function DashboardPage() {
 
         {/* Metric cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MetricCard label="Total Revenue (May)" value="₦710,000" icon={Wallet} trend={18.3} color="#ff6b00" />
-          <MetricCard label="Pending Payments" value="₦45,200" icon={Receipt} color="#d97706" sub="2 transactions pending" />
-          <MetricCard label="TraceScore" value="742 / 900" icon={TrendingUp} trend={1.2} trendLabel="this month" color="#16a34a" />
-          <MetricCard label="Available Balance" value="₦128,450" icon={AccountBalance} trend={-3.1} color="#2563eb" />
+          <MetricCard label="Total Revenue (May)" value={formatNaira(metrics.revenue)} icon={Wallet} trend={18.3} color="#ff6b00" />
+          <MetricCard label="Pending Payments" value={formatNaira(metrics.pendingPayments)} icon={Receipt} color="#d97706" sub="2 transactions pending" />
+          <MetricCard label="TraceScore" value={`${metrics.score} / 900`} icon={TrendingUp} trend={metrics.scoreTrend} trendLabel="this month" color="#16a34a" />
+          <MetricCard label="Available Balance" value={formatNaira(metrics.balance)} icon={AccountBalance} trend={-3.1} color="#ff6b00" />
         </div>
 
         {/* Payment link bar */}
@@ -130,6 +165,22 @@ export default function DashboardPage() {
             {copied ? "Copied!" : "Copy link"}
           </button>
           <div className="hidden lg:block text-xs text-[#94a3b8]">Your Trace payment link · share with anyone</div>
+        </div>
+
+        <div className="rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#3b1d09" }}>
+              <GraphicEq style={{ fontSize: 20, color: "#ff6b00" }} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#f0f0f0]">Live updates connected</p>
+              <p className="text-xs text-[#94a3b8]">Incoming payments, score changes, and lender interest appear automatically.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e", color: "#f0f0f0" }}>
+            <FiberManualRecord style={{ fontSize: 12, color: "#16a34a" }} />
+            Demo stream active
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -181,7 +232,7 @@ export default function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {transactions.map((t) => (
+                    {recentTransactions.map((t) => (
                       <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                         <td className="py-3 pr-4 text-xs text-[#94a3b8] whitespace-nowrap">{t.date}</td>
                         <td className="py-3 pr-4 font-medium text-[#f0f0f0]">{t.desc}</td>
@@ -207,95 +258,24 @@ export default function DashboardPage() {
 
           {/* Right — widgets */}
           <div className="space-y-6">
-            {/* TraceScore widget */}
             <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>TraceScore</h2>
-                <Link href="/tracescore" className="text-xs font-semibold" style={{ color: "#ff6b00" }}>Full report →</Link>
-              </div>
-              {/* Gauge */}
-              <div className="flex flex-col items-center mb-5">
-                <div className="relative w-36 h-36">
-                  <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="#1e1e1e" strokeWidth="14" />
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="#ff6b00" strokeWidth="14"
-                      strokeDasharray={`${2 * Math.PI * 75 * 0.742} ${2 * Math.PI * 75}`} strokeLinecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <p className="text-3xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>742</p>
-                    <p className="text-xs font-semibold" style={{ color: "#ff6b00" }}>Excellent</p>
-                  </div>
-                </div>
-                <p className="text-xs text-[#94a3b8] mt-2">+7 points this month</p>
-              </div>
-              {/* Factors */}
-              <div className="space-y-3">
-                {scoreFactors.map((f) => (
-                  <div key={f.label}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-[#cbd5e1]">{f.label}</span>
-                      <span className="font-semibold text-[#f0f0f0]">{f.pct}%</span>
-                    </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
-                      <div className="h-full rounded-full" style={{ width: `${f.pct}%`, backgroundColor: f.color }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Pre-qualified */}
-              <div className="mt-4 p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                <p className="text-xs text-[#94a3b8]">Pre-qualified for</p>
-                <p className="text-xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>₦2,500,000</p>
-                <p className="text-xs text-[#94a3b8]">from 3 verified lenders</p>
-              </div>
-            </div>
-
-            {/* Active jobs */}
-            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Active Jobs</h2>
-                <Link href="/jobs" className="text-xs font-semibold" style={{ color: "#ff6b00" }}>View all →</Link>
+                <h2 className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Live Activity</h2>
+                <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "#161616", color: "#16a34a" }}>
+                  Connected
+                </span>
               </div>
               <div className="space-y-3">
-                {activeJobs.map((j) => (
-                  <div key={j.title} className="p-3 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-semibold text-[#f0f0f0]">{j.title}</p>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: j.status === "Active" ? "#dcfce7" : "#161616", color: j.status === "Active" ? "#16a34a" : "#94a3b8" }}>
-                        {j.status}
-                      </span>
+                {liveFeed.map((item) => (
+                  <div key={item.id} className="rounded-xl p-3" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                    <div className="flex items-center justify-between gap-3 mb-1">
+                      <p className="text-sm font-semibold text-[#f0f0f0]">{item.title}</p>
+                      <span className="text-[11px] text-[#94a3b8]">{item.status}</span>
                     </div>
-                    <p className="text-xs text-[#94a3b8]">{j.workers} worker{j.workers !== 1 ? "s" : ""} · {j.pay}</p>
-                    {j.daysLeft > 0 && <p className="text-xs text-[#d97706] mt-1">{j.daysLeft} day{j.daysLeft !== 1 ? "s" : ""} left</p>}
+                    <p className="text-xs font-semibold text-[#ff6b00] mb-1">{item.label}</p>
+                    <p className="text-xs text-[#94a3b8] leading-5">{item.description}</p>
                   </div>
                 ))}
-              </div>
-              <Link href="/jobs" className="mt-4 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
-                <Add style={{ fontSize: 18 }} />Post a Job
-              </Link>
-            </div>
-
-            {/* Quick actions */}
-            <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-              <h2 className="text-base font-bold text-[#f0f0f0] mb-4" style={{ fontFamily: "Epilogue, sans-serif" }}>Quick Actions</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { label: "Request Payment", href: "/payments", icon: Wallet, color: "#ff6b00", bg: "#3b1d09" },
-                  { label: "Post a Job", href: "/jobs", icon: Work, color: "#ff6b00", bg: "#3b1d09" },
-                  { label: "View Score", href: "/tracescore", icon: TrendingUp, color: "#16a34a", bg: "#dcfce7" },
-                  { label: "Find Workers", href: "/marketplace", icon: People, color: "#2563eb", bg: "#172554" },
-                ].map((a) => {
-                  const Icon = a.icon;
-                  return (
-                    <Link key={a.label} href={a.href}
-                      className="flex flex-col items-center gap-2 p-4 rounded-xl text-center text-xs font-semibold transition-all hover:scale-105"
-                      style={{ backgroundColor: a.bg, color: a.color }}>
-                      <Icon style={{ fontSize: 24 }} />
-                      {a.label}
-                    </Link>
-                  );
-                })}
               </div>
             </div>
           </div>

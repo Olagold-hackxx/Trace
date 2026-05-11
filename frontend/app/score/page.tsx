@@ -1,5 +1,5 @@
 import { ScorePage } from "@/components/score/score-page";
 
-export default function TraceScorePage() {
+export default function Page() {
   return <ScorePage />;
 }

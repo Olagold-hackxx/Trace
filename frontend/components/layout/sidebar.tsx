@@ -23,7 +23,8 @@ interface SidebarProps {
 const userNav = [
   { label: "Dashboard", href: "/dashboard", icon: Dashboard },
   { label: "Payments", href: "/payments", icon: Wallet },
-  { label: "TraceScore", href: "/tracescore", icon: TrendingUp },
+  { label: "TraceScore", href: "/score", icon: TrendingUp },
+  { label: "Loans", href: "/loan", icon: AccountBalanceWallet },
   { label: "Jobs & Hiring", href: "/jobs", icon: Work },
   { label: "Marketplace", href: "/marketplace", icon: Storefront },
 ];
@@ -42,7 +43,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
   const nav = role === "lender" ? lenderNav : userNav;
   const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
   const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
-  const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/tracescore", "/lender/analytics"]);
+  const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/score", "/tracescore", "/lender/analytics"]);
 
   return (
     <aside

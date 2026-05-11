@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: { default: 'Trace', template: '%s | Trace' },
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased" style={{ backgroundColor: "#0d0d0d", color: "#f0f0f0" }}>
         {children}
+        <Toaster />
       </body>
     </html>
   )
