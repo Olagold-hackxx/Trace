@@ -1,16 +1,17 @@
 numpy
 pandas
 pyarrow
-matplotlib
-seaborn
-scipy
-scikit-learn
-lightgbm
-shap
-optuna
-fairlearn
+# matplotlib
+# seaborn
+# scipy
+# scikit-learn
+# lightgbm
+# shap
+# optuna
+# fairlearn
 fastapi
 uvicorn
+gunicorn
 requests
 # jupyter
 # sentence-transformers
