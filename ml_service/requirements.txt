@@ -6,7 +6,7 @@ pyarrow
 # scipy
 # scikit-learn
 # lightgbm
-# shap
+shap
 # optuna
 # fairlearn
 fastapi
