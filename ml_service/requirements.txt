@@ -5,7 +5,7 @@ pyarrow
 # seaborn
 # scipy
 # scikit-learn
-# lightgbm
+lightgbm
 shap
 # optuna
 # fairlearn
