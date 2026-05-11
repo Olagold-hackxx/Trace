@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
@@ -142,6 +143,13 @@ export default function LoanOfferPage() {
               >
                 {accepted ? "Accepting offer..." : `Accept ${selectedOffer.name} offer`}
               </button>
+              <Link
+                href="/loan/apply"
+                className="mt-3 w-full inline-flex items-center justify-center py-3 rounded-xl text-sm font-semibold"
+                style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e", color: "#f0f0f0" }}
+              >
+                Submit a custom loan application
+              </Link>
               <p className="text-xs text-[#94a3b8] mt-3 leading-5">
                 Accepting this facility moves you straight into active loan tracking with repayment milestones and due-date monitoring.
               </p>
