@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BrandLogo } from "@/components/common/brand-logo";
 import { cn } from "@/lib/utils";
 import {
   Dashboard,
@@ -50,20 +51,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-6 py-5 border-b" style={{ borderColor: "#1e1e1e" }}>
-        <Link href="/" className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm"
-            style={{ backgroundColor: "#ff6b00", fontFamily: "Epilogue, sans-serif" }}
-          >
-            T
-          </div>
-          <span
-            className="text-xl font-bold tracking-tight"
-            style={{ fontFamily: "Epilogue, sans-serif", color: "#f0f0f0" }}
-          >
-            Trace
-          </span>
-        </Link>
+        <BrandLogo href="/" iconSize={36} textSize={22} textColor="#f0f0f0" />
         {role === "lender" && (
           <span
             className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"

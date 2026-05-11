@@ -3,7 +3,6 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { Add, People, CheckCircle, Cancel, AccessTime, Work, ChevronRight } from "@mui/icons-material";
 
 const initialPostedJobs = [
@@ -47,7 +46,6 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function JobsPage() {
-  const searchParams = useSearchParams();
   const [postedJobs, setPostedJobs] = useState(initialPostedJobs);
   const [tab, setTab] = useState<"posted" | "applied">("posted");
   const [showPostForm, setShowPostForm] = useState(false);
@@ -60,11 +58,12 @@ export default function JobsPage() {
   const inputStyle = { borderColor: "#1e1e1e", backgroundColor: "#111111", color: "#f0f0f0" };
 
   useEffect(() => {
-    if (searchParams.get("openPost") === "1") {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("openPost") === "1") {
       setTab("posted");
       setShowPostForm(true);
     }
-  }, [searchParams]);
+  }, []);
 
   const handlePostJob = () => {
     if (!form.title || !form.category || !form.pay || !form.duration || !form.location || !form.desc) {

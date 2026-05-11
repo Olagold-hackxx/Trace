@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BrandLogo } from "@/components/common/brand-logo";
 import {
   Dashboard,
   People,
@@ -29,13 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="flex flex-col w-64 shrink-0 h-full border-r" style={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.08)" }}>
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00", fontFamily: "Epilogue, sans-serif" }}>T</div>
-            <div>
-              <span className="text-lg font-bold text-white" style={{ fontFamily: "Epilogue, sans-serif" }}>Trace</span>
-              <span className="block text-xs font-semibold tracking-widest uppercase" style={{ color: "#f59e0b" }}>Admin</span>
-            </div>
-          </Link>
+          <BrandLogo href="/" iconSize={36} textSize={20} textColor="#ffffff" subtitle="Admin" subtitleColor="#f59e0b" />
         </div>
 
         {/* Nav */}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { BrandLogo } from "@/components/common/brand-logo";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -76,28 +77,7 @@ export default function LoginPage() {
         />
         {/* Logo */}
         <div style={{ position: "absolute", top: 40, left: 40, zIndex: 10 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 11,
-                background: "#ff6b00",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "'Epilogue', sans-serif",
-                fontWeight: 800,
-                fontSize: 20,
-                color: "#fff",
-              }}
-            >
-              T
-            </div>
-            <span style={{ fontFamily: "'Epilogue', sans-serif", fontWeight: 700, fontSize: 22, color: "#fff" }}>
-              Trace
-            </span>
-          </Link>
+          <BrandLogo href="/" iconSize={38} textSize={22} textColor="#ffffff" />
         </div>
         {/* Bottom caption */}
         <div style={{ position: "absolute", bottom: 48, left: 40, right: 40, zIndex: 10 }}>
@@ -146,28 +126,7 @@ export default function LoginPage() {
       >
         {/* Mobile logo */}
         <div className="flex lg:hidden" style={{ marginBottom: 32, width: "100%", maxWidth: 440 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 9,
-                background: "#ff6b00",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "'Epilogue', sans-serif",
-                fontWeight: 800,
-                fontSize: 17,
-                color: "#fff",
-              }}
-            >
-              T
-            </div>
-            <span style={{ fontFamily: "'Epilogue', sans-serif", fontWeight: 700, fontSize: 20, color: "#fff" }}>
-              Trace
-            </span>
-          </Link>
+          <BrandLogo href="/" iconSize={34} textSize={20} textColor="#ffffff" />
         </div>
 
         <div style={{ maxWidth: 420, width: "100%" }}>

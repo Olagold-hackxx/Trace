@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { BrandLogo } from "@/components/common/brand-logo";
 
 type Role = "trader" | "lender";
 
@@ -54,44 +55,9 @@ export default function RolePage() {
       }}
     >
       {/* Logo */}
-      <Link
-        href="/"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          textDecoration: "none",
-          marginBottom: 48,
-        }}
-      >
-        <div
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: 11,
-            background: "#ff6b00",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "'Epilogue', sans-serif",
-            fontWeight: 800,
-            fontSize: 20,
-            color: "#fff",
-          }}
-        >
-          T
-        </div>
-        <span
-          style={{
-            fontFamily: "'Epilogue', sans-serif",
-            fontWeight: 700,
-            fontSize: 22,
-            color: "#fff",
-          }}
-        >
-          Trace
-        </span>
-      </Link>
+      <div style={{ marginBottom: 48 }}>
+        <BrandLogo href="/" iconSize={38} textSize={22} textColor="#ffffff" />
+      </div>
 
       {/* Heading */}
       <div style={{ textAlign: "center", marginBottom: 40, maxWidth: 480 }}>

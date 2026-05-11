@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { BrandLogo } from "@/components/common/brand-logo";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -93,28 +94,7 @@ export default function LandingPage() {
             height: 64,
           }}
         >
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: "#ff6b00",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "'Epilogue', sans-serif",
-                fontWeight: 800,
-                fontSize: 19,
-                color: "#fff",
-              }}
-            >
-              T
-            </div>
-            <span style={{ fontFamily: "'Epilogue', sans-serif", fontWeight: 700, fontSize: 21, color: "#fff" }}>
-              Trace
-            </span>
-          </Link>
+          <BrandLogo href="/" iconSize={36} textSize={21} textColor="#ffffff" />
 
           <div className="hidden md:flex" style={{ gap: 36, alignItems: "center" }}>
             {["Features", "How It Works", "Testimonials", "For Lenders"].map((l) => (
@@ -746,27 +726,8 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48, marginBottom: 56 }} className="footer-grid">
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <div
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 9,
-                    background: "#ff6b00",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: "'Epilogue', sans-serif",
-                    fontWeight: 800,
-                    fontSize: 17,
-                    color: "#fff",
-                  }}
-                >
-                  T
-                </div>
-                <span style={{ fontFamily: "'Epilogue', sans-serif", fontWeight: 700, fontSize: 20, color: "#fff" }}>
-                  Trace
-                </span>
+              <div style={{ marginBottom: 16 }}>
+                <BrandLogo href="/" iconSize={34} textSize={20} textColor="#ffffff" />
               </div>
               <p style={{ fontSize: 14, color: "#475569", lineHeight: 1.7, maxWidth: 260 }}>
                 Building financial identity for informal African traders. From Lagos to Kano, every transaction counts.
