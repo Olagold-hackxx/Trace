@@ -13,10 +13,12 @@ fastapi
 uvicorn
 gunicorn
 requests
+sqlalchemy
+psycopg[binary]
+python-dotenv
 # jupyter
 # sentence-transformers
 # transformers
 # torch
-# psycopg[binary]
 # pgvector
 # qdrant-client
