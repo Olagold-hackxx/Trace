@@ -11,3 +11,6 @@ env/
 *.env
 *.log
 *.bak
+node_modules/
+dist/
+.next/
