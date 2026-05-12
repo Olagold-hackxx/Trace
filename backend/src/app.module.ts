@@ -22,6 +22,7 @@ import { PaymentsModule } from "./payments/payments.module";
 import { RealtimeModule } from "./realtime/realtime.module";
 import { RedisModule } from "./redis/redis.module";
 import { ScoreModule } from "./score/score.module";
+import { SessionModule } from "./session/session.module";
 import { SquadModule } from "./squad/squad.module";
 import { TransactionsModule } from "./transactions/transactions.module";
 import { UsersModule } from "./users/users.module";
@@ -54,6 +55,7 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
       }
     }),
     RedisModule,
+    SessionModule,
     RealtimeModule,
     SquadModule,
     HealthModule,

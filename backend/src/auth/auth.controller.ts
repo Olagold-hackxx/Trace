@@ -10,8 +10,14 @@ export class AuthController {
 
   @Version("1")
   @Post("signup")
-  async signup(@Body() dto: SignupDto) {
-    return this.authService.signup(dto);
+  async signup(@Body() dto: SignupDto, @Res({ passthrough: true }) response: Response) {
+    const result = await this.authService.signup(dto);
+    response.cookie("kudiscore_session", result.token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false
+    });
+    return result;
   }
 
   @Version("1")

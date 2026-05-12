@@ -6,10 +6,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/common/brand-logo";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  DEMO_TRADER_SIGNUP_DEFAULTS,
+  fetchBackend,
+  persistTraderSession,
+} from "@/lib/backend";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -20,9 +27,48 @@ export default function RegisterPage() {
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/auth/role");
+    setLoading(true);
+    setError("");
+
+    try {
+      const result = await fetchBackend<{
+        user: {
+          id: string;
+          phone: string;
+          fullName: string;
+          businessName?: string;
+          businessType?: string;
+          marketName?: string;
+          role?: "trader" | "lender" | "admin";
+          bvnLast4?: string;
+        };
+        virtualAccount: {
+          accountNumber: string;
+          bankName?: string;
+          status?: string;
+        };
+      }>("/auth/signup", {
+        method: "POST",
+        bodyJson: {
+          phone: form.phone,
+          fullName: form.fullName,
+          ...DEMO_TRADER_SIGNUP_DEFAULTS,
+        },
+      });
+
+      persistTraderSession({
+        user: result.user,
+        virtualAccount: result.virtualAccount,
+      });
+
+      router.push("/dashboard");
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Could not create your account");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputStyle: React.CSSProperties = {
@@ -224,23 +270,30 @@ export default function RegisterPage() {
               </div>
             </div>
 
+            {error ? (
+              <p style={{ fontSize: 12, color: "#f87171", marginTop: -4 }}>
+                {error}
+              </p>
+            ) : null}
+
             <button
               type="submit"
+              disabled={loading}
               style={{
                 width: "100%",
                 padding: "13px 20px",
                 borderRadius: 12,
                 border: "none",
-                background: "#ff6b00",
-                color: "#fff",
+                background: loading ? "#2a2a2a" : "#ff6b00",
+                color: loading ? "#64748b" : "#fff",
                 fontSize: 15,
                 fontWeight: 700,
-                cursor: "pointer",
+                cursor: loading ? "not-allowed" : "pointer",
                 fontFamily: "'Hanken Grotesk', sans-serif",
                 marginTop: 6,
               }}
             >
-              Continue →
+              {loading ? "Creating account..." : "Continue →"}
             </button>
           </form>
 

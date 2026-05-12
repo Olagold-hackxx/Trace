@@ -4,32 +4,18 @@ import Image from "next/image";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { MetricCard } from "@/components/common/metric-card";
+import { useTraderData } from "@/hooks/use-trader-data";
 import {
   ContentCopy, CheckCircle, Wallet, TrendingUp, AccessTime, Cancel,
   Add, ArrowUpward, ArrowDownward, LinkOutlined,
 } from "@mui/icons-material";
-
-const transactions = [
-  { id: "TRX-001", date: "May 10", time: "09:14", desc: "Market sale — Yaba table 4", ref: "PAY/2026/00412", type: "Credit", amount: 45000, status: "Success", method: "Payment link" },
-  { id: "TRX-002", date: "May 10", time: "08:32", desc: "Supplier payment — Okafor Farms", ref: "TRF/2026/00311", type: "Debit", amount: 28000, status: "Success", method: "Bank transfer" },
-  { id: "TRX-003", date: "May 09", time: "14:55", desc: "Catering — Okeke Wedding", ref: "PAY/2026/00399", type: "Credit", amount: 120000, status: "Success", method: "Payment link" },
-  { id: "TRX-004", date: "May 09", time: "11:20", desc: "Rent — Market stall fee", ref: "TRF/2026/00288", type: "Debit", amount: 15000, status: "Success", method: "Bank transfer" },
-  { id: "TRX-005", date: "May 09", time: "09:05", desc: "Bulk food sale — Ikeja buyer", ref: "PAY/2026/00381", type: "Credit", amount: 67500, status: "Success", method: "Payment link" },
-  { id: "TRX-006", date: "May 08", time: "16:41", desc: "Payment link — Ngozi Adeyemi", ref: "PAY/2026/00366", type: "Credit", amount: 35000, status: "Pending", method: "Payment link" },
-  { id: "TRX-007", date: "May 08", time: "14:00", desc: "Staff wages — May week 1", ref: "TRF/2026/00355", type: "Debit", amount: 48000, status: "Success", method: "Bank transfer" },
-  { id: "TRX-008", date: "May 07", time: "10:30", desc: "Event catering — UNILAG dept", ref: "PAY/2026/00340", type: "Credit", amount: 95000, status: "Success", method: "Payment link" },
-  { id: "TRX-009", date: "May 07", time: "09:15", desc: "Equipment purchase", ref: "TRF/2026/00328", type: "Debit", amount: 32000, status: "Success", method: "Bank transfer" },
-  { id: "TRX-010", date: "May 06", time: "13:45", desc: "Food sale — Surulere market", ref: "PAY/2026/00312", type: "Credit", amount: 52000, status: "Success", method: "Payment link" },
-  { id: "TRX-011", date: "May 06", time: "11:00", desc: "Payment link — Failed attempt", ref: "PAY/2026/00299", type: "Credit", amount: 10000, status: "Failed", method: "Payment link" },
-  { id: "TRX-012", date: "May 05", time: "15:30", desc: "Supplier restock — Groceries", ref: "TRF/2026/00285", type: "Debit", amount: 78000, status: "Success", method: "Bank transfer" },
-];
-
-const paymentLinks = [
-  { id: "L1", name: "Amaka Foods — General", url: "trace.co/pay/amaka-foods", uses: 48, total: "₦1,240,000", created: "Mar 1, 2026", active: true },
-  { id: "L2", name: "Catering Deposits", url: "trace.co/pay/amaka-catering", uses: 12, total: "₦380,000", created: "Apr 5, 2026", active: true },
-  { id: "L3", name: "Market Stall — May", url: "trace.co/pay/amaka-may", uses: 7, total: "₦132,000", created: "May 1, 2026", active: true },
-  { id: "L4", name: "Event: Okeke Wedding", url: "trace.co/pay/okeke-wed", uses: 1, total: "₦120,000", created: "May 3, 2026", active: false },
-];
+import {
+  buildPaymentLinkUrl,
+  DEMO_PAYMENT_EMAIL,
+  fetchBackend,
+  formatDateLabel,
+  formatNairaFromKobo,
+} from "@/lib/backend";
 
 const statusConfig: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
   Success: { color: "#16a34a", bg: "#dcfce7", icon: CheckCircle },
@@ -48,11 +34,46 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function PaymentsPage() {
+  const { user, virtualAccount, summary, transactions, paymentLinks, defaultPaymentLink, refresh } = useTraderData();
   const [tab, setTab] = useState<"transactions" | "links">("transactions");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestAmount, setRequestAmount] = useState("");
   const [requestDesc, setRequestDesc] = useState("");
+  const [requestLink, setRequestLink] = useState("");
+  const [requestError, setRequestError] = useState("");
+  const [requestLoading, setRequestLoading] = useState(false);
+
+  const mappedTransactions = transactions.map((transaction) => ({
+    id: transaction.id,
+    date: formatDateLabel(transaction.occurredAt),
+    time: new Date(transaction.occurredAt).toLocaleTimeString("en-NG", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    desc: transaction.senderName ?? transaction.reference,
+    ref: transaction.reference,
+    type:
+      transaction.type === "debit" || transaction.type === "loan_repayment" ? "Debit" : "Credit",
+    amount: Math.round(Number(transaction.amountKobo) / 100),
+    status:
+      transaction.status === "success"
+        ? "Success"
+        : transaction.status === "failed"
+          ? "Failed"
+          : "Pending",
+    method: transaction.type === "payment_link" ? "Payment link" : "Bank transfer",
+  }));
+
+  const mappedPaymentLinks = paymentLinks.map((link) => ({
+    id: link.id,
+    name: link.name,
+    url: buildPaymentLinkUrl(link.slug).replace(/^https?:\/\//, ""),
+    uses: 0,
+    total: link.amountKobo ? formatNairaFromKobo(link.amountKobo) : "Flexible",
+    created: formatDateLabel(link.createdAt),
+    active: link.active,
+  }));
 
   const copy = (text: string, id: string) => {
     navigator.clipboard.writeText("https://" + text);
@@ -60,7 +81,32 @@ export default function PaymentsPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const mainLink = "trace.co/pay/amaka-foods";
+  const mainLink = buildPaymentLinkUrl(defaultPaymentLink?.slug).replace(/^https?:\/\//, "");
+
+  const handleGenerateLink = async () => {
+    if (!requestAmount.trim()) return;
+
+    setRequestLoading(true);
+    setRequestError("");
+
+    try {
+      const result = await fetchBackend<{ checkoutUrl: string }>("/payments/initiate", {
+        method: "POST",
+        bodyJson: {
+          amountKobo: String(Number(requestAmount) * 100),
+          description: requestDesc || "Trace payment request",
+          email: DEMO_PAYMENT_EMAIL,
+        },
+      });
+
+      setRequestLink(result.checkoutUrl);
+      void refresh();
+    } catch (error) {
+      setRequestError(error instanceof Error ? error.message : "Could not generate a live payment link");
+    } finally {
+      setRequestLoading(false);
+    }
+  };
 
   return (
     <AppShell role="user">
@@ -98,15 +144,21 @@ export default function PaymentsPage() {
             </div>
             {requestAmount && (
               <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                <p className="text-xs text-[#94a3b8] mb-1">Generated payment link</p>
-                <p className="text-sm font-mono font-semibold text-[#f0f0f0]">
-                  trace.co/pay/amaka-foods?amount={requestAmount}{requestDesc ? `&desc=${encodeURIComponent(requestDesc)}` : ""}
+                <p className="text-xs text-[#94a3b8] mb-1">Live checkout link</p>
+                <p className="text-sm font-mono font-semibold text-[#f0f0f0] break-all">
+                  {requestLink || "Generate a live Squad payment link"}
                 </p>
               </div>
             )}
+            {requestError ? <p className="text-xs text-[#f87171] mt-3">{requestError}</p> : null}
             <div className="flex gap-3 mt-5">
-              <button className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
-                Generate Link
+              <button
+                onClick={handleGenerateLink}
+                disabled={requestLoading}
+                className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-70"
+                style={{ backgroundColor: "#ff6b00" }}
+              >
+                {requestLoading ? "Generating..." : "Generate Link"}
               </button>
               <button onClick={() => setShowRequestForm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]" style={{ borderColor: "#1e1e1e" }}>
                 Cancel
@@ -117,10 +169,21 @@ export default function PaymentsPage() {
 
         {/* Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <MetricCard label="Total Volume" value="₦2,847,500" icon={Wallet} trend={18.3} color="#ff6b00" />
-          <MetricCard label="This Month" value="₦710,000" icon={TrendingUp} trend={12.1} color="#ff6b00" />
-          <MetricCard label="Success Rate" value="98.7%" sub="2 failed in 30 days" color="#16a34a" />
-          <MetricCard label="Pending" value="₦45,200" icon={AccessTime} color="#d97706" sub="2 transactions" />
+          <MetricCard label="Total Inflow" value={formatNairaFromKobo(summary?.totalInflowKobo)} icon={Wallet} color="#ff6b00" />
+          <MetricCard label="Available Balance" value={formatNairaFromKobo(summary?.balanceKobo)} icon={TrendingUp} color="#ff6b00" />
+          <MetricCard
+            label="Success Rate"
+            value={`${mappedTransactions.length === 0 ? 0 : Math.round((mappedTransactions.filter((transaction) => transaction.status === "Success").length / mappedTransactions.length) * 100)}%`}
+            sub={`${mappedTransactions.filter((transaction) => transaction.status === "Failed").length} failed records`}
+            color="#16a34a"
+          />
+          <MetricCard
+            label="Pending"
+            value={`₦${mappedTransactions.filter((transaction) => transaction.status === "Pending").reduce((sum, transaction) => sum + transaction.amount, 0).toLocaleString()}`}
+            icon={AccessTime}
+            color="#d97706"
+            sub={`${mappedTransactions.filter((transaction) => transaction.status === "Pending").length} transactions`}
+          />
         </div>
 
         {/* Payment link + QR */}
@@ -128,13 +191,15 @@ export default function PaymentsPage() {
           <div className="rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
             <div className="flex items-center gap-2 flex-none">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#161616" }}>
-                <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-[#f0f0f0]">Your Trace Pay Link</p>
-                <p className="text-xs text-[#94a3b8]">Share to accept payments instantly</p>
-              </div>
-            </div>
+                    <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#f0f0f0]">Your Trace Pay Link</p>
+                    <p className="text-xs text-[#94a3b8]">
+                      {user?.businessName ?? "Trace business"} · {virtualAccount?.bankName ?? "GTBank"} {virtualAccount?.accountNumber ?? ""}
+                    </p>
+                  </div>
+                </div>
             <div className="flex-1 flex items-center gap-2 w-full">
               <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#f0f0f0]" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 {mainLink}
@@ -186,11 +251,11 @@ export default function PaymentsPage() {
         <div className="flex gap-1 p-1 rounded-xl mb-5 w-fit" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
           <button onClick={() => setTab("transactions")} className="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all"
             style={tab === "transactions" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#cbd5e1" }}>
-            Transactions ({transactions.length})
+            Transactions ({mappedTransactions.length})
           </button>
           <button onClick={() => setTab("links")} className="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all"
             style={tab === "links" ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#cbd5e1" }}>
-            Payment Links ({paymentLinks.length})
+            Payment Links ({mappedPaymentLinks.length})
           </button>
         </div>
 
@@ -207,7 +272,7 @@ export default function PaymentsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((t) => (
+                  {mappedTransactions.map((t) => (
                     <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                       <td className="px-5 py-4 whitespace-nowrap">
                         <p className="text-xs font-semibold text-[#f0f0f0]">{t.date}</p>
@@ -237,7 +302,7 @@ export default function PaymentsPage() {
         {/* Payment Links */}
         {tab === "links" && (
           <div className="space-y-4">
-            {paymentLinks.map((link) => (
+            {mappedPaymentLinks.map((link) => (
               <div key={link.id} className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
                 <div className="flex items-center gap-4">

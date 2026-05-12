@@ -3,6 +3,8 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { MetricCard } from "@/components/common/metric-card";
 import Link from "next/link";
+import { useLenderData } from "@/hooks/use-lender-data";
+import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 import {
   AccountBalance, TrendingUp, People, Warning, CheckCircle, AccessTime,
   ChevronRight,
@@ -37,25 +39,6 @@ const scoreDistribution = [
   { band: "600–649", count: 2 },
 ];
 
-const pipeline = [
-  { id: "APP-101", name: "Amaka Foods", type: "Food & Bev", score: 742, amount: 2500000, purpose: "Working capital", risk: "Low", status: "Pending", days: 2 },
-  { id: "APP-102", name: "Kemi Snacks", type: "Food", score: 708, amount: 500000, purpose: "Inventory", risk: "Low", status: "Pending", days: 4 },
-  { id: "APP-103", name: "Lagos Grocers", type: "Retail", score: 728, amount: 1200000, purpose: "Expansion", risk: "Low", status: "Under Review", days: 1 },
-  { id: "APP-104", name: "QuickEats", type: "Delivery", score: 715, amount: 800000, purpose: "Fleet", risk: "Medium", status: "Pending", days: 6 },
-  { id: "APP-105", name: "Fashion Hub", type: "Fashion", score: 623, amount: 350000, purpose: "Stock", risk: "Medium", status: "Info Needed", days: 8 },
-  { id: "APP-106", name: "Bello Supplies", type: "Wholesale", score: 488, amount: 900000, purpose: "Working capital", risk: "High", status: "Pending", days: 3 },
-  { id: "APP-107", name: "Nwosu Electronics", type: "Electronics", score: 541, amount: 600000, purpose: "Equipment", risk: "High", status: "Pending", days: 5 },
-  { id: "APP-108", name: "Adaeze Logistics", type: "Logistics", score: 701, amount: 1800000, purpose: "Fleet expansion", risk: "Low", status: "Pending", days: 7 },
-];
-
-const topMerchants = [
-  { name: "Amaka Foods", score: 742, loan: "₦1.2M", repaid: "₦800K", onTime: true },
-  { name: "Lagos Grocers", score: 728, loan: "₦900K", repaid: "₦500K", onTime: true },
-  { name: "QuickEats", score: 715, loan: "₦800K", repaid: "₦800K", onTime: true },
-  { name: "Kemi Snacks", score: 708, loan: "₦500K", repaid: "₦500K", onTime: true },
-  { name: "Adaeze Logistics", score: 701, loan: "₦1.8M", repaid: "₦600K", onTime: true },
-];
-
 const statusStyle: Record<string, { color: string; bg: string }> = {
   Pending: { color: "#d97706", bg: "#fef3c7" },
   "Under Review": { color: "#ff6b00", bg: "#3b1d09" },
@@ -74,6 +57,9 @@ function Badge({ label, style }: { label: string; style: { color: string; bg: st
 }
 
 export default function LenderDashboardPage() {
+  const { summary, applications, merchants } = useLenderData();
+  const topMerchants = merchants.slice(0, 5);
+
   return (
     <AppShell role="lender">
       <div className="p-6 max-w-7xl mx-auto">
@@ -85,10 +71,10 @@ export default function LenderDashboardPage() {
 
         {/* Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MetricCard label="Total AUM" value="₦45,000,000" icon={AccountBalance} trend={12.4} color="#ff6b00" />
-          <MetricCard label="Active Loans" value="23" icon={TrendingUp} sub="8 pending review" color="#ff6b00" />
-          <MetricCard label="Avg TraceScore" value="718" icon={TrendingUp} trend={3.2} trendLabel="this quarter" color="#ff6b00" />
-          <MetricCard label="NPL Rate" value="2.3%" icon={Warning} trend={-0.4} trendLabel="improving" color="#dc2626" />
+          <MetricCard label="Total AUM" value={formatNairaFromKobo(summary?.totalAumKobo)} icon={AccountBalance} color="#ff6b00" />
+          <MetricCard label="Active Loans" value={String(summary?.activeLoans ?? 0)} icon={TrendingUp} sub={`${applications.length} applications in pipeline`} color="#ff6b00" />
+          <MetricCard label="Merchants" value={String(merchants.length)} icon={People} color="#ff6b00" />
+          <MetricCard label="Pipeline" value={String(applications.length)} icon={Warning} sub="Live backend approvals" color="#dc2626" />
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6 mb-6">
@@ -171,34 +157,38 @@ export default function LenderDashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {pipeline.map((app) => (
+                {applications.map((app) => {
+                  const merchant = merchants.find((item) => item.id === app.userId);
+                  const amount = Number(app.amountKobo);
+                  const normalizedStatus = app.status.replace(/_/g, " ");
+                  return (
                   <tr key={app.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#ff6b00" }}>{app.name[0]}</div>
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#ff6b00" }}>{merchant?.businessName?.[0] ?? merchant?.fullName?.[0] ?? "M"}</div>
                         <div>
-                          <p className="font-semibold text-[#f0f0f0]">{app.name}</p>
+                          <p className="font-semibold text-[#f0f0f0]">{merchant?.businessName ?? merchant?.fullName ?? "Merchant"}</p>
                           <p className="text-xs text-[#94a3b8]">{app.id}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-[#cbd5e1]">{app.type}</td>
+                    <td className="px-5 py-4 text-[#cbd5e1]">{merchant?.businessType ?? "General"}</td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold" style={{ color: app.score >= 700 ? "#16a34a" : app.score >= 500 ? "#d97706" : "#dc2626" }}>{app.score}</span>
+                        <span className="font-bold" style={{ color: "#ff6b00" }}>Live</span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">₦{app.amount.toLocaleString()}</td>
-                    <td className="px-5 py-4"><Badge label={app.risk} style={riskStyle[app.risk]} /></td>
-                    <td className="px-5 py-4"><Badge label={app.status} style={statusStyle[app.status] || statusStyle.Pending} /></td>
-                    <td className="px-5 py-4 text-[#94a3b8] text-xs">{app.days}d</td>
+                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{formatNairaFromKobo(amount)}</td>
+                    <td className="px-5 py-4"><Badge label={amount > 100000000 ? "High" : amount > 50000000 ? "Medium" : "Low"} style={amount > 100000000 ? riskStyle.High : amount > 50000000 ? riskStyle.Medium : riskStyle.Low} /></td>
+                    <td className="px-5 py-4"><Badge label={normalizedStatus} style={statusStyle[normalizedStatus] || statusStyle.Pending} /></td>
+                    <td className="px-5 py-4 text-[#94a3b8] text-xs">{formatDateLabel(app.createdAt)}</td>
                     <td className="px-5 py-4">
-                      <Link href={`/lender/merchants/${app.id}`} className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#ff6b00" }}>
+                      <Link href={`/lender/merchants/${app.userId}`} className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#ff6b00" }}>
                         Review <ChevronRight style={{ fontSize: 14 }} />
                       </Link>
                     </td>
                   </tr>
-                ))}
+                )})}
               </tbody>
             </table>
           </div>
@@ -212,19 +202,19 @@ export default function LenderDashboardPage() {
           </div>
           <div className="space-y-3">
             {topMerchants.map((m, i) => (
-              <div key={m.name} className="flex items-center gap-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+              <div key={m.id} className="flex items-center gap-4 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 <span className="text-sm font-bold text-[#94a3b8] w-5">{i + 1}</span>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#ff6b00" }}>{m.name[0]}</div>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#ff6b00" }}>{(m.businessName ?? m.fullName)[0]}</div>
                 <div className="flex-1">
-                  <p className="font-semibold text-[#f0f0f0] text-sm">{m.name}</p>
-                  <p className="text-xs text-[#94a3b8]">Loan: {m.loan} · Repaid: {m.repaid}</p>
+                  <p className="font-semibold text-[#f0f0f0] text-sm">{m.businessName ?? m.fullName}</p>
+                  <p className="text-xs text-[#94a3b8]">{m.businessType ?? "Trader"} · {m.marketName ?? "Lagos"}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div>
-                    <p className="text-xs text-[#94a3b8]">Score</p>
-                    <p className="font-bold text-[#f0f0f0]">{m.score}</p>
+                    <p className="text-xs text-[#94a3b8]">Role</p>
+                    <p className="font-bold text-[#f0f0f0]">{m.role}</p>
                   </div>
-                  {m.onTime && <CheckCircle style={{ fontSize: 20, color: "#16a34a" }} />}
+                  <CheckCircle style={{ fontSize: 20, color: "#16a34a" }} />
                 </div>
               </div>
             ))}

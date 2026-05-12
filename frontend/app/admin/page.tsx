@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -23,6 +24,7 @@ import {
   Storefront,
   BarChart as BarChartIcon,
 } from "@mui/icons-material";
+import { BackendAdminOverview, fetchBackend } from "@/lib/backend";
 
 const platformTrend = [
   { month: "Nov", volume: 1200000, users: 82, lenders: 4 },
@@ -84,6 +86,19 @@ function StatCard({ label, value, sub, color, icon: Icon }: { label: string; val
 }
 
 export default function AdminDashboardPage() {
+  const [overview, setOverview] = useState<BackendAdminOverview | null>(null);
+  const [fraudAlerts, setFraudAlerts] = useState<Array<{ id: string; severity: string; reason: string; status: string }>>([]);
+
+  useEffect(() => {
+    void Promise.all([
+      fetchBackend<BackendAdminOverview>("/admin/overview"),
+      fetchBackend<Array<{ id: string; severity: string; reason: string; status: string }>>("/admin/fraud-alerts"),
+    ]).then(([overviewResult, alertsResult]) => {
+      setOverview(overviewResult);
+      setFraudAlerts(alertsResult);
+    });
+  }, []);
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Page header */}
@@ -94,10 +109,10 @@ export default function AdminDashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard label="Total Users" value="12,541" sub="+135 this week" color="#ff6b00" icon={People} />
-        <StatCard label="Active Lenders" value="14" sub="3 pending onboarding" color="#2563eb" icon={AccountBalance} />
-        <StatCard label="Monthly Volume" value="₦8.9M" sub="+31% vs last month" color="#16a34a" icon={Wallet} />
-        <StatCard label="Capital Deployed" value="₦890M" sub="All time" color="#d97706" icon={TrendingUp} />
+        <StatCard label="Total Users" value={String(overview?.users ?? 0)} sub="Live backend count" color="#ff6b00" icon={People} />
+        <StatCard label="Transactions" value={String(overview?.transactions ?? 0)} sub="Recorded events" color="#2563eb" icon={AccountBalance} />
+        <StatCard label="Loans" value={String(overview?.loans ?? 0)} sub="Created facilities" color="#16a34a" icon={Wallet} />
+        <StatCard label="Applications" value={String(overview?.applications ?? 0)} sub="In backend pipeline" color="#d97706" icon={TrendingUp} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6 mb-6">
@@ -161,7 +176,14 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "rgba(220,38,38,0.15)", color: "#f87171" }}>{flaggedUsers.length} alerts</span>
           </div>
           <div className="space-y-4">
-            {flaggedUsers.map((u) => (
+            {(fraudAlerts.length
+              ? fraudAlerts.map((alert) => ({
+                  name: alert.id,
+                  issue: alert.reason,
+                  score: 0,
+                  risk: alert.severity === "medium" ? "Medium" : "High",
+                }))
+              : flaggedUsers).map((u) => (
               <div key={u.name} className="p-3 rounded-xl" style={{ backgroundColor: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.15)" }}>
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-sm font-semibold text-white">{u.name}</p>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { useTraderData } from "@/hooks/use-trader-data";
 import {
   Drawer,
   DrawerContent,
@@ -30,14 +31,35 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { lenderOffers, scoreFaqs, scoreFactors, scoreHistory } from "@/lib/demo-data";
+import { formatNairaFromKobo } from "@/lib/backend";
 
 export function ScorePage() {
+  const { score: backendScore, explanation, scoreHistory: backendHistory, offers } = useTraderData();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [lenderVisible, setLenderVisible] = useState(true);
   const [insightOpen, setInsightOpen] = useState(false);
-  const score = 742;
+  const score = backendScore?.score ?? 742;
   const pct = (score / 900) * 100;
   const circumference = 2 * Math.PI * 80;
+  const activeHistory = backendHistory.length
+    ? backendHistory.map((item) => ({
+        month: new Date(item.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" }),
+        score: item.score,
+      }))
+    : scoreHistory;
+  const activeOffers = offers.length
+    ? offers.map((offer, index) => ({
+        id: offer.id,
+        name: offer.lenderName,
+        amount: formatNairaFromKobo(offer.amountKobo),
+        rate: offer.rateLabel,
+        tenor: offer.tenorLabel,
+        monthly: offer.monthlyRepaymentLabel,
+        badge: index === 0 ? "Live" : "Available",
+        badgeColor: index === 0 ? "#16a34a" : "#ff6b00",
+        badgeBg: index === 0 ? "#dcfce7" : "#3b1d09",
+      }))
+    : lenderOffers;
 
   return (
     <AppShell role="user">
@@ -81,7 +103,9 @@ export function ScorePage() {
                 <p className="text-6xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   {score}
                 </p>
-                <p className="text-sm font-semibold mt-1" style={{ color: "#ff6b00" }}>Excellent</p>
+                <p className="text-sm font-semibold mt-1" style={{ color: "#ff6b00" }}>
+                  {score >= 750 ? "Excellent" : score >= 650 ? "Good" : "Building"}
+                </p>
                 <p className="text-xs text-[#94a3b8]">out of 900</p>
               </div>
             </div>
@@ -156,7 +180,7 @@ export function ScorePage() {
             Score History — 12 Months
           </h2>
           <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={scoreHistory}>
+            <LineChart data={activeHistory}>
               <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
               <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis domain={[670, 760]} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
@@ -212,11 +236,11 @@ export function ScorePage() {
               <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                 Pre-Qualified Offers
               </h2>
-              <p className="text-sm text-[#94a3b8] mt-1">Based on your TraceScore of 742 — no application needed to see these</p>
+              <p className="text-sm text-[#94a3b8] mt-1">Based on your TraceScore of {score} — no extra form needed to see these</p>
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-4">
-            {lenderOffers.map((offer) => (
+            {activeOffers.map((offer) => (
               <div key={offer.name} className="rounded-xl p-5 border" style={{ borderColor: "#1e1e1e" }}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "#ff6b00" }}>
@@ -280,14 +304,23 @@ export function ScorePage() {
         <DrawerContent className="border-t border-[#1e1e1e] bg-[#111111] text-[#f0f0f0]">
           <DrawerHeader className="text-left">
             <DrawerTitle className="text-xl text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
-              Why your score is 742
+              Why your score is {score}
             </DrawerTitle>
             <DrawerDescription className="text-[#94a3b8]">
               Plain-language factor explanations for lenders and traders.
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-2 max-h-[60vh] overflow-y-auto space-y-3">
-            {scoreFactors.map((factor) => {
+            {(explanation?.factors?.length
+              ? explanation.factors.map((factor, index) => ({
+                  label: index % 2 === 0 ? "Positive signal" : "Watch signal",
+                  score: Math.max(40, 82 - index * 8),
+                  color: index % 2 === 0 ? "#16a34a" : "#ff6b00",
+                  direction: factor.direction === "positive" ? "up" : "watch",
+                  whatHelped: typeof factor.text === "string" ? factor.text : "Recent transaction performance supports this factor.",
+                  nextMove: "Keep collections stable and avoid customer concentration spikes.",
+                }))
+              : scoreFactors).map((factor) => {
               const icon =
                 factor.direction === "up" ? (
                   <NorthEast style={{ fontSize: 16, color: "#16a34a" }} />

@@ -1,6 +1,8 @@
 "use client";
 
 import { Notifications, Search, KeyboardArrowDown } from "@mui/icons-material";
+import { getInitials } from "@/lib/backend";
+import { useTraderIdentity } from "@/hooks/use-trader-identity";
 
 interface AppHeaderProps {
   role?: "user" | "lender";
@@ -8,10 +10,16 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ role = "user", title }: AppHeaderProps) {
+  const traderIdentity = useTraderIdentity(role === "user");
   const user =
     role === "lender"
       ? { name: "Zenith Capital", sub: "Partner Institution", initials: "ZC", color: "#ff6b00" }
-      : { name: "Amaka Okonkwo", sub: "Business Account", initials: "AO", color: "#ff6b00" };
+      : {
+          name: traderIdentity.user?.fullName ?? "Amaka Okonkwo",
+          sub: traderIdentity.user?.businessName ?? "Business Account",
+          initials: getInitials(traderIdentity.user?.fullName ?? "Amaka Okonkwo"),
+          color: "#ff6b00",
+        };
   const borderColor = "#1e1e1e";
   const surfaceColor = "#111111";
   const mutedColor = "#64748b";

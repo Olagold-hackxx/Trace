@@ -1,9 +1,34 @@
+"use client";
+
 import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
 import { activeLoan, lenderOffers } from "@/lib/demo-data";
+import { useTraderData } from "@/hooks/use-trader-data";
+import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 import { AccountBalanceWallet, ChevronRight, Payments, Timeline, EditNote } from "@mui/icons-material";
 
 export default function Page() {
+  const { activeLoan: backendLoan, offers } = useTraderData();
+  const visibleLoan = backendLoan
+    ? {
+        lender: backendLoan.lenderName,
+        facility: `${formatNairaFromKobo(backendLoan.principalKobo)} facility`,
+        remaining: formatNairaFromKobo(Number(backendLoan.principalKobo) - Number(backendLoan.amountRepaidKobo)),
+        monthlyRepayment: backendLoan.repaymentPctLabel,
+        nextDueDate: backendLoan.nextDueDate ? formatDateLabel(backendLoan.nextDueDate) : "Pending",
+        amount: formatNairaFromKobo(backendLoan.principalKobo),
+      }
+    : activeLoan;
+  const visibleOffers = offers.length
+    ? offers.map((offer) => ({
+        id: offer.id,
+        name: offer.lenderName,
+        amount: formatNairaFromKobo(offer.amountKobo),
+        rate: offer.rateLabel,
+        tenor: offer.tenorLabel,
+      }))
+    : lenderOffers;
+
   return (
     <AppShell role="user" title="Loans">
       <div className="p-6 max-w-6xl mx-auto">
@@ -33,7 +58,7 @@ export default function Page() {
                   Open your repayment progress, next due date, and remaining balance.
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm">
-                  <span className="text-[#cbd5e1]">{activeLoan.amount}</span>
+                  <span className="text-[#cbd5e1]">{visibleLoan.amount}</span>
                   <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "#ff6b00" }}>
                     Open
                     <ChevronRight style={{ fontSize: 16 }} />
@@ -75,7 +100,7 @@ export default function Page() {
                   Review your lender offers and accept the facility that fits your business best.
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm">
-                  <span className="text-[#cbd5e1]">{lenderOffers.length} offers ready</span>
+                  <span className="text-[#cbd5e1]">{visibleOffers.length} offers ready</span>
                   <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "#ff6b00" }}>
                     Review
                     <ChevronRight style={{ fontSize: 16 }} />
@@ -91,11 +116,11 @@ export default function Page() {
                 Current facility snapshot
               </h2>
               <div className="space-y-3 text-sm">
-                <Row label="Lender" value={activeLoan.lender} />
-                <Row label="Facility" value={activeLoan.facility} />
-                <Row label="Outstanding" value={activeLoan.remaining} />
-                <Row label="Monthly repayment" value={activeLoan.monthlyRepayment} />
-                <Row label="Next due date" value={activeLoan.nextDueDate} />
+                <Row label="Lender" value={visibleLoan.lender} />
+                <Row label="Facility" value={visibleLoan.facility} />
+                <Row label="Outstanding" value={visibleLoan.remaining} />
+                <Row label="Repayment mode" value={visibleLoan.monthlyRepayment} />
+                <Row label="Next due date" value={visibleLoan.nextDueDate} />
               </div>
             </div>
 
@@ -104,16 +129,16 @@ export default function Page() {
                 Top visible offer
               </h2>
               <div className="rounded-xl p-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                <p className="text-sm font-semibold text-[#f0f0f0]">{lenderOffers[1].name}</p>
+                <p className="text-sm font-semibold text-[#f0f0f0]">{visibleOffers[0].name}</p>
                 <p className="text-2xl font-bold text-[#f0f0f0] mt-2" style={{ fontFamily: "Epilogue, sans-serif" }}>
-                  {lenderOffers[1].amount}
+                  {visibleOffers[0].amount}
                 </p>
                 <div className="space-y-1 mt-3 text-sm text-[#94a3b8]">
-                  <p>Rate: <span className="font-semibold text-[#f0f0f0]">{lenderOffers[1].rate}</span></p>
-                  <p>Tenor: <span className="font-semibold text-[#f0f0f0]">{lenderOffers[1].tenor}</span></p>
+                  <p>Rate: <span className="font-semibold text-[#f0f0f0]">{visibleOffers[0].rate}</span></p>
+                  <p>Tenor: <span className="font-semibold text-[#f0f0f0]">{visibleOffers[0].tenor}</span></p>
                 </div>
                 <Link
-                  href={`/loan/offer?offer=${lenderOffers[1].id}`}
+                  href={`/loan/offer?offer=${visibleOffers[0].id}`}
                   className="mt-4 w-full inline-flex items-center justify-center py-3 rounded-xl text-sm font-semibold text-white"
                   style={{ backgroundColor: "#ff6b00" }}
                 >

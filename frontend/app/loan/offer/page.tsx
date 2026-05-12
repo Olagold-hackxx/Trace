@@ -5,32 +5,57 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
 import { lenderOffers } from "@/lib/demo-data";
+import { useTraderData } from "@/hooks/use-trader-data";
+import { fetchBackend, formatNairaFromKobo } from "@/lib/backend";
 import { CheckCircle, RadioButtonUnchecked, Bolt, AccessTime, Shield } from "@mui/icons-material";
 
 export default function LoanOfferPage() {
   const router = useRouter();
-  const [selectedOfferId, setSelectedOfferId] = useState(lenderOffers[1].id);
+  const { offers } = useTraderData();
+  const liveOffers = offers.length
+    ? offers.map((offer, index) => ({
+        id: offer.id,
+        name: offer.lenderName,
+        amount: formatNairaFromKobo(offer.amountKobo),
+        rate: offer.rateLabel,
+        tenor: offer.tenorLabel,
+        monthly: offer.monthlyRepaymentLabel,
+        badge: index === 0 ? "Live" : "Available",
+        badgeColor: index === 0 ? "#16a34a" : "#ff6b00",
+        badgeBg: index === 0 ? "#dcfce7" : "#3b1d09",
+        decisionWindow: "Review now",
+        disbursement: "Triggered by backend acceptance",
+        purpose: "Business capital offer",
+      }))
+    : lenderOffers;
+  const [selectedOfferId, setSelectedOfferId] = useState(liveOffers[0]?.id ?? lenderOffers[1].id);
   const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requestedOffer = params.get("offer");
-    const matchedOffer = lenderOffers.find((offer) => offer.id === requestedOffer);
+    const matchedOffer = liveOffers.find((offer) => offer.id === requestedOffer);
     if (matchedOffer) {
       setSelectedOfferId(matchedOffer.id);
     }
-  }, []);
+  }, [liveOffers]);
 
   const selectedOffer = useMemo(
-    () => lenderOffers.find((offer) => offer.id === selectedOfferId) ?? lenderOffers[1],
-    [selectedOfferId]
+    () => liveOffers.find((offer) => offer.id === selectedOfferId) ?? liveOffers[0] ?? lenderOffers[1],
+    [liveOffers, selectedOfferId]
   );
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     setAccepted(true);
-    setTimeout(() => {
+
+    try {
+      await fetchBackend(`/loans/offers/${selectedOffer.id}/accept`, {
+        method: "POST",
+      });
       router.push(`/loan/active?offer=${selectedOffer.id}`);
-    }, 900);
+    } catch {
+      setAccepted(false);
+    }
   };
 
   return (
@@ -49,7 +74,7 @@ export default function LoanOfferPage() {
             </div>
 
             <div className="space-y-4">
-              {lenderOffers.map((offer) => {
+              {liveOffers.map((offer) => {
                 const isSelected = selectedOffer.id === offer.id;
                 return (
                   <button

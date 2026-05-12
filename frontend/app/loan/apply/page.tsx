@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
+import { fetchBackend } from "@/lib/backend";
 import { CheckCircle, Description, MonetizationOn, Schedule, Storefront } from "@mui/icons-material";
 
 const tenorOptions = ["3 months", "6 months", "9 months", "12 months", "18 months"];
@@ -24,7 +25,9 @@ export default function LoanApplyPage() {
     setErrors((current) => ({ ...current, [field]: "" }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const [submitError, setSubmitError] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const nextErrors: Record<string, string> = {};
 
@@ -37,7 +40,23 @@ export default function LoanApplyPage() {
       return;
     }
 
-    setSubmitted(true);
+    setSubmitError("");
+
+    try {
+      await fetchBackend("/loans/applications", {
+        method: "POST",
+        bodyJson: {
+          amountKobo: String(Number(form.amount.replace(/[^\d]/g, "")) * 100),
+          purpose: form.purpose,
+          tenor: form.tenor,
+          revenueSource: form.revenueSource,
+          proposal: form.proposal,
+        },
+      });
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Could not submit loan application");
+    }
   };
 
   return (
@@ -138,6 +157,7 @@ export default function LoanApplyPage() {
                     Submit Application
                   </button>
                 </div>
+                {submitError ? <p className="text-xs text-[#f87171]">{submitError}</p> : null}
               </form>
             ) : (
               <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>

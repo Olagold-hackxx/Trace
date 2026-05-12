@@ -5,6 +5,7 @@ import { MetricCard } from "@/components/common/metric-card";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
+import { useTraderData } from "@/hooks/use-trader-data";
 import {
   Wallet,
   TrendingUp,
@@ -30,6 +31,7 @@ import {
   Area,
 } from "recharts";
 import { baseTransactions, formatNaira, liveDashboardEvents } from "@/lib/demo-data";
+import { buildBackendUrl, buildPaymentLinkUrl, formatDateLabel } from "@/lib/backend";
 
 const revenueData = [
   { month: "Dec", revenue: 320000, expenses: 98000 },
@@ -56,8 +58,9 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function DashboardPage() {
+  const { user, virtualAccount, score, summary, transactions, defaultPaymentLink, offers } = useTraderData();
   const [copied, setCopied] = useState(false);
-  const liveStarted = useRef(false);
+  const streamStarted = useRef(false);
   const [metrics, setMetrics] = useState({
     revenue: 710000,
     pendingPayments: 45200,
@@ -68,15 +71,54 @@ export default function DashboardPage() {
   });
   const [recentTransactions, setRecentTransactions] = useState(baseTransactions);
   const [liveFeed, setLiveFeed] = useState(
-    liveDashboardEvents.map((event, index) => ({
+    liveDashboardEvents.slice(0, 2).map((event, index) => ({
       id: `${event.id}-seed`,
-      label: index === 0 ? "Listening for live events" : "Queued simulation",
+      label: index === 0 ? "Stream ready" : "Awaiting backend event",
       title: event.title,
       description: event.description,
       status: index === 0 ? "Connected" : "Waiting",
     }))
   );
-  const paymentLink = "https://pay.trace.ng/amaka-foods";
+  const paymentLink = buildPaymentLinkUrl(defaultPaymentLink?.slug);
+  const displayName = user?.fullName?.split(" ")[0] ?? "Amaka";
+  const businessName = user?.businessName ?? "Amaka Foods";
+
+  useEffect(() => {
+    setMetrics((current) => ({
+      ...current,
+      revenue: summary ? Math.round(summary.totalInflowKobo / 100) : current.revenue,
+      balance: summary ? Math.round(summary.balanceKobo / 100) : current.balance,
+      pendingPayments: transactions
+        .filter((transaction) => transaction.status === "pending")
+        .reduce((sum, transaction) => sum + Math.round(Number(transaction.amountKobo) / 100), 0),
+      score: score?.score ?? current.score,
+      preQualifiedAmount:
+        offers.length > 0 ? Math.round(Number(offers[0].amountKobo) / 100) : current.preQualifiedAmount,
+    }));
+  }, [offers, score?.score, summary, transactions]);
+
+  useEffect(() => {
+    if (transactions.length === 0) return;
+
+    setRecentTransactions(
+      transactions.map((transaction) => ({
+        id: transaction.id,
+        date: formatDateLabel(transaction.occurredAt),
+        desc: transaction.senderName ?? transaction.reference,
+        type:
+          transaction.type === "debit" || transaction.type === "loan_repayment"
+            ? "Debit"
+            : "Credit",
+        amount: Math.round(Number(transaction.amountKobo) / 100),
+        status:
+          transaction.status === "success"
+            ? "Success"
+            : transaction.status === "failed"
+              ? "Failed"
+              : "Pending",
+      }))
+    );
+  }, [transactions]);
 
   const copy = () => {
     navigator.clipboard.writeText(paymentLink);
@@ -85,46 +127,111 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    if (liveStarted.current) return;
-    liveStarted.current = true;
+    if (!user?.id || streamStarted.current) return;
+    streamStarted.current = true;
 
-    const timers = liveDashboardEvents.map((event, index) =>
-      window.setTimeout(() => {
-        setMetrics((current) => ({
-          revenue: current.revenue + (event.revenueDelta ?? 0),
-          pendingPayments: Math.max(0, current.pendingPayments + (event.pendingPaymentsDelta ?? 0)),
-          score: current.score + (event.scoreDelta ?? 0),
-          scoreTrend: current.scoreTrend + ((event.scoreDelta ?? 0) > 0 ? 0.9 : 0),
-          balance: current.balance + (event.balanceDelta ?? 0),
-          preQualifiedAmount: event.preQualifiedAmount ?? current.preQualifiedAmount,
-        }));
+    const eventSource = new EventSource(buildBackendUrl(`/api/v1/stream/user/${user.id}`), {
+      withCredentials: true,
+    });
 
-        if (event.transaction) {
-          setRecentTransactions((current) => [event.transaction!, ...current].slice(0, 8));
+    eventSource.onmessage = (event) => {
+      try {
+        const parsed = JSON.parse(event.data) as {
+          type: string;
+          payload: Record<string, unknown>;
+          createdAt: string;
+        };
+
+        if (parsed.type === "stream.connected") {
+          setLiveFeed((current) => [
+            {
+              id: "stream.connected",
+              label: "Realtime connected",
+              title: "Live updates online",
+              description: "Incoming payments, score changes, and fraud alerts will appear here.",
+              status: "Just now",
+            },
+            ...current,
+          ].slice(0, 5));
+          return;
+        }
+
+        if (parsed.type === "transaction.created") {
+          const amountKobo = Number(parsed.payload.amountKobo ?? 0);
+          const reference = String(parsed.payload.reference ?? "Live transaction");
+          const status = String(parsed.payload.status ?? "pending");
+
+          setMetrics((current) => ({
+            ...current,
+            pendingPayments: status === "pending"
+              ? current.pendingPayments + Math.round(amountKobo / 100)
+              : current.pendingPayments,
+          }));
+
+          setRecentTransactions((current) => [
+            {
+              id: reference,
+              date: formatDateLabel(parsed.createdAt),
+              desc: reference,
+              type: "Credit",
+              amount: Math.round(amountKobo / 100),
+              status: status === "success" ? "Success" : status === "failed" ? "Failed" : "Pending",
+            },
+            ...current,
+          ].slice(0, 8));
+        }
+
+        if (parsed.type === "loan.disbursed") {
+          const amountKobo = Number(parsed.payload.amountKobo ?? 0);
+          setMetrics((current) => ({
+            ...current,
+            preQualifiedAmount: Math.round(amountKobo / 100),
+          }));
+        }
+
+        if (parsed.type === "fraud.alert") {
+          toast({
+            title: "Fraud alert",
+            description: String(parsed.payload.message ?? "Anomalous activity detected."),
+          });
         }
 
         setLiveFeed((current) => [
           {
-            id: event.id,
-            label: event.label,
-            title: event.title,
-            description: event.description,
+            id: `${parsed.type}-${parsed.createdAt}`,
+            label: parsed.type.replace(/\./g, " "),
+            title: parsed.type === "transaction.created" ? "New live transaction" : parsed.type,
+            description:
+              parsed.type === "transaction.created"
+                ? `Reference ${String(parsed.payload.reference ?? "n/a")} was recorded.`
+                : String(parsed.payload.message ?? JSON.stringify(parsed.payload)),
             status: "Just now",
           },
           ...current,
         ].slice(0, 5));
+      } catch {
+        // Ignore malformed events and keep the stream alive.
+      }
+    };
 
-        toast({
-          title: event.title,
-          description: event.description,
-        });
-      }, 4000 * (index + 1))
-    );
+    eventSource.onerror = () => {
+      setLiveFeed((current) => [
+        {
+          id: "stream.error",
+          label: "Realtime paused",
+          title: "Live connection dropped",
+          description: "The dashboard stream disconnected. Refresh to reconnect.",
+          status: "Now",
+        },
+        ...current,
+      ].slice(0, 5));
+    };
 
     return () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
+      eventSource.close();
+      streamStarted.current = false;
     };
-  }, []);
+  }, [user?.id]);
 
   return (
     <AppShell role="user">
@@ -133,9 +240,9 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
-              Good morning, Amaka 👋
+              Good morning, {displayName} 👋
             </h1>
-            <p className="text-[#94a3b8] text-sm mt-1">Saturday, May 10, 2026 · Amaka Foods</p>
+            <p className="text-[#94a3b8] text-sm mt-1">{businessName}</p>
           </div>
           <Link
             href="/payments"
@@ -164,7 +271,9 @@ export default function DashboardPage() {
             <ContentCopy style={{ fontSize: 16 }} />
             {copied ? "Copied!" : "Copy link"}
           </button>
-          <div className="hidden lg:block text-xs text-[#94a3b8]">Your Trace payment link · share with anyone</div>
+          <div className="hidden lg:block text-xs text-[#94a3b8]">
+            Virtual account: {virtualAccount?.accountNumber ?? "2411166689"} · {virtualAccount?.bankName ?? "GTBank"}
+          </div>
         </div>
 
         <div className="rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>

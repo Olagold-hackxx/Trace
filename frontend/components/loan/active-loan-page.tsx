@@ -1,9 +1,33 @@
+"use client";
+
 import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
 import { activeLoan } from "@/lib/demo-data";
+import { useTraderData } from "@/hooks/use-trader-data";
+import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 import { CalendarMonth, CheckCircle, Payments, Shield, Timeline } from "@mui/icons-material";
 
 export function ActiveLoanPage() {
+  const { activeLoan: backendLoan } = useTraderData();
+  const loanView = backendLoan
+    ? {
+        facility: `${formatNairaFromKobo(backendLoan.principalKobo)} working capital facility`,
+        lender: backendLoan.lenderName,
+        amount: formatNairaFromKobo(backendLoan.principalKobo),
+        monthlyRepayment: backendLoan.repaymentPctLabel,
+        remaining: formatNairaFromKobo(Number(backendLoan.principalKobo) - Number(backendLoan.amountRepaidKobo)),
+        completionPct: Number(backendLoan.principalKobo) === 0
+          ? 0
+          : Math.round((Number(backendLoan.amountRepaidKobo) / Number(backendLoan.principalKobo)) * 100),
+        repaid: formatNairaFromKobo(backendLoan.amountRepaidKobo),
+        disbursedOn: formatDateLabel(backendLoan.createdAt),
+        nextDueDate: backendLoan.nextDueDate ? formatDateLabel(backendLoan.nextDueDate) : "Pending",
+        rate: backendLoan.rateLabel,
+        tenor: backendLoan.tenorLabel,
+        autopayEnabled: backendLoan.repaymentMethod === "cash_flow_indexed",
+      }
+    : activeLoan;
+
   return (
     <AppShell role="user" title="Loans">
       <div className="p-6 max-w-6xl mx-auto">
@@ -12,31 +36,31 @@ export function ActiveLoanPage() {
             <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ff6b00] mb-3">Live facility</p>
               <h1 className="text-3xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
-                {activeLoan.facility}
+                {loanView.facility}
               </h1>
               <p className="text-sm text-[#94a3b8] mt-2">
-                Your facility is active with {activeLoan.lender}. Track repayment progress, next due date, and remaining balance here.
+                Your facility is active with {loanView.lender}. Track repayment progress, next due date, and remaining balance here.
               </p>
             </div>
 
             <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
               <div className="grid md:grid-cols-3 gap-4 mb-5">
-                <LoanMetric label="Facility amount" value={activeLoan.amount} icon={Payments} />
-                <LoanMetric label="Monthly repayment" value={activeLoan.monthlyRepayment} icon={CalendarMonth} />
-                <LoanMetric label="Remaining balance" value={activeLoan.remaining} icon={Timeline} />
+                <LoanMetric label="Facility amount" value={loanView.amount} icon={Payments} />
+                <LoanMetric label="Repayment mode" value={loanView.monthlyRepayment} icon={CalendarMonth} />
+                <LoanMetric label="Remaining balance" value={loanView.remaining} icon={Timeline} />
               </div>
 
               <div className="rounded-xl p-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-[#f0f0f0]">Repayment progress</p>
-                  <p className="text-sm font-bold text-[#ff6b00]">{activeLoan.completionPct}% complete</p>
+                  <p className="text-sm font-bold text-[#ff6b00]">{loanView.completionPct}% complete</p>
                 </div>
                 <div className="h-3 rounded-full overflow-hidden mb-3" style={{ backgroundColor: "#1e1e1e" }}>
-                  <div className="h-full rounded-full" style={{ width: `${activeLoan.completionPct}%`, backgroundColor: "#ff6b00" }} />
+                  <div className="h-full rounded-full" style={{ width: `${loanView.completionPct}%`, backgroundColor: "#ff6b00" }} />
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#94a3b8]">Repaid: <span className="font-semibold text-[#f0f0f0]">{activeLoan.repaid}</span></span>
-                  <span className="text-[#94a3b8]">Outstanding: <span className="font-semibold text-[#f0f0f0]">{activeLoan.remaining}</span></span>
+                  <span className="text-[#94a3b8]">Repaid: <span className="font-semibold text-[#f0f0f0]">{loanView.repaid}</span></span>
+                  <span className="text-[#94a3b8]">Outstanding: <span className="font-semibold text-[#f0f0f0]">{loanView.remaining}</span></span>
                 </div>
               </div>
             </div>
@@ -47,9 +71,9 @@ export function ActiveLoanPage() {
               </h2>
               <div className="space-y-4">
                 {[
-                  { title: "Facility disbursed", date: activeLoan.disbursedOn, status: "completed" },
+                  { title: "Facility disbursed", date: loanView.disbursedOn, status: "completed" },
                   { title: "1st repayment processed", date: "June 12, 2026", status: "completed" },
-                  { title: "2nd repayment scheduled", date: activeLoan.nextDueDate, status: "current" },
+                  { title: "Next repayment checkpoint", date: loanView.nextDueDate, status: "current" },
                   { title: "Final repayment", date: "May 12, 2027", status: "upcoming" },
                 ].map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
@@ -77,11 +101,11 @@ export function ActiveLoanPage() {
                 Facility details
               </h2>
               <div className="space-y-3 text-sm">
-                <Row label="Lender" value={activeLoan.lender} />
-                <Row label="Rate" value={activeLoan.rate} />
-                <Row label="Tenor" value={activeLoan.tenor} />
-                <Row label="Next due date" value={activeLoan.nextDueDate} />
-                <Row label="Auto debit" value={activeLoan.autopayEnabled ? "Enabled" : "Disabled"} />
+                <Row label="Lender" value={loanView.lender} />
+                <Row label="Rate" value={loanView.rate} />
+                <Row label="Tenor" value={loanView.tenor} />
+                <Row label="Next due date" value={loanView.nextDueDate} />
+                <Row label="Auto debit" value={loanView.autopayEnabled ? "Enabled" : "Disabled"} />
               </div>
             </div>
 

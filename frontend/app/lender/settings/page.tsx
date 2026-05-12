@@ -1,7 +1,7 @@
 "use client";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Business,
   Lock,
@@ -12,14 +12,21 @@ import {
   VisibilityOff,
   CheckCircle,
 } from "@mui/icons-material";
+import { fetchBackend, formatNairaFromKobo } from "@/lib/backend";
 
 const tabs = ["Institution", "Underwriting Rules", "Notifications", "API Access"];
+
+interface ApiKeysPayload {
+  publicKey: string;
+  docs: string[];
+}
 
 export default function LenderSettingsPage() {
   const [activeTab, setActiveTab] = useState("Institution");
   const [showKey, setShowKey] = useState(false);
   const [saved, setSaved] = useState(false);
-
+  const [apiKeys, setApiKeys] = useState<ApiKeysPayload | null>(null);
+  const [settlementAccount, setSettlementAccount] = useState("Zenith Bank — 1234567890");
   const [settings, setSettings] = useState({
     institutionName: "Zenith Capital Finance",
     contactEmail: "loans@zenithcapital.ng",
@@ -37,9 +44,71 @@ export default function LenderSettingsPage() {
     weeklyReport: true,
   });
 
-  const handleSave = () => {
+  useEffect(() => {
+    void Promise.all([
+      fetchBackend<{
+        institutionName: string;
+        minScore: number;
+        maxAmountKobo: number;
+        riskTolerance: string;
+      }>("/lender/settings"),
+      fetchBackend<ApiKeysPayload>("/lender/api-keys"),
+    ]).then(([backendSettings, backendApiKeys]) => {
+      setSettings((current) => ({
+        ...current,
+        institutionName: backendSettings.institutionName,
+        minScore: String(backendSettings.minScore),
+        maxAmount: String(Math.round(backendSettings.maxAmountKobo / 100)),
+        riskTolerance: backendSettings.riskTolerance,
+      }));
+      setApiKeys(backendApiKeys);
+    });
+  }, []);
+
+  const flashSaved = () => {
     setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    window.setTimeout(() => setSaved(false), 3000);
+  };
+
+  const handleSave = async () => {
+    await fetchBackend("/lender/settings", {
+      method: "PATCH",
+      bodyJson: {
+        institutionName: settings.institutionName,
+        contactEmail: settings.contactEmail,
+        phone: settings.phone,
+        address: settings.address,
+        rcNumber: settings.rcNumber,
+        minScore: Number(settings.minScore),
+        maxAmountKobo: Number(settings.maxAmount) * 100,
+        defaultRate: Number(settings.defaultRate),
+        maxTenor: Number(settings.maxTenor),
+        riskTolerance: settings.riskTolerance,
+        notifications: {
+          emailAlerts: settings.emailAlerts,
+          newApplications: settings.newApplications,
+          repaymentDue: settings.repaymentDue,
+          weeklyReport: settings.weeklyReport,
+        },
+      },
+    });
+    flashSaved();
+  };
+
+  const handleAddSettlementAccount = async () => {
+    const payload = {
+      bankName: "Zenith Bank",
+      accountNumber: "1234567890",
+      label: "Primary settlement account",
+    };
+
+    await fetchBackend<{ account?: { bankName?: string; accountNumber?: string } }>("/lender/settlement-accounts", {
+      method: "POST",
+      bodyJson: payload,
+    });
+
+    setSettlementAccount(`${payload.bankName} — ${payload.accountNumber}`);
+    flashSaved();
   };
 
   return (
@@ -48,29 +117,23 @@ export default function LenderSettingsPage() {
         {saved && (
           <div className="mb-4 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: "#dcfce7", border: "1px solid #bbf7d0" }}>
             <CheckCircle style={{ fontSize: 20, color: "#16a34a" }} />
-            <p className="text-sm font-semibold text-[#16a34a]">Settings saved successfully.</p>
+            <p className="text-sm font-semibold text-[#16a34a]">Settings synced with the lender backend.</p>
           </div>
         )}
 
-        {/* Tabs */}
         <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
           {tabs.map((t) => (
             <button
               key={t}
               onClick={() => setActiveTab(t)}
               className="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all"
-              style={
-                activeTab === t
-                  ? { backgroundColor: "#ff6b00", color: "#fff" }
-                  : { color: "#cbd5e1" }
-              }
+              style={activeTab === t ? { backgroundColor: "#ff6b00", color: "#fff" } : { color: "#cbd5e1" }}
             >
               {t}
             </button>
           ))}
         </div>
 
-        {/* Institution Tab */}
         {activeTab === "Institution" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
@@ -102,24 +165,23 @@ export default function LenderSettingsPage() {
             <div className="mt-6 pt-6 border-t" style={{ borderColor: "#1e1e1e" }}>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-[#f0f0f0] text-sm">Settlement Account</h3>
-                <button className="text-sm font-semibold" style={{ color: "#ff6b00" }}>Add account</button>
+                <button onClick={() => void handleAddSettlementAccount()} className="text-sm font-semibold" style={{ color: "#ff6b00" }}>Add account</button>
               </div>
               <div className="p-4 rounded-xl flex items-center gap-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 <AccountBalance style={{ fontSize: 24, color: "#ff6b00" }} />
                 <div>
-                  <p className="text-sm font-semibold text-[#f0f0f0]">Zenith Bank — 1234567890</p>
+                  <p className="text-sm font-semibold text-[#f0f0f0]">{settlementAccount}</p>
                   <p className="text-xs text-[#94a3b8]">Primary disbursement & repayment account</p>
                 </div>
                 <span className="ml-auto text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>Verified</span>
               </div>
             </div>
-            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
+            <button onClick={() => void handleSave()} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
               <Save style={{ fontSize: 18 }} />Save Changes
             </button>
           </div>
         )}
 
-        {/* Underwriting Rules Tab */}
         {activeTab === "Underwriting Rules" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
@@ -171,7 +233,9 @@ export default function LenderSettingsPage() {
             </div>
             <div className="mt-5 p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
               <p className="text-xs font-semibold text-[#cbd5e1] mb-2">Auto-approval Threshold</p>
-              <p className="text-sm text-[#94a3b8]">Applications with TraceScore ≥ 750 and amount ≤ ₦500,000 will be auto-approved.</p>
+              <p className="text-sm text-[#94a3b8]">
+                Applications with TraceScore ≥ {settings.minScore} and amount ≤ {formatNairaFromKobo(Number(settings.maxAmount) * 100)} stay within your configured range.
+              </p>
               <label className="flex items-center gap-3 mt-3 cursor-pointer">
                 <div className="relative w-10 h-5 rounded-full transition-all" style={{ backgroundColor: "#ff6b00" }}>
                   <div className="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-[#111111]" />
@@ -179,13 +243,12 @@ export default function LenderSettingsPage() {
                 <span className="text-sm font-medium text-[#f0f0f0]">Auto-approve enabled</span>
               </label>
             </div>
-            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
+            <button onClick={() => void handleSave()} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
               <Save style={{ fontSize: 18 }} />Save Rules
             </button>
           </div>
         )}
 
-        {/* Notifications Tab */}
         {activeTab === "Notifications" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
@@ -219,13 +282,12 @@ export default function LenderSettingsPage() {
                 </div>
               ))}
             </div>
-            <button onClick={handleSave} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
+            <button onClick={() => void handleSave()} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90" style={{ backgroundColor: "#ff6b00" }}>
               <Save style={{ fontSize: 18 }} />Save Preferences
             </button>
           </div>
         )}
 
-        {/* API Access Tab */}
         {activeTab === "API Access" && (
           <div className="bg-[#111111] rounded-2xl p-6" style={{ border: "1px solid #1e1e1e", boxShadow: "0px 4px 20px rgba(15,23,42,0.05)" }}>
             <div className="flex items-center gap-3 mb-6">
@@ -234,14 +296,14 @@ export default function LenderSettingsPage() {
               </div>
               <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>API Access</h2>
             </div>
-            <p className="text-sm text-[#cbd5e1] mb-6">Use our API to integrate TraceScore directly into your loan origination system.</p>
+            <p className="text-sm text-[#cbd5e1] mb-6">Use the lender API to pull score, profile, and repayment decisions into your origination stack.</p>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">API Key</label>
+                <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Public API Key</label>
                 <div className="flex items-center gap-2">
                   <input
                     type={showKey ? "text" : "password"}
-                    value="trc_live_zenith_k92mxpq4n8rlzjew"
+                    value={apiKeys?.publicKey ?? "loading..."}
                     readOnly
                     className="flex-1 px-3 py-2.5 text-sm rounded-xl border font-mono outline-none"
                     style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
@@ -254,17 +316,16 @@ export default function LenderSettingsPage() {
               <div className="p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                 <p className="text-xs font-semibold text-[#cbd5e1] mb-3">API Endpoints</p>
                 <div className="space-y-2 font-mono text-xs text-[#f0f0f0]">
-                  <p>GET /v1/tracescore/{"{merchant_id}"}</p>
-                  <p>GET /v1/merchants/{"{merchant_id}"}/profile</p>
-                  <p>POST /v1/loans/decision</p>
-                  <p>GET /v1/loans/{"{loan_id}"}/repayments</p>
+                  {(apiKeys?.docs ?? []).map((doc) => (
+                    <p key={doc}>{doc}</p>
+                  ))}
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: "API Calls (30d)", val: "4,291" },
-                  { label: "Avg Response", val: "120ms" },
-                  { label: "Error Rate", val: "0.02%" },
+                  { label: "Live Routes", val: String((apiKeys?.docs ?? []).length) },
+                  { label: "Policy Floor", val: settings.minScore },
+                  { label: "Max Ticket", val: formatNairaFromKobo(Number(settings.maxAmount) * 100) },
                 ].map((s) => (
                   <div key={s.label} className="p-3 rounded-xl text-center" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                     <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{s.val}</p>

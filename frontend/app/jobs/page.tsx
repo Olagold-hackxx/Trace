@@ -4,26 +4,13 @@ import { AppShell } from "@/components/layout/app-shell";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Add, People, CheckCircle, Cancel, AccessTime, Work, ChevronRight } from "@mui/icons-material";
-
-const initialPostedJobs = [
-  { id: "p1", title: "Sales Assistant", status: "Active", applicants: 14, hired: 2, pay: "₦8,500/day", posted: "May 8", expires: "May 15", category: "Sales" },
-  { id: "p2", title: "Market Supervisor", status: "Active", applicants: 7, hired: 1, pay: "₦12,000/day", posted: "May 9", expires: "May 13", category: "Management" },
-  { id: "p3", title: "Delivery Rider", status: "Completed", applicants: 22, hired: 3, pay: "₦6,000/day", posted: "May 1", expires: "May 7", category: "Delivery" },
-  { id: "p4", title: "Event Caterer", status: "Draft", applicants: 0, hired: 0, pay: "₦15,000/event", posted: "—", expires: "—", category: "Catering" },
-  { id: "p5", title: "Cashier", status: "Closed", applicants: 31, hired: 2, pay: "₦5,500/day", posted: "Apr 20", expires: "Apr 27", category: "Finance" },
-  { id: "p6", title: "Store Cleaner", status: "Completed", applicants: 9, hired: 1, pay: "₦3,500/day", posted: "Apr 15", expires: "Apr 17", category: "Cleaning" },
-];
-
-const appliedJobs = [
-  { id: "a1", title: "Brand Promoter", company: "LagosDrinks Co.", status: "Pending", pay: "₦8,000/day", applied: "May 9", location: "Alimosho" },
-  { id: "a2", title: "Office Admin", company: "Trace Partner SME", status: "Accepted", pay: "₦6,500/day", applied: "May 7", location: "Gbagada" },
-  { id: "a3", title: "Security Guard", company: "SafeGuard Ltd", status: "Pending", pay: "₦7,000/shift", applied: "May 6", location: "Maryland" },
-  { id: "a4", title: "Kitchen Assistant", company: "Eko Buka", status: "Rejected", pay: "₦5,000/day", applied: "May 4", location: "Agege" },
-  { id: "a5", title: "Inventory Counter", company: "Wholesale Plus", status: "Accepted", pay: "₦4,000/day", applied: "May 2", location: "Trade Fair" },
-  { id: "a6", title: "Store Assistant", company: "Fashion Hub", status: "Pending", pay: "₦4,500/day", applied: "Apr 30", location: "Oshodi" },
-  { id: "a7", title: "Sales Rep", company: "Kemi Snacks", status: "Rejected", pay: "₦7,500/day", applied: "Apr 28", location: "Yaba" },
-  { id: "a8", title: "Event Helper", company: "Mama Cooks", status: "Accepted", pay: "₦5,000/event", applied: "Apr 25", location: "V.I." },
-];
+import {
+  BackendJob,
+  BackendJobApplication,
+  fetchBackend,
+  formatDateLabel,
+  formatNairaFromKobo,
+} from "@/lib/backend";
 
 const statusMap: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
   Active: { color: "#16a34a", bg: "#dcfce7", icon: CheckCircle },
@@ -46,12 +33,15 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function JobsPage() {
-  const [postedJobs, setPostedJobs] = useState(initialPostedJobs);
+  const [postedJobs, setPostedJobs] = useState<BackendJob[]>([]);
+  const [appliedJobs, setAppliedJobs] = useState<BackendJobApplication[]>([]);
+  const [jobsIndex, setJobsIndex] = useState<Record<string, BackendJob>>({});
   const [tab, setTab] = useState<"posted" | "applied">("posted");
   const [showPostForm, setShowPostForm] = useState(false);
   const [form, setForm] = useState({ title: "", category: "", pay: "", duration: "", location: "", desc: "" });
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -63,35 +53,57 @@ export default function JobsPage() {
       setTab("posted");
       setShowPostForm(true);
     }
+
+    void loadJobs();
   }, []);
 
-  const handlePostJob = () => {
+  const loadJobs = async () => {
+    setLoading(true);
+    try {
+      const [mine, applications, marketplace] = await Promise.all([
+        fetchBackend<BackendJob[]>("/jobs/mine"),
+        fetchBackend<BackendJobApplication[]>("/job-applications/mine"),
+        fetchBackend<BackendJob[]>("/marketplace/jobs"),
+      ]);
+
+      setPostedJobs(mine);
+      setAppliedJobs(applications);
+      setJobsIndex(Object.fromEntries(marketplace.map((job) => [job.id, job])));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePostJob = async () => {
     if (!form.title || !form.category || !form.pay || !form.duration || !form.location || !form.desc) {
       setFormError("Fill in the full job form before posting.");
       setFormSuccess(null);
       return;
     }
 
-    const amount = Number(form.pay);
-    const postedLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    const nextJob = {
-      id: `p${Date.now()}`,
-      title: form.title,
-      status: "Active",
-      applicants: 0,
-      hired: 0,
-      pay: Number.isFinite(amount) && amount > 0 ? `₦${amount.toLocaleString()}/day` : form.pay,
-      posted: postedLabel,
-      expires: form.duration,
-      category: form.category,
-    };
+    try {
+      const nextJob = await fetchBackend<BackendJob>("/jobs", {
+        method: "POST",
+        bodyJson: {
+          title: form.title,
+          category: form.category,
+          payKobo: String(Number(form.pay) * 100),
+          durationLabel: form.duration,
+          location: form.location,
+          description: form.desc,
+        },
+      });
 
-    setPostedJobs((current) => [nextJob, ...current]);
-    setForm({ title: "", category: "", pay: "", duration: "", location: "", desc: "" });
-    setFormError(null);
-    setFormSuccess(`${nextJob.title} is now live in your posted jobs.`);
-    setShowPostForm(false);
-    setTab("posted");
+      setForm({ title: "", category: "", pay: "", duration: "", location: "", desc: "" });
+      setFormError(null);
+      setFormSuccess(`${nextJob.title} is now live in your posted jobs.`);
+      setShowPostForm(false);
+      setTab("posted");
+      await loadJobs();
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Could not post job.");
+      setFormSuccess(null);
+    }
   };
 
   return (
@@ -208,23 +220,23 @@ export default function JobsPage() {
                         <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#3b1d09" }}>
                           <Work style={{ fontSize: 16, color: "#ff6b00" }} />
                         </div>
-                        <span className="font-semibold text-[#f0f0f0]">{j.title}</span>
+                            <span className="font-semibold text-[#f0f0f0]">{j.title}</span>
                       </div>
                     </td>
                     <td className="px-5 py-4 text-[#cbd5e1]">{j.category}</td>
-                    <td className="px-5 py-4"><StatusBadge status={j.status} /></td>
+                    <td className="px-5 py-4"><StatusBadge status={j.status === "active" ? "Active" : j.status} /></td>
                     <td className="px-5 py-4">
                       <span className="flex items-center gap-1 text-[#cbd5e1]">
-                        <People style={{ fontSize: 14 }} />{j.applicants}
+                        <People style={{ fontSize: 14 }} />{appliedJobs.filter((application) => application.jobId === j.id).length}
                       </span>
                     </td>
-                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{j.hired}</td>
-                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{j.pay}</td>
-                    <td className="px-5 py-4 text-[#94a3b8]">{j.posted}</td>
+                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">0</td>
+                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{formatNairaFromKobo(j.payKobo)}/day</td>
+                    <td className="px-5 py-4 text-[#94a3b8]">{formatDateLabel(j.createdAt)}</td>
                     <td className="px-5 py-4">
-                      <button className="flex items-center gap-1 text-xs font-semibold transition-colors hover:underline" style={{ color: "#ff6b00" }}>
+                      <Link href={`/jobs/${j.id}`} className="flex items-center gap-1 text-xs font-semibold transition-colors hover:underline" style={{ color: "#ff6b00" }}>
                         View <ChevronRight style={{ fontSize: 14 }} />
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -236,31 +248,35 @@ export default function JobsPage() {
         {/* Applied Jobs */}
         {tab === "applied" && (
           <div className="space-y-3">
-            {appliedJobs.map((j) => (
+            {appliedJobs.map((j) => {
+              const job = jobsIndex[j.jobId];
+              return (
               <div key={j.id} className="rounded-2xl p-5 flex items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00" }}>
-                    {j.company[0]}
+                    {job?.title?.[0] ?? "J"}
                   </div>
                   <div>
-                    <p className="font-semibold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{j.title}</p>
-                    <p className="text-sm text-[#cbd5e1]">{j.company} · {j.location}</p>
-                    <p className="text-xs text-[#94a3b8] mt-0.5">Applied {j.applied}</p>
+                    <p className="font-semibold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{job?.title ?? "Marketplace role"}</p>
+                    <p className="text-sm text-[#cbd5e1]">{job?.category ?? "General"} · {job?.location ?? "Lagos"}</p>
+                    <p className="text-xs text-[#94a3b8] mt-0.5">Applied {formatDateLabel(j.createdAt)}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 flex-none">
-                  <span className="text-sm font-bold text-[#f0f0f0]">{j.pay}</span>
-                  <StatusBadge status={j.status} />
-                  {j.status === "Accepted" && (
+                  <span className="text-sm font-bold text-[#f0f0f0]">{job ? `${formatNairaFromKobo(job.payKobo)}/day` : "Flexible"}</span>
+                  <StatusBadge status={j.status.charAt(0).toUpperCase() + j.status.slice(1)} />
+                  {j.status === "accepted" && (
                     <button className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white" style={{ backgroundColor: "#16a34a" }}>
                       View details
                     </button>
                   )}
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         )}
+
+        {loading ? <p className="mt-4 text-sm text-[#94a3b8]">Loading jobs...</p> : null}
 
         {/* Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">

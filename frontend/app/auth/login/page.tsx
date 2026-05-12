@@ -9,6 +9,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import {
+  BackendUser,
+  BackendVirtualAccount,
+  DEMO_TRADER_LOGIN_PHONE,
+  fetchBackend,
+  persistTraderSession,
+} from "@/lib/backend";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,18 +33,40 @@ export default function LoginPage() {
     return errs;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
     }
+
     setLoading(true);
-    setTimeout(() => {
+    setErrors({});
+
+    try {
+      await fetchBackend("/auth/login", {
+        method: "POST",
+        bodyJson: {
+          phone: DEMO_TRADER_LOGIN_PHONE,
+          password: formData.password,
+        },
+      });
+
+      const [user, virtualAccount] = await Promise.all([
+        fetchBackend<BackendUser>("/users/me"),
+        fetchBackend<BackendVirtualAccount>("/virtual-accounts/me"),
+      ]);
+
+      persistTraderSession({ user, virtualAccount });
       setLoading(false);
       router.push("/dashboard");
-    }, 1200);
+    } catch (submitError) {
+      setLoading(false);
+      setErrors({
+        password: submitError instanceof Error ? submitError.message : "Could not sign you in",
+      });
+    }
   };
 
   const handleChange = (field: string, value: string) => {
