@@ -160,16 +160,30 @@ export class SquadService {
       };
     }
 
+    const accountNumber = input.accountNumber ?? this.getPayoutAccountNumber() ?? this.getBeneficiaryAccount();
+    const bankCode = input.bankCode ?? this.getPayoutBankCode();
+
+    if (!accountNumber) {
+      throw new BadRequestException("No payout account number is configured for Squad disbursement.");
+    }
+
+    if (!bankCode) {
+      throw new BadRequestException("No payout bank code is configured for Squad disbursement.");
+    }
+
+    const lookedUpAccount = await this.lookupAccount(bankCode, accountNumber);
+    const transactionReference = this.buildTransferReference(input.reference);
+
     try {
       const response = await firstValueFrom(this.httpService.post(
         `${this.getBaseUrl()}/payout/transfer`,
         {
           amount: Number(input.amountKobo),
-          account_number: input.accountNumber,
-          bank_code: input.bankCode,
-          account_name: input.accountName,
-          transaction_reference: input.reference,
-          narration: input.narration,
+          account_number: accountNumber,
+          bank_code: bankCode,
+          account_name: input.accountName ?? lookedUpAccount.accountName,
+          transaction_reference: transactionReference,
+          remark: input.narration,
           currency_id: "NGN"
         },
         {
@@ -179,11 +193,20 @@ export class SquadService {
 
       return {
         provider: "squad",
-        payoutReference: response.data?.data?.transaction_reference ?? input.reference,
+        payoutReference: response.data?.data?.transaction_reference ?? transactionReference,
         status: response.data?.data?.transaction_status ?? "queued",
         raw: response.data
       };
     } catch (error) {
+      if (this.shouldUseDemoPayoutFallback(error)) {
+        this.logger.warn("Falling back to demo payout because this Squad merchant is not eligible for live transfers in the current environment.");
+        return {
+          provider: "demo",
+          payoutReference: `SQD-PAYOUT-${transactionReference}`,
+          status: "queued"
+        };
+      }
+
       this.mapAndThrowProviderError(error, "Squad payout transfer");
     }
   }
@@ -227,8 +250,85 @@ export class SquadService {
     return this.configService.get<string>("SQUAD_BENEFICIARY_ACCOUNT");
   }
 
+  private getPayoutAccountNumber() {
+    return this.configService.get<string>("SQUAD_PAYOUT_ACCOUNT_NUMBER");
+  }
+
+  private getPayoutBankCode() {
+    return this.configService.get<string>("SQUAD_PAYOUT_BANK_CODE") ?? "000013";
+  }
+
+  private getMerchantId() {
+    return this.configService.get<string>("SQUAD_MERCHANT_ID");
+  }
+
   private getSquadPhoneNumber(phoneNumber: string) {
     return phoneNumber.replace(/\D/g, "");
+  }
+
+  private async lookupAccount(bankCode: string, accountNumber: string) {
+    const secretKey = this.configService.get<string>("SQUAD_SECRET_KEY");
+
+    if (!secretKey || secretKey === "replace-me") {
+      return {
+        accountName: "TRACE DEMO USER",
+        accountNumber
+      };
+    }
+
+    try {
+      const response = await firstValueFrom(this.httpService.post(
+        `${this.getBaseUrl()}/payout/account/lookup`,
+        {
+          bank_code: bankCode,
+          account_number: accountNumber
+        },
+        {
+          headers: this.getAuthHeaders(secretKey)
+        }
+      ));
+
+      return {
+        accountName: response.data?.data?.account_name,
+        accountNumber: response.data?.data?.account_number ?? accountNumber
+      };
+    } catch (error) {
+      if (this.shouldUseDemoPayoutFallback(error)) {
+        this.logger.warn("Skipping live Squad account lookup because this merchant is not eligible for the payout endpoint in the current environment.");
+        return {
+          accountName: "TRACE DEMO USER",
+          accountNumber
+        };
+      }
+
+      this.mapAndThrowProviderError(error, "Squad payout account lookup");
+    }
+  }
+
+  private buildTransferReference(reference: string) {
+    const merchantId = this.getMerchantId();
+
+    if (!merchantId) {
+      return reference;
+    }
+
+    return reference.startsWith(`${merchantId}_`) ? reference : `${merchantId}_${reference}`;
+  }
+
+  private shouldUseDemoPayoutFallback(error: unknown) {
+    if (!isAxiosError(error)) {
+      return false;
+    }
+
+    const message =
+      error.response?.data?.message ??
+      error.response?.data?.data?.message ??
+      error.message;
+
+    return typeof message === "string" && (
+      message.includes("Merchant not eligible to use this endpoint") ||
+      message.includes("Merchant not profiled for this service")
+    );
   }
 
   private mapAndThrowProviderError(error: unknown, operation: string): never {

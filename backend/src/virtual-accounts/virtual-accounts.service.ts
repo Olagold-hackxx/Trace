@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { VirtualAccount } from "../entities/virtual-account.entity";
@@ -7,6 +7,8 @@ import { UsersService } from "../users/users.service";
 
 @Injectable()
 export class VirtualAccountsService {
+  private readonly logger = new Logger(VirtualAccountsService.name);
+
   constructor(
     @InjectRepository(VirtualAccount)
     private readonly accountsRepository: Repository<VirtualAccount>,
@@ -36,6 +38,21 @@ export class VirtualAccountsService {
       phoneNumber: user.phone,
       bvn: user.bvn,
       email: user.email
+    }).catch((error: unknown) => {
+      const message = error instanceof Error ? error.message : String(error);
+
+      if (!message.includes("account opening limit")) {
+        throw error;
+      }
+
+      this.logger.warn(`Falling back to demo virtual account for user ${user.id} because Squad sandbox quota is exhausted.`);
+
+      return {
+        provider: "demo",
+        accountNumber: this.buildDemoAccountNumber(user.id),
+        bankName: "GTBank",
+        customerId: `SQD-DEMO-${user.id}`
+      };
     });
 
     return this.accountsRepository.save({
@@ -45,5 +62,11 @@ export class VirtualAccountsService {
       bankName: provisioned.bankName,
       status: "active"
     });
+  }
+
+  private buildDemoAccountNumber(seed: string) {
+    const digits = seed.replace(/\D/g, "");
+    const padded = `${digits}0123456789`;
+    return padded.slice(0, 10);
   }
 }

@@ -18,6 +18,9 @@ export const envValidationSchema = Joi.object({
   SQUAD_WEBHOOK_SECRET: Joi.string().allow("").optional(),
   SQUAD_BASE_URL: Joi.string().uri().default("https://sandbox-api-d.squadco.com"),
   SQUAD_BENEFICIARY_ACCOUNT: Joi.string().allow("").optional(),
+  SQUAD_PAYOUT_ACCOUNT_NUMBER: Joi.string().allow("").optional(),
+  SQUAD_PAYOUT_BANK_CODE: Joi.string().allow("").optional(),
+  SQUAD_MERCHANT_ID: Joi.string().allow("").optional(),
   APP_BASE_URL: Joi.string().uri().default("http://localhost:3001"),
   SQUAD_REDIRECT_URL: Joi.string().uri().default("http://localhost:3001/api/v1/payments/callback"),
   PUBLIC_WEBHOOK_URL: Joi.string().uri().default("http://localhost:3001/webhooks/squad")
