@@ -1,0 +1,99 @@
+name: Deploy Backend Service to EC2
+
+on:
+  push:
+    branches:
+      - production
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy-backend-service.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          ECR_REPOSITORY: ${{ secrets.ECR_BACKEND_REPOSITORY }}
+          IMAGE_TAG: latest
+        run: |
+          cd backend
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+            IMAGE="$ECR_REGISTRY/${{ secrets.ECR_BACKEND_REPOSITORY }}:latest"
+
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+              | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            docker pull $IMAGE
+
+            docker stop backend-service 2>/dev/null || true
+            docker rm backend-service 2>/dev/null || true
+
+            docker run -d \
+              --name backend-service \
+              --restart unless-stopped \
+              -p 3001:3001 \
+              -e PORT=3001 \
+              -e NODE_ENV=production \
+              -e DB_HOST="${{ secrets.DB_HOST }}" \
+              -e DB_PORT="${{ secrets.DB_PORT }}" \
+              -e DB_NAME="${{ secrets.DB_NAME }}" \
+              -e DB_USER="${{ secrets.DB_USER }}" \
+              -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              -e DB_SYNC="${{ secrets.DB_SYNC }}" \
+              -e REDIS_HOST="${{ secrets.REDIS_HOST }}" \
+              -e REDIS_PORT="${{ secrets.REDIS_PORT }}" \
+              -e REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e SQUAD_SECRET_KEY="${{ secrets.SQUAD_SECRET_KEY }}" \
+              -e SQUAD_PUBLIC_KEY="${{ secrets.SQUAD_PUBLIC_KEY }}" \
+              -e SQUAD_WEBHOOK_SECRET="${{ secrets.SQUAD_WEBHOOK_SECRET }}" \
+              -e SQUAD_BASE_URL="${{ secrets.SQUAD_BASE_URL }}" \
+              -e SQUAD_BENEFICIARY_ACCOUNT="${{ secrets.SQUAD_BENEFICIARY_ACCOUNT }}" \
+              -e SQUAD_PAYOUT_ACCOUNT_NUMBER="${{ secrets.SQUAD_PAYOUT_ACCOUNT_NUMBER }}" \
+              -e SQUAD_PAYOUT_BANK_CODE="${{ secrets.SQUAD_PAYOUT_BANK_CODE }}" \
+              -e SQUAD_MERCHANT_ID="${{ secrets.SQUAD_MERCHANT_ID }}" \
+              -e APP_BASE_URL="${{ secrets.APP_BASE_URL }}" \
+              -e SQUAD_REDIRECT_URL="${{ secrets.SQUAD_REDIRECT_URL }}" \
+              -e PUBLIC_WEBHOOK_URL="${{ secrets.PUBLIC_WEBHOOK_URL }}" \
+              $IMAGE
+
+            echo "Waiting for service to be healthy..."
+            for i in $(seq 1 12); do
+              if curl -sf http://localhost:3001/health > /dev/null; then
+                echo "Service is healthy."
+                exit 0
+              fi
+              echo "Attempt $i/12..."
+              sleep 5
+            done
+
+            echo "ERROR: health check failed after 60s"
+            docker logs --tail 50 backend-service
+            exit 1

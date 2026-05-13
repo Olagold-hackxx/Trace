@@ -23,6 +23,30 @@ export class Transaction {
   @Column({ nullable: true })
   senderAccount?: string;
 
+  @Column({ nullable: true })
+  maskedSenderAccountNumber?: string;
+
+  @Column({ nullable: true })
+  sessionId?: string;
+
+  @Column({ nullable: true })
+  remarks?: string;
+
+  @Column({ nullable: true })
+  channel?: string;
+
+  @Column({ nullable: true })
+  transactionIndicator?: string;
+
+  @Column({ nullable: true })
+  virtualAccountNumber?: string;
+
+  @Column("bigint", { nullable: true })
+  settledAmountKobo?: string;
+
+  @Column("bigint", { nullable: true })
+  principalAmountKobo?: string;
+
   @Column({ default: "success" })
   status!: string;
 

@@ -1,7 +1,7 @@
 "use client";
 
 export const BACKEND_API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:3001/api/v1";
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:3005/api/v1";
 export const BACKEND_BASE_URL = BACKEND_API_BASE_URL.replace(/\/api\/v1$/, "");
 
 export const DEMO_TRADER_SIGNUP_DEFAULTS = {
