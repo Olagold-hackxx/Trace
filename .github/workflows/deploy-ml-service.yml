@@ -1,0 +1,77 @@
+name: Deploy ML Service to EC2
+
+on:
+  push:
+    branches:
+      - production
+    paths:
+      - "ml_service/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          ECR_REPOSITORY: ${{ secrets.ECR_ML_REPOSITORY }}
+          IMAGE_TAG: latest
+        run: |
+          cd ml_service
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+            IMAGE="$ECR_REGISTRY/${{ secrets.ECR_ML_REPOSITORY }}:latest"
+
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+              | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            docker pull $IMAGE
+
+            docker stop ml-service 2>/dev/null || true
+            docker rm   ml-service 2>/dev/null || true
+
+            docker run -d \
+              --name ml-service \
+              --restart unless-stopped \
+              -p 8000:8000 \
+              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -e PYTHONUNBUFFERED=1 \
+              $IMAGE
+
+            echo "Waiting for service to be healthy..."
+            for i in $(seq 1 12); do
+              if curl -sf http://localhost:8000/health > /dev/null; then
+                echo "Service is healthy."
+                exit 0
+              fi
+              echo "Attempt $i/12..."
+              sleep 5
+            done
+
+            echo "ERROR: health check failed after 60s"
+            docker logs --tail 50 ml-service
+            exit 1
