@@ -130,7 +130,10 @@ ml_service/
 │   ├── score_scaler.py                    ← pd_to_score / pd_to_score_batch
 │   └── shap_explainer.py                  ← SHAP templates + score-delta math
 ├── schemas/
-│   └── credit.py                          ← Pydantic request/response models
+│   └── credit.py  
+├── notebooks/
+    └── 01_feature_engineering.ipynb
+    
 ├── training/
 │   ├── synth_data_gen.py                  ← 10k Lagos trader simulator
 │   ├── feature_engine.py                  ← compute_features()

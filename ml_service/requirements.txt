@@ -16,9 +16,9 @@ requests
 sqlalchemy
 psycopg[binary]
 python-dotenv
-# jupyter
-# sentence-transformers
+jupyter
+sentence-transformers
 # transformers
-# torch
+torch
 # pgvector
 # qdrant-client
