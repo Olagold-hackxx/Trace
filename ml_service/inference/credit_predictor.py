@@ -6,7 +6,6 @@ from .artifact_loader import Artifact
 from .feature_validator import validate_and_prepare
 from .score_scaler import pd_to_score
 from .fraud_predictor import FraudPredictor
-from .fraud_predictor import FraudPredictor
 
 # Maps feature → sub-score family
 SUBSCORE_FAMILIES = {
@@ -32,10 +31,10 @@ SUBSCORE_FAMILIES = {
 }
 
 class CreditPredictor:
-    def __init__(self, artifact: Artifact, shap_explainer=None):
-        self.artifact = artifact
-        self.shap_explainer = shap_explainer  # set by service at startup
-        self.fraud_predictor = FraudPredictor(artifact.fraud_model, FraudPredictor.get_feature_cols()) if artifact.fraud_model else None
+    def __init__(self, artifact: Artifact, shap_explainer=None, fraud_predictor=None):
+        self.artifact        = artifact
+        self.shap_explainer  = shap_explainer   # built lazily on first /predict/explain
+        self.fraud_predictor = fraud_predictor  # FraudPredictor, loaded separately
     
     def predict(self, features: dict, transactions: Optional[List[dict]] = None) -> dict:
         df = validate_and_prepare(

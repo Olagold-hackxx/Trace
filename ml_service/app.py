@@ -10,8 +10,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from db import get_db, fetch_transactions, fetch_user_meta
-from forecasting.api import forecast_router, init_forecast_state
 from inference.artifact_loader import Artifact
+from inference.cash_flow_predictor import CashFlowPredictor
 from inference.credit_predictor import CreditPredictor
 from inference.shap_explainer import get_phrasing, shap_to_score_delta
 from schemas.credit import (
@@ -19,6 +19,7 @@ from schemas.credit import (
     ExplainRequest, ExplainResponse, FactorExplanation,
     FraudRequest, FraudResponse,
 )
+from schemas.forecast import DailyForecast, DipWarning, ForecastResponse
 from schemas.match import MatchRequest, MatchResponse, WorkerResult
 from training.feature_engine import compute_features
 # JobMatchEngine and synthetic data imports are deferred to _ensure_match_engine()
@@ -43,7 +44,10 @@ async def lifespan(app: FastAPI):
     logger.info(f"Loaded model_version={artifact.model_version}, "
                 f"features={len(artifact.feature_cols)}")
 
-    state['predictor'] = CreditPredictor(artifact, shap_explainer=None)
+    # Fraud model — loaded lazily on first /predict/fraud call
+    state['fraud_predictor'] = None
+
+    state['predictor'] = CreditPredictor(artifact, shap_explainer=None, fraud_predictor=None)
     state['artifact']  = artifact
     # SHAP TreeExplainer is built lazily on first /predict/explain call
     # — building it at startup blocks gunicorn workers for 30-60s on large models
@@ -53,15 +57,16 @@ async def lifespan(app: FastAPI):
     state['match_engine'] = None
     state['jobs_df']      = None
 
-    # Forecasting — load archetype profiles for cold-start users
-    init_forecast_state()
+    # ── Cash-flow forecasting ─────────────────────────────────────────────────
+    logger.info("Loading CashFlowPredictor (archetype profiles + holidays)...")
+    state['cash_flow_predictor'] = CashFlowPredictor.load()
+    logger.info("CashFlowPredictor ready")
 
     yield
     state.clear()
 
 
 app = FastAPI(title="Trace ML Service", version="1.0", lifespan=lifespan)
-app.include_router(forecast_router, prefix="/predict")
 
 
 def _now_utc() -> datetime:
@@ -184,38 +189,98 @@ def predict_explain(req: ExplainRequest, db: Session = Depends(get_db)):
     )
 
 
+def _ensure_fraud_predictor():
+    """Load the fraud model on first call and cache it."""
+    if state.get('fraud_predictor') is None:
+        from inference.fraud_predictor import FraudPredictor
+        from pathlib import Path
+        model_path = Path(__file__).parent / 'models' / 'fraud_model.pkl'
+        if not model_path.exists():
+            raise HTTPException(503, "Fraud model not found — run 04_fraud_training.ipynb first")
+        logger.info("Loading fraud model (first /predict/fraud request)...")
+        fp = FraudPredictor.load(model_path)
+        state['fraud_predictor'] = fp
+        # Also wire into the credit predictor so it applies the penalty there too
+        state['predictor'].fraud_predictor = fp
+        logger.info("Fraud model ready")
+    return state['fraud_predictor']
+
+
 @app.post('/predict/fraud', response_model=FraudResponse)
 def predict_fraud(req: FraudRequest, db: Session = Depends(get_db)):
-    predictor: CreditPredictor = state.get('predictor')
-    if predictor is None:
-        raise HTTPException(503, "Model not loaded")
-    if predictor.fraud_predictor is None:
-        raise HTTPException(503, "Fraud model not loaded")
+    """
+    Score one specific transaction for fraud.
 
-    as_of = _now_utc()
+    The backend sends the transaction details inline (amount, sender, timestamp).
+    We fetch this user's 30-day history from DB, compute 13 features via the
+    online path, run Isolation Forest, and return the anomaly score + penalty.
+    """
+    fraud_predictor = _ensure_fraud_predictor()
+
+    # Fetch the user's prior history strictly before this transaction
+    try:
+        user_history = fetch_transactions(db, req.user_id, req.occurred_at)
+    except Exception as e:
+        logger.exception("DB fetch failed for fraud")
+        raise HTTPException(500, f"History fetch failed: {e}")
+
+    new_txn = {
+        "occurred_at": req.occurred_at,
+        "amount_kobo": req.amount_kobo,
+        "sender_name": req.sender_name,
+        "type":        req.type,
+    }
 
     try:
-        txns = fetch_transactions(db, req.user_id, as_of)
-        if txns.empty:
-            return FraudResponse(
-                transaction_id=req.transaction_id,
-                user_id=req.user_id,
-                fraud_penalty=0.0,
-                anomaly_score=0.0,
-                is_anomalous=False,
-            )
-        penalty = predictor.fraud_predictor.compute_user_fraud_penalty(txns, as_of)
-        anomaly_score = float(penalty / 100)
-        return FraudResponse(
-            transaction_id=req.transaction_id,
-            user_id=req.user_id,
-            fraud_penalty=float(penalty),
-            anomaly_score=anomaly_score,
-            is_anomalous=anomaly_score > 0.5,
-        )
+        result = fraud_predictor.score_transaction(new_txn, user_history)
     except Exception as e:
-        logger.exception("Fraud detection failed")
-        raise HTTPException(500, f"Fraud detection failed: {e}")
+        logger.exception("Fraud scoring failed")
+        raise HTTPException(500, f"Fraud scoring failed: {e}")
+
+    anomaly_score = float(result["anomaly_score"])
+    return FraudResponse(
+        transaction_id=req.transaction_id,
+        user_id=req.user_id,
+        anomaly_score=anomaly_score,
+        is_anomalous=bool(result["flag"]),
+        top_signals=result["top_signals"],
+        fraud_penalty=round(anomaly_score * 100, 2),
+    )
+
+
+# ── Cash-flow forecast ───────────────────────────────────────────────────────
+
+@app.post('/predict/forecast', response_model=ForecastResponse)
+def predict_forecast(
+    user_id: str,
+    horizon_days: int = 30,
+    db: Session = Depends(get_db),
+):
+    predictor: CashFlowPredictor = state.get('cash_flow_predictor')
+    if predictor is None:
+        raise HTTPException(503, "CashFlowPredictor not loaded")
+
+    try:
+        result = predictor.predict(user_id, db, horizon_days=horizon_days)
+    except Exception as e:
+        logger.exception("Forecast failed for %s", user_id)
+        raise HTTPException(500, f"Forecast failed: {e}")
+
+    dip = result["dip_warning"]
+    return ForecastResponse(
+        user_id=result["user_id"],
+        model_version=result["model_version"],
+        daily=[
+            DailyForecast(
+                date=r["forecast_date"],
+                predicted_inflow_kobo=r["predicted_inflow"],
+                lower_bound_kobo=r["lower_bound_80"],
+                upper_bound_kobo=r["upper_bound_80"],
+            )
+            for r in result["daily"]
+        ],
+        dip_warning=DipWarning(**dip) if dip else None,
+    )
 
 
 # ── Job matching ──────────────────────────────────────────────────────────────

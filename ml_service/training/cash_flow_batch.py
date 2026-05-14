@@ -1,26 +1,30 @@
 """
-Nightly batch job: fit Prophet for every active user and cache results.
+Nightly batch job: fit Prophet for every active user and populate the forecast cache.
 
 Usage:
-    from forecasting.batch import run_nightly_batch
-    run_nightly_batch(session, tx_df, active_user_ids, persona_map, archetype_profiles)
-
-Or run standalone:
-    python -m forecasting.batch
+    python -m training.cash_flow_batch
 """
 import logging
+import sys
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import pandas as pd
 from joblib import Parallel, delayed
-from sqlalchemy.orm import Session
 
-from .aggregation import build_daily_series
-from .archetypes import archetype_forecast, load_archetype_profiles
-from .cache import write_forecast_cache
-from .fit import build_eom_holidays, fit_user_forecast
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from training.cash_flow import (
+    archetype_forecast,
+    build_daily_series,
+    build_eom_holidays,
+    fit_user_forecast,
+    load_archetype_profiles,
+)
 
 logger = logging.getLogger(__name__)
+
+_HOLIDAYS = build_eom_holidays("2024-01-01", "2027-12-31")
 
 
 def _fit_one_user(
@@ -28,7 +32,6 @@ def _fit_one_user(
     tx_df: pd.DataFrame,
     persona: str,
     archetype_profiles: dict,
-    holidays: pd.DataFrame,
 ) -> tuple[str, pd.DataFrame | None, str | None]:
     daily = build_daily_series(tx_df, user_id)
     if len(daily) < 21:
@@ -37,7 +40,7 @@ def _fit_one_user(
         )
         return user_id, forecast, "archetype-v1"
     try:
-        _, forecast = fit_user_forecast(daily, horizon_days=30, custom_holidays=holidays)
+        _, forecast = fit_user_forecast(daily, horizon_days=30, custom_holidays=_HOLIDAYS)
         forecast = forecast[forecast["ds"] > daily["ds"].max()].head(30)
         return user_id, forecast, "prophet-v1"
     except Exception as exc:
@@ -46,19 +49,24 @@ def _fit_one_user(
 
 
 def run_nightly_batch(
-    db: Session,
+    db,
     tx_df: pd.DataFrame,
     active_user_ids: list[str],
     persona_map: dict[str, str],
     archetype_profiles: dict,
     n_jobs: int = -1,
 ) -> int:
-    """Fit models for all active users. Returns number of users cached."""
-    holidays = build_eom_holidays("2024-01-01", "2027-12-31")
+    """
+    Fit models for active users in parallel and write results to the forecast cache.
+    Returns the number of users whose forecasts were cached.
+
+    db: SQLAlchemy Session
+    """
+    from db import write_forecast_cache  # avoid circular import at module level
 
     results = Parallel(n_jobs=n_jobs, backend="loky", verbose=0)(
         delayed(_fit_one_user)(
-            uid, tx_df, persona_map.get(uid, ""), archetype_profiles, holidays
+            uid, tx_df, persona_map.get(uid, ""), archetype_profiles
         )
         for uid in active_user_ids
     )
@@ -72,33 +80,14 @@ def run_nightly_batch(
             except Exception as exc:
                 logger.error("Cache write failed for %s: %s", user_id, exc)
 
-    logger.info("Nightly batch complete: %d/%d users cached", cached, len(active_user_ids))
+    logger.info("Batch complete: %d/%d users cached", cached, len(active_user_ids))
     return cached
 
 
-def get_active_user_ids(db: Session, days: int = 7) -> list[str]:
-    """Users who had at least one transaction in the last `days` days."""
-    from sqlalchemy import text
-    result = db.execute(
-        text("""
-            SELECT DISTINCT user_id FROM transactions
-            WHERE occurred_at >= NOW() - INTERVAL ':days days'
-        """),
-        {"days": days},
-    )
-    return [row[0] for row in result.fetchall()]
-
-
 if __name__ == "__main__":
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).parent.parent))
+    logging.basicConfig(level=logging.INFO)
 
     from db import SessionLocal
-    from forecasting.archetypes import load_archetype_profiles
-
-    logging.basicConfig(level=logging.INFO)
 
     tx_df = pd.read_parquet("data/synth_transactions.parquet")
     users_df = pd.read_parquet("data/synth_users.parquet")
@@ -106,8 +95,12 @@ if __name__ == "__main__":
     profiles = load_archetype_profiles()
 
     cutoff = datetime.utcnow() - timedelta(days=7)
-    recent_users = tx_df[pd.to_datetime(tx_df["occurred_at"]) >= cutoff]["user_id"].unique().tolist()
+    recent = (
+        tx_df[pd.to_datetime(tx_df["occurred_at"]) >= cutoff]["user_id"]
+        .unique()
+        .tolist()
+    )
 
     with SessionLocal() as db:
-        n = run_nightly_batch(db, tx_df, recent_users[:200], persona_map, profiles)
+        n = run_nightly_batch(db, tx_df, recent[:200], persona_map, profiles)
     print(f"Cached {n} users")
