@@ -1,4 +1,4 @@
-numpy
+numpy<2
 pandas
 pyarrow
 # matplotlib
@@ -17,8 +17,8 @@ sqlalchemy
 psycopg[binary]
 python-dotenv
 jupyter
-sentence-transformers
-# transformers
-torch
+sentence-transformers>=2.7,<3
+transformers>=4.36,<5
+torch==2.2.2
 # pgvector
 # qdrant-client
