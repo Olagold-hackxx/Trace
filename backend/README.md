@@ -28,6 +28,8 @@ docker compose up --build
 
 API runs on `http://localhost:3001`.
 
+Set either `DATABASE_URL` or the split `DB_HOST`/`DB_PORT`/`DB_NAME`/`DB_USER`/`DB_PASSWORD` variables before starting the service outside Docker Compose.
+
 ## Important current notes
 
 - This is the backend foundation and route surface. ML scoring, SHAP generation, fraud inference, and forecasting are still expected to be integrated later from `ml_service/`.

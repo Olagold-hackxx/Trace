@@ -40,11 +40,22 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>("DATABASE_URL");
         const dbSync = configService.get<string | boolean>("DB_SYNC");
 
         return {
           type: "postgres",
-          url: configService.get<string>("DATABASE_URL"),
+          ...(databaseUrl
+            ? {
+                url: databaseUrl
+              }
+            : {
+                host: configService.get<string>("DB_HOST"),
+                port: Number(configService.get<string>("DB_PORT") ?? 5432),
+                username: configService.get<string>("DB_USER"),
+                password: configService.get<string>("DB_PASSWORD"),
+                database: configService.get<string>("DB_NAME")
+              }),
           synchronize: dbSync === true || dbSync === "true",
           autoLoadEntities: false,
           entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session]

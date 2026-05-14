@@ -3,10 +3,15 @@ import * as Joi from "joi";
 export const envValidationSchema = Joi.object({
   PORT: Joi.number().default(3001),
   NODE_ENV: Joi.string().valid("development", "test", "production").default("development"),
-  DATABASE_URL: Joi.string().uri().required(),
-  DB_SYNC: Joi.boolean().truthy("true").falsy("false").default(false),
-  REDIS_HOST: Joi.string().default("localhost"),
-  REDIS_PORT: Joi.number().default(6379),
+  DATABASE_URL: Joi.string().uri().empty("").optional(),
+  DB_HOST: Joi.string().optional(),
+  DB_PORT: Joi.number().default(5432),
+  DB_NAME: Joi.string().optional(),
+  DB_USER: Joi.string().optional(),
+  DB_PASSWORD: Joi.string().allow("").optional(),
+  DB_SYNC: Joi.boolean().truthy("true").falsy("false").empty("").default(false),
+  REDIS_HOST: Joi.string().empty("").default("localhost"),
+  REDIS_PORT: Joi.number().empty("").default(6379),
   REDIS_PASSWORD: Joi.string().allow("").optional(),
   JWT_SECRET: Joi.string().required(),
   SQUAD_SECRET_KEY: Joi.string().allow("").optional(),
@@ -20,4 +25,8 @@ export const envValidationSchema = Joi.object({
   APP_BASE_URL: Joi.string().uri().default("http://localhost:3001"),
   SQUAD_REDIRECT_URL: Joi.string().uri().default("http://localhost:3001/api/v1/payments/callback"),
   PUBLIC_WEBHOOK_URL: Joi.string().uri().default("http://localhost:3001/webhooks/squad")
-});
+})
+  .or("DATABASE_URL", "DB_HOST")
+  .with("DB_HOST", ["DB_NAME", "DB_USER"])
+  .with("DB_NAME", ["DB_HOST", "DB_USER"])
+  .with("DB_USER", ["DB_HOST", "DB_NAME"]);

@@ -14,9 +14,21 @@ import { VirtualAccount } from "./entities/virtual-account.entity";
 
 loadEnv();
 
+const databaseUrl = process.env.DATABASE_URL;
+
 export default new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL ?? "postgres://postgres:postgres@localhost:5432/kudiscore",
+  ...(databaseUrl
+    ? {
+        url: databaseUrl
+      }
+    : {
+        host: process.env.DB_HOST ?? "localhost",
+        port: Number(process.env.DB_PORT ?? 5432),
+        username: process.env.DB_USER ?? "postgres",
+        password: process.env.DB_PASSWORD ?? "postgres",
+        database: process.env.DB_NAME ?? "kudiscore"
+      }),
   entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot],
   migrations: ["src/migrations/*.ts"],
   synchronize: process.env.DB_SYNC === "true"
