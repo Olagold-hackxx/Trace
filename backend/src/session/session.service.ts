@@ -1,26 +1,27 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Session } from "../entities/session.entity";
 
 @Injectable()
 export class SessionService {
-  private readonly sessions = new Map<string, string>();
+  constructor(
+    @InjectRepository(Session)
+    private readonly sessionRepository: Repository<Session>
+  ) {}
 
-  createSession(token: string, userId: string) {
-    this.sessions.set(token, userId);
+  async createSession(token: string, userId: string) {
+    await this.sessionRepository.save({ token, userId });
   }
 
-  getUserId(token?: string | null) {
-    if (!token) {
-      return null;
-    }
-
-    return this.sessions.get(token) ?? null;
+  async getUserId(token?: string | null): Promise<string | null> {
+    if (!token) return null;
+    const session = await this.sessionRepository.findOne({ where: { token } });
+    return session?.userId ?? null;
   }
 
-  clearSession(token?: string | null) {
-    if (!token) {
-      return;
-    }
-
-    this.sessions.delete(token);
+  async clearSession(token?: string | null) {
+    if (!token) return;
+    await this.sessionRepository.delete({ token });
   }
 }

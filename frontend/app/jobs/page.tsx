@@ -4,6 +4,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Add, People, CheckCircle, Cancel, AccessTime, Work, ChevronRight } from "@mui/icons-material";
+import { Spinner } from "@/components/ui/spinner";
 import {
   BackendJob,
   BackendJobApplication,
@@ -276,13 +277,20 @@ export default function JobsPage() {
           </div>
         )}
 
-        {loading ? <p className="mt-4 text-sm text-[#94a3b8]">Loading jobs...</p> : null}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center gap-3">
+              <Spinner className="size-8 text-[#ff6b00]" />
+              <p className="text-sm text-[#94a3b8]">Loading jobs...</p>
+            </div>
+          </div>
+        )}
 
         {/* Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           {[
             { label: "Jobs Posted", val: postedJobs.length.toString(), color: "#ff6b00" },
-            { label: "Workers Hired", val: "9", color: "#ff6b00" },
+            { label: "Workers Hired", val: appliedJobs.filter(j => j.status === "accepted").length.toString(), color: "#ff6b00" },
             { label: "Applications Sent", val: appliedJobs.length.toString(), color: "#2563eb" },
             { label: "Accepted", val: appliedJobs.filter(j => j.status === "Accepted").length.toString(), color: "#16a34a" },
           ].map((s) => (

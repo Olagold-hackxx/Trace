@@ -1,4 +1,5 @@
-import { Controller, Get, MessageEvent, Param, Query, Sse, Version } from "@nestjs/common";
+import { Controller, Get, MessageEvent, Param, Query, Req, Sse, Version } from "@nestjs/common";
+import { Request } from "express";
 import { map, Observable, startWith } from "rxjs";
 import { RealtimeService } from "../realtime/realtime.service";
 import { TransactionsService } from "./transactions.service";
@@ -12,14 +13,14 @@ export class TransactionsController {
 
   @Version("1")
   @Get("transactions")
-  getTransactions(@Query("limit") limit?: string) {
-    return this.transactionsService.getTransactions(limit ? Number(limit) : 20);
+  getTransactions(@Req() req: Request, @Query("limit") limit?: string) {
+    return this.transactionsService.getTransactions(req.cookies?.kudiscore_session, limit ? Number(limit) : 20);
   }
 
   @Version("1")
   @Get("transactions/summary")
-  getSummary() {
-    return this.transactionsService.getSummary();
+  getSummary(@Req() req: Request) {
+    return this.transactionsService.getSummary(req.cookies?.kudiscore_session);
   }
 
   @Version("1")

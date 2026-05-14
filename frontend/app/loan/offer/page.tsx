@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
-import { lenderOffers } from "@/lib/demo-data";
 import { useTraderData } from "@/hooks/use-trader-data";
 import { fetchBackend, formatNairaFromKobo } from "@/lib/backend";
 import { CheckCircle, RadioButtonUnchecked, Bolt, AccessTime, Shield } from "@mui/icons-material";
@@ -12,23 +11,21 @@ import { CheckCircle, RadioButtonUnchecked, Bolt, AccessTime, Shield } from "@mu
 export default function LoanOfferPage() {
   const router = useRouter();
   const { offers } = useTraderData();
-  const liveOffers = offers.length
-    ? offers.map((offer, index) => ({
-        id: offer.id,
-        name: offer.lenderName,
-        amount: formatNairaFromKobo(offer.amountKobo),
-        rate: offer.rateLabel,
-        tenor: offer.tenorLabel,
-        monthly: offer.monthlyRepaymentLabel,
-        badge: index === 0 ? "Live" : "Available",
-        badgeColor: index === 0 ? "#16a34a" : "#ff6b00",
-        badgeBg: index === 0 ? "#dcfce7" : "#3b1d09",
-        decisionWindow: "Review now",
-        disbursement: "Triggered by backend acceptance",
-        purpose: "Business capital offer",
-      }))
-    : lenderOffers;
-  const [selectedOfferId, setSelectedOfferId] = useState(liveOffers[0]?.id ?? lenderOffers[1].id);
+  const liveOffers = offers.map((offer, index) => ({
+    id: offer.id,
+    name: offer.lenderName,
+    amount: formatNairaFromKobo(offer.amountKobo),
+    rate: offer.rateLabel,
+    tenor: offer.tenorLabel,
+    monthly: offer.monthlyRepaymentLabel,
+    badge: index === 0 ? "Live" : "Available",
+    badgeColor: index === 0 ? "#16a34a" : "#ff6b00",
+    badgeBg: index === 0 ? "#dcfce7" : "#3b1d09",
+    decisionWindow: "Review now",
+    disbursement: "Triggered by backend acceptance",
+    purpose: "Business capital offer",
+  }));
+  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(liveOffers[0]?.id ?? null);
   const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
@@ -41,7 +38,7 @@ export default function LoanOfferPage() {
   }, [liveOffers]);
 
   const selectedOffer = useMemo(
-    () => liveOffers.find((offer) => offer.id === selectedOfferId) ?? liveOffers[0] ?? lenderOffers[1],
+    () => liveOffers.find((offer) => offer.id === selectedOfferId) ?? liveOffers[0] ?? null,
     [liveOffers, selectedOfferId]
   );
 
@@ -57,6 +54,16 @@ export default function LoanOfferPage() {
       setAccepted(false);
     }
   };
+
+  if (!selectedOffer) {
+    return (
+      <AppShell role="user" title="Loan Offer">
+        <div className="p-6 max-w-6xl mx-auto flex items-center justify-center min-h-[40vh]">
+          <p className="text-sm text-[#94a3b8]">No pre-qualified offers available yet. Build your TraceScore to unlock offers.</p>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell role="user" title="Loan Offer">

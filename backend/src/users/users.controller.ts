@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Req, Version } from "@nestjs/common";
+import { Request } from "express";
 import { UpdateUserSettingsDto } from "./dto/update-user-settings.dto";
 import { UsersService } from "./users.service";
 
@@ -8,14 +9,14 @@ export class UsersController {
 
   @Version("1")
   @Get("me")
-  async getMe() {
-    return this.usersService.getCurrentUser();
+  async getMe(@Req() req: Request) {
+    return this.usersService.getCurrentUser(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Patch("me")
-  async updateMe(@Body() dto: UpdateUserSettingsDto) {
-    return this.usersService.updateCurrentUser(dto);
+  async updateMe(@Req() req: Request, @Body() dto: UpdateUserSettingsDto) {
+    return this.usersService.updateCurrentUser(req.cookies?.kudiscore_session, dto);
   }
 
   @Version("1")

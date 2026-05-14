@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
-import { activeLoan } from "@/lib/demo-data";
 import { useTraderData } from "@/hooks/use-trader-data";
 import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 import { CalendarMonth, CheckCircle, Payments, Shield, Timeline } from "@mui/icons-material";
@@ -26,7 +25,22 @@ export function ActiveLoanPage() {
         tenor: backendLoan.tenorLabel,
         autopayEnabled: backendLoan.repaymentMethod === "cash_flow_indexed",
       }
-    : activeLoan;
+    : null;
+
+  if (!loanView) {
+    return (
+      <AppShell role="user" title="Loans">
+        <div className="p-6 max-w-6xl mx-auto flex items-center justify-center min-h-[40vh]">
+          <div className="text-center">
+            <p className="text-sm text-[#94a3b8] mb-4">You don&apos;t have an active loan facility.</p>
+            <Link href="/loan/offer" className="inline-flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#ff6b00" }}>
+              View loan offers
+            </Link>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell role="user" title="Loans">

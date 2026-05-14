@@ -12,7 +12,6 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   BackendUser,
   BackendVirtualAccount,
-  DEMO_TRADER_LOGIN_PHONE,
   fetchBackend,
   persistTraderSession,
 } from "@/lib/backend";
@@ -26,10 +25,10 @@ export default function LoginPage() {
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.email) errs.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Enter a valid email";
+    if (!formData.email) errs.email = "Email address is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Enter a valid email address";
     if (!formData.password) errs.password = "Password is required";
-    else if (formData.password.length < 6) errs.password = "Min. 6 characters";
+    else if (formData.password.length < 4) errs.password = "Min. 4 characters";
     return errs;
   };
 
@@ -48,7 +47,7 @@ export default function LoginPage() {
       await fetchBackend("/auth/login", {
         method: "POST",
         bodyJson: {
-          phone: DEMO_TRADER_LOGIN_PHONE,
+          email: formData.email,
           password: formData.password,
         },
       });

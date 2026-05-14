@@ -5,39 +5,15 @@ import { MetricCard } from "@/components/common/metric-card";
 import Link from "next/link";
 import { useLenderData } from "@/hooks/use-lender-data";
 import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
+import { Spinner } from "@/components/ui/spinner";
 import {
-  AccountBalance, TrendingUp, People, Warning, CheckCircle, AccessTime,
+  AccountBalance, TrendingUp, People, Warning, CheckCircle,
   ChevronRight,
 } from "@mui/icons-material";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Legend, PieChart, Pie, Cell,
 } from "recharts";
-
-const repaymentTrend = [
-  { month: "Nov", repaid: 3200000, disbursed: 4000000 },
-  { month: "Dec", repaid: 4800000, disbursed: 5500000 },
-  { month: "Jan", repaid: 5200000, disbursed: 6000000 },
-  { month: "Feb", repaid: 6100000, disbursed: 7200000 },
-  { month: "Mar", repaid: 7400000, disbursed: 8500000 },
-  { month: "Apr", repaid: 8900000, disbursed: 9800000 },
-  { month: "May", repaid: 5200000, disbursed: 11000000 },
-];
-
-const sectorData = [
-  { name: "Food & Bev", value: 14, color: "#ff6b00" },
-  { name: "Retail", value: 5, color: "#ff6b00" },
-  { name: "Logistics", value: 2, color: "#7c3aed" },
-  { name: "Fashion", value: 1, color: "#d97706" },
-  { name: "Services", value: 1, color: "#16a34a" },
-];
-
-const scoreDistribution = [
-  { band: "750+", count: 8 },
-  { band: "700–749", count: 9 },
-  { band: "650–699", count: 4 },
-  { band: "600–649", count: 2 },
-];
 
 const statusStyle: Record<string, { color: string; bg: string }> = {
   Pending: { color: "#d97706", bg: "#fef3c7" },
@@ -56,17 +32,42 @@ function Badge({ label, style }: { label: string; style: { color: string; bg: st
   return <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ color: style.color, backgroundColor: style.bg }}>{label}</span>;
 }
 
+const SECTOR_COLORS = ["#ff6b00", "#2563eb", "#7c3aed", "#d97706", "#16a34a", "#0891b2", "#be185d"];
+
 export default function LenderDashboardPage() {
-  const { summary, applications, merchants } = useLenderData();
+  const { summary, applications, merchants, loading } = useLenderData();
   const topMerchants = merchants.slice(0, 5);
+
+  // Derive sector distribution from real merchant data
+  const sectorData = (() => {
+    const counts: Record<string, number> = {};
+    merchants.forEach((m) => {
+      const sector = m.businessType ?? "General";
+      counts[sector] = (counts[sector] ?? 0) + 1;
+    });
+    return Object.entries(counts).map(([name, value], i) => ({ name, value, color: SECTOR_COLORS[i % SECTOR_COLORS.length] }));
+  })();
+
+  if (loading) {
+    return (
+      <AppShell role="lender">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center gap-3">
+            <Spinner className="size-8 text-[#ff6b00]" />
+            <p className="text-sm text-[#94a3b8]">Loading portfolio data...</p>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell role="lender">
       <div className="p-6 max-w-7xl mx-auto">
         {/* Greeting */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Welcome back, Zenith Capital</h1>
-          <p className="text-sm text-[#94a3b8] mt-1">Saturday, May 10, 2026 · Lender Dashboard</p>
+          <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Lender Dashboard</h1>
+          <p className="text-sm text-[#94a3b8] mt-1">Live portfolio overview from the backend</p>
         </div>
 
         {/* Metrics */}
@@ -78,66 +79,55 @@ export default function LenderDashboardPage() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6 mb-6">
-          {/* Repayment trend */}
+          {/* Applications by amount */}
           <div className="lg:col-span-2 rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-            <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Disbursement vs Repayment</h2>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={repaymentTrend} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
-                <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tickFormatter={(v) => `₦${(v / 1000000).toFixed(1)}M`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }} formatter={(v: number) => `₦${v.toLocaleString()}`} />
-                <Legend />
-                <Bar dataKey="disbursed" fill="#334155" name="Disbursed" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="repaid" fill="#ff6b00" name="Repaid" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Applications by Amount</h2>
+            {applications.length === 0 ? (
+              <div className="flex items-center justify-center h-[220px] text-sm text-[#94a3b8]">No applications in pipeline</div>
+            ) : (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={applications.slice(0, 10).map((a) => ({ id: a.id.slice(0, 8), amount: Math.round(Number(a.amountKobo) / 100) }))} barGap={4}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
+                  <XAxis dataKey="id" tick={{ fill: "#94a3b8", fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}k`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }} formatter={(v: number) => `₦${v.toLocaleString()}`} />
+                  <Legend />
+                  <Bar dataKey="amount" fill="#ff6b00" name="Amount" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
 
           {/* Portfolio mix */}
           <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-            <h2 className="text-base font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Portfolio by Sector</h2>
-            <ResponsiveContainer width="100%" height={160}>
-              <PieChart>
-                <Pie data={sectorData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value">
-                  {sectorData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+            <h2 className="text-base font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Merchants by Sector</h2>
+            {sectorData.length === 0 ? (
+              <div className="flex items-center justify-center h-[160px] text-sm text-[#94a3b8]">No merchant data</div>
+            ) : (
+              <>
+                <ResponsiveContainer width="100%" height={160}>
+                  <PieChart>
+                    <Pie data={sectorData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value">
+                      {sectorData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 8, fontSize: 12, color: "#f0f0f0" }} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="space-y-2 mt-2">
+                  {sectorData.map((s) => (
+                    <div key={s.name} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.color }} />
+                        <span className="text-[#cbd5e1]">{s.name}</span>
+                      </div>
+                      <span className="font-semibold text-[#f0f0f0]">{s.value} merchants</span>
+                    </div>
                   ))}
-                </Pie>
-                <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 8, fontSize: 12, color: "#f0f0f0" }} />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="space-y-2 mt-2">
-              {sectorData.map((s) => (
-                <div key={s.name} className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.color }} />
-                    <span className="text-[#cbd5e1]">{s.name}</span>
-                  </div>
-                  <span className="font-semibold text-[#f0f0f0]">{s.value} loans</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Score distribution */}
-        <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-          <h2 className="text-lg font-bold text-[#f0f0f0] mb-5" style={{ fontFamily: "Epilogue, sans-serif" }}>Portfolio Score Distribution</h2>
-          <div className="grid grid-cols-4 gap-4">
-            {scoreDistribution.map((b) => (
-              <div key={b.band} className="text-center p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{b.count}</p>
-                <p className="text-xs text-[#94a3b8] mt-1">Score {b.band}</p>
-                <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
-                  <div className="h-full rounded-full" style={{ width: `${(b.count / 23) * 100}%`, backgroundColor: "#ff6b00" }} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: "#dcfce7", border: "1px solid #bbf7d0" }}>
-            <CheckCircle style={{ fontSize: 20, color: "#16a34a" }} />
-            <p className="text-sm font-semibold text-[#16a34a]">74% of portfolio is above TraceScore 700 — excellent credit quality.</p>
+              </>
+            )}
           </div>
         </div>
 

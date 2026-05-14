@@ -30,17 +30,10 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { baseTransactions, formatNaira, liveDashboardEvents } from "@/lib/demo-data";
 import { buildBackendUrl, buildPaymentLinkUrl, formatDateLabel } from "@/lib/backend";
+import { Spinner } from "@/components/ui/spinner";
 
-const revenueData = [
-  { month: "Dec", revenue: 320000, expenses: 98000 },
-  { month: "Jan", revenue: 410000, expenses: 125000 },
-  { month: "Feb", revenue: 385000, expenses: 110000 },
-  { month: "Mar", revenue: 520000, expenses: 142000 },
-  { month: "Apr", revenue: 490000, expenses: 135000 },
-  { month: "May", revenue: 710000, expenses: 180000 },
-];
+function formatNaira(v: number) { return `₦${v.toLocaleString()}`; }
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
@@ -58,30 +51,22 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function DashboardPage() {
-  const { user, virtualAccount, score, summary, transactions, defaultPaymentLink, offers } = useTraderData();
+  const { user, virtualAccount, score, summary, transactions, defaultPaymentLink, offers, loading } = useTraderData();
   const [copied, setCopied] = useState(false);
   const streamStarted = useRef(false);
   const [metrics, setMetrics] = useState({
-    revenue: 710000,
-    pendingPayments: 45200,
-    score: 742,
-    scoreTrend: 1.2,
-    balance: 128450,
-    preQualifiedAmount: 2500000,
+    revenue: 0,
+    pendingPayments: 0,
+    score: 0,
+    scoreTrend: 0,
+    balance: 0,
+    preQualifiedAmount: 0,
   });
-  const [recentTransactions, setRecentTransactions] = useState(baseTransactions);
-  const [liveFeed, setLiveFeed] = useState(
-    liveDashboardEvents.slice(0, 2).map((event, index) => ({
-      id: `${event.id}-seed`,
-      label: index === 0 ? "Stream ready" : "Awaiting backend event",
-      title: event.title,
-      description: event.description,
-      status: index === 0 ? "Connected" : "Waiting",
-    }))
-  );
+  const [recentTransactions, setRecentTransactions] = useState<Array<{ id: string; date: string; desc: string; type: string; amount: number; status: string }>>([]);
+  const [liveFeed, setLiveFeed] = useState<Array<{ id: string; label: string; title: string; description: string; status: string }>>([]);
   const paymentLink = buildPaymentLinkUrl(defaultPaymentLink?.slug);
-  const displayName = user?.fullName?.split(" ")[0] ?? "Amaka";
-  const businessName = user?.businessName ?? "Amaka Foods";
+  const displayName = user?.fullName?.split(" ")[0] ?? "there";
+  const businessName = user?.businessName ?? user?.fullName ?? "";
 
   useEffect(() => {
     setMetrics((current) => ({
@@ -233,6 +218,33 @@ export default function DashboardPage() {
     };
   }, [user?.id]);
 
+  // Build revenue chart from real transactions
+  const revenueData = (() => {
+    if (transactions.length === 0) return [];
+    const byMonth: Record<string, { revenue: number; expenses: number }> = {};
+    transactions.forEach((t) => {
+      const month = new Date(t.occurredAt ?? t.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" });
+      if (!byMonth[month]) byMonth[month] = { revenue: 0, expenses: 0 };
+      const amt = Math.round(Number(t.amountKobo) / 100);
+      if (t.type === "debit" || t.type === "loan_repayment") byMonth[month].expenses += amt;
+      else if (t.status === "success") byMonth[month].revenue += amt;
+    });
+    return Object.entries(byMonth).map(([month, vals]) => ({ month, ...vals }));
+  })();
+
+  if (loading) {
+    return (
+      <AppShell role="user">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center gap-3">
+            <Spinner className="size-8 text-[#ff6b00]" />
+            <p className="text-sm text-[#94a3b8]">Loading your dashboard...</p>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell role="user">
       <div className="p-6 max-w-7xl mx-auto">
@@ -271,9 +283,11 @@ export default function DashboardPage() {
             <ContentCopy style={{ fontSize: 16 }} />
             {copied ? "Copied!" : "Copy link"}
           </button>
-          <div className="hidden lg:block text-xs text-[#94a3b8]">
-            Virtual account: {virtualAccount?.accountNumber ?? "2411166689"} · {virtualAccount?.bankName ?? "GTBank"}
-          </div>
+          {virtualAccount && (
+            <div className="hidden lg:block text-xs text-[#94a3b8]">
+              Virtual account: {virtualAccount.accountNumber} · {virtualAccount.bankName}
+            </div>
+          )}
         </div>
 
         <div className="rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
@@ -288,7 +302,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e", color: "#f0f0f0" }}>
             <FiberManualRecord style={{ fontSize: 12, color: "#16a34a" }} />
-            Demo stream active
+            Live
           </div>
         </div>
 
@@ -304,6 +318,9 @@ export default function DashboardPage() {
                   <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#334155" }} />Expenses</span>
                 </div>
               </div>
+              {revenueData.length === 0 ? (
+                <div className="flex items-center justify-center h-[220px] text-sm text-[#64748b]">No transaction data yet</div>
+              ) : (
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={revenueData}>
                   <defs>
@@ -323,6 +340,7 @@ export default function DashboardPage() {
                   <Area type="monotone" dataKey="expenses" stroke="#334155" strokeWidth={2} fill="none" strokeDasharray="4 2" />
                 </AreaChart>
               </ResponsiveContainer>
+              )}
             </div>
 
             {/* Transactions */}
@@ -331,6 +349,9 @@ export default function DashboardPage() {
                 <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Recent Transactions</h2>
                 <Link href="/payments" className="text-sm font-semibold" style={{ color: "#ff6b00" }}>View all →</Link>
               </div>
+              {recentTransactions.length === 0 ? (
+                <div className="flex items-center justify-center py-12 text-sm text-[#64748b]">No transactions yet</div>
+              ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -362,6 +383,7 @@ export default function DashboardPage() {
                   </tbody>
                 </table>
               </div>
+              )}
             </div>
           </div>
 

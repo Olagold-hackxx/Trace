@@ -1,31 +1,36 @@
 "use client";
 
 import { AppShell } from "@/components/layout/app-shell";
-import { People, Work, CheckCircle, AccessTime, Warning, ArrowOutward } from "@mui/icons-material";
-
-const hiringSignals = [
-  { label: "Active Borrower Jobs", value: "38", color: "#ff6b00" },
-  { label: "Workers Hired", value: "112", color: "#16a34a" },
-  { label: "Urgent Roles", value: "9", color: "#ff6b00" },
-  { label: "At-Risk Staffing", value: "4", color: "#dc2626" },
-];
-
-const jobs = [
-  { id: "J-1001", merchant: "Amaka Foods", title: "Sales Assistant", applicants: 14, hired: 2, pay: "₦8,500/day", status: "Hiring", signal: "Healthy", location: "Yaba" },
-  { id: "J-1002", merchant: "QuickEats", title: "Delivery Rider", applicants: 22, hired: 3, pay: "₦6,000/day", status: "Filled", signal: "Strong demand", location: "Surulere" },
-  { id: "J-1003", merchant: "BabaChef Catering", title: "Kitchen Assistant", applicants: 4, hired: 0, pay: "₦5,000/day", status: "Hiring", signal: "Slow fill", location: "Oshodi" },
-  { id: "J-1004", merchant: "City Bakery", title: "Cashier", applicants: 19, hired: 1, pay: "₦5,500/day", status: "Hiring", signal: "Healthy", location: "Agege" },
-  { id: "J-1005", merchant: "TechFix Lagos", title: "Store Assistant", applicants: 3, hired: 0, pay: "₦4,500/day", status: "Urgent", signal: "Weak demand", location: "Gbagada" },
-];
-
-const signalStyle: Record<string, { bg: string; color: string; icon: React.ElementType }> = {
-  Healthy: { bg: "#dcfce7", color: "#16a34a", icon: CheckCircle },
-  "Strong demand": { bg: "#3b1d09", color: "#ff6b00", icon: People },
-  "Slow fill": { bg: "#fef3c7", color: "#d97706", icon: AccessTime },
-  "Weak demand": { bg: "#fee2e2", color: "#dc2626", icon: Warning },
-};
+import { useLenderData } from "@/hooks/use-lender-data";
+import { formatNairaFromKobo, formatDateLabel } from "@/lib/backend";
+import { Spinner } from "@/components/ui/spinner";
+import { People, Work, ArrowOutward, LocationOn } from "@mui/icons-material";
 
 export default function LenderJobsPage() {
+  const { jobs, merchants, loading } = useLenderData();
+
+  const merchantIndex = Object.fromEntries(merchants.map((m) => [m.id, m]));
+
+  const hiringMetrics = [
+    { label: "Active Borrower Jobs", value: jobs.filter((j) => j.status === "active").length, color: "#ff6b00" },
+    { label: "Total Listings", value: jobs.length, color: "#16a34a" },
+    { label: "Unique Employers", value: new Set(jobs.map((j) => j.userId)).size, color: "#ff6b00" },
+    { label: "Merchants with Jobs", value: merchants.filter((m) => jobs.some((j) => j.userId === m.id)).length, color: "#dc2626" },
+  ];
+
+  if (loading) {
+    return (
+      <AppShell role="lender">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center gap-3">
+            <Spinner className="size-8 text-[#ff6b00]" />
+            <p className="text-sm text-[#94a3b8]">Loading hiring signals...</p>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell role="lender">
       <div className="p-6 max-w-7xl mx-auto">
@@ -39,7 +44,7 @@ export default function LenderJobsPage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {hiringSignals.map((item) => (
+          {hiringMetrics.map((item) => (
             <div
               key={item.label}
               className="rounded-2xl p-5"
@@ -66,63 +71,61 @@ export default function LenderJobsPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
-                  {["Merchant", "Role", "Applicants", "Hired", "Pay", "Location", "Status", "Signal"].map((header) => (
-                    <th key={header} className="text-left px-5 py-4 font-semibold text-xs text-[#94a3b8] whitespace-nowrap">
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.map((job) => {
-                  const signal = signalStyle[job.signal];
-                  const SignalIcon = signal.icon;
-                  return (
-                    <tr key={job.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00" }}>
-                            {job.merchant[0]}
+          {jobs.length === 0 ? (
+            <div className="flex items-center justify-center h-40 text-sm text-[#94a3b8]">No job listings found in portfolio</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
+                    {["Merchant", "Role", "Category", "Pay", "Location", "Status", "Posted"].map((header) => (
+                      <th key={header} className="text-left px-5 py-4 font-semibold text-xs text-[#94a3b8] whitespace-nowrap">
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobs.map((job) => {
+                    const merchant = merchantIndex[job.userId];
+                    return (
+                      <tr key={job.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold" style={{ backgroundColor: "#ff6b00" }}>
+                              {(merchant?.businessName ?? merchant?.fullName ?? "M")[0]}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-[#f0f0f0]">{merchant?.businessName ?? merchant?.fullName ?? "Merchant"}</p>
+                              <p className="text-xs text-[#64748b]">{job.id.slice(0, 8)}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-semibold text-[#f0f0f0]">{job.merchant}</p>
-                            <p className="text-xs text-[#64748b]">{job.id}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-5 py-4 text-[#cbd5e1]">{job.title}</td>
-                      <td className="px-5 py-4 text-[#f0f0f0] font-semibold">{job.applicants}</td>
-                      <td className="px-5 py-4 text-[#f0f0f0] font-semibold">{job.hired}</td>
-                      <td className="px-5 py-4 text-[#f0f0f0] font-semibold">{job.pay}</td>
-                      <td className="px-5 py-4 text-[#94a3b8]">{job.location}</td>
-                      <td className="px-5 py-4">
-                        <span
-                          className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
-                          style={{
-                            backgroundColor: job.status === "Urgent" ? "#3b1d09" : "#3b1d09",
-                            color: job.status === "Urgent" ? "#ff6b00" : "#ff6b00",
-                          }}
-                        >
-                          <Work style={{ fontSize: 12 }} />
-                          {job.status}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold" style={{ backgroundColor: signal.bg, color: signal.color }}>
-                          <SignalIcon style={{ fontSize: 12 }} />
-                          {job.signal}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        </td>
+                        <td className="px-5 py-4 text-[#cbd5e1]">{job.title}</td>
+                        <td className="px-5 py-4 text-[#cbd5e1]">{job.category}</td>
+                        <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{formatNairaFromKobo(job.payKobo)}/day</td>
+                        <td className="px-5 py-4">
+                          <span className="flex items-center gap-1 text-[#94a3b8] text-xs">
+                            <LocationOn style={{ fontSize: 13 }} />{job.location}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4">
+                          <span
+                            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
+                            style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}
+                          >
+                            <Work style={{ fontSize: 12 }} />
+                            {job.status}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 text-[#94a3b8] text-xs">{formatDateLabel(job.createdAt)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         <div className="mt-6 rounded-2xl p-5 flex items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>

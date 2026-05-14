@@ -1,65 +1,31 @@
-import { Inject, Injectable, NotFoundException, Scope } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Request } from "express";
 import { Repository } from "typeorm";
 import { SessionService } from "../session/session.service";
 import { User } from "../entities/user.entity";
 import { UpdateUserSettingsDto } from "./dto/update-user-settings.dto";
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly sessionService: SessionService,
-    @Inject(REQUEST)
-    private readonly request: Request
+    private readonly sessionService: SessionService
   ) {}
 
-  async getCurrentUser(): Promise<User> {
-    const sessionToken = this.request.cookies?.kudiscore_session as string | undefined;
-    const sessionUserId = this.sessionService.getUserId(sessionToken);
+  async getCurrentUser(sessionToken?: string): Promise<User> {
+    const sessionUserId = await this.sessionService.getUserId(sessionToken);
 
-    if (sessionUserId) {
-      const sessionUser = await this.usersRepository.findOne({ where: { id: sessionUserId } });
-      if (sessionUser) {
-        return sessionUser;
-      }
+    if (!sessionUserId) {
+      throw new UnauthorizedException("No active session. Please log in.");
     }
 
-    const demoUser = await this.usersRepository.findOne({
-      where: { phone: "+2348012345678" }
-    });
-
-    const user = demoUser ?? await this.usersRepository.findOne({
-      where: { role: "trader" },
-      order: { createdAt: "DESC" }
-    });
-
-    if (user) {
-      if (user.phone === "+2348012345678" && (!user.bvn || !user.email || user.email.endsWith("@trace.local"))) {
-        user.bvn = user.bvn ?? "22172180083";
-        user.email = "amaka.okonkwo@trace.app";
-        return this.usersRepository.save(user);
-      }
-
-      return user;
+    const sessionUser = await this.usersRepository.findOne({ where: { id: sessionUserId } });
+    if (!sessionUser) {
+      throw new UnauthorizedException("Session user not found. Please log in again.");
     }
 
-    return this.usersRepository.save({
-      phone: "+2348012345678",
-      fullName: "Amaka Okonkwo",
-      email: "amaka.okonkwo@trace.app",
-      businessName: "Amaka Foods",
-      businessType: "Food & Beverage",
-      marketName: "Yaba Main Market",
-      role: "trader",
-      language: "english",
-      bvn: "22172180083",
-      bvnLast4: "4321",
-      lenderVisible: true
-    });
+    return sessionUser;
   }
 
   async findById(id: string): Promise<User> {
@@ -80,12 +46,16 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { phone } });
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { email } });
+  }
+
   async deleteById(id: string): Promise<void> {
     await this.usersRepository.delete({ id });
   }
 
-  async updateCurrentUser(payload: UpdateUserSettingsDto): Promise<User> {
-    const user = await this.getCurrentUser();
+  async updateCurrentUser(sessionToken: string | undefined, payload: UpdateUserSettingsDto): Promise<User> {
+    const user = await this.getCurrentUser(sessionToken);
     Object.assign(user, payload);
     return this.usersRepository.save(user);
   }

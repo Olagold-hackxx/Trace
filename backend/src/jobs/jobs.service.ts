@@ -16,8 +16,8 @@ export class JobsService {
     private readonly usersService: UsersService
   ) {}
 
-  async getMyJobs() {
-    const user = await this.usersService.getCurrentUser();
+  async getMyJobs(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     const existing = await this.jobsRepository.find({
       where: { postedByUserId: user.id },
       order: { createdAt: "DESC" }
@@ -44,8 +44,8 @@ export class JobsService {
     });
   }
 
-  async createJob(dto: CreateJobDto) {
-    const user = await this.usersService.getCurrentUser();
+  async createJob(sessionToken: string | undefined, dto: CreateJobDto) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.jobsRepository.save({
       postedByUserId: user.id,
       ...dto,
@@ -69,15 +69,15 @@ export class JobsService {
     });
   }
 
-  async getMyApplications() {
-    const user = await this.usersService.getCurrentUser();
+  async getMyApplications(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.applicationsRepository.find({
       where: { userId: user.id },
       order: { createdAt: "DESC" }
     });
   }
 
-  async getMarketplaceJobs() {
+  async getMarketplaceJobs(sessionToken?: string) {
     const jobs = await this.jobsRepository.find({
       where: { status: "active" },
       order: { createdAt: "DESC" }
@@ -87,7 +87,7 @@ export class JobsService {
       return jobs;
     }
 
-    const user = await this.usersService.getCurrentUser();
+    const user = await this.usersService.getCurrentUser(sessionToken);
     await this.jobsRepository.save([
       {
         postedByUserId: user.id,
@@ -117,9 +117,9 @@ export class JobsService {
     });
   }
 
-  async applyToJob(jobId: string) {
+  async applyToJob(sessionToken: string | undefined, jobId: string) {
     await this.getJob(jobId);
-    const user = await this.usersService.getCurrentUser();
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.applicationsRepository.save({
       jobId,
       userId: user.id,

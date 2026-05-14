@@ -21,21 +21,21 @@ export class PaymentsService {
     private readonly squadService: SquadService
   ) {}
 
-  async getLinks() {
-    const user = await this.usersService.getCurrentUser();
+  async getLinks(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.paymentLinksRepository.find({
       where: { userId: user.id },
       order: { createdAt: "DESC" }
     });
   }
 
-  async getDefaultLink() {
-    const links = await this.getLinks();
-    return links[0] ?? this.createLink({ name: "Amaka Foods - General", amountKobo: "0" });
+  async getDefaultLink(sessionToken?: string) {
+    const links = await this.getLinks(sessionToken);
+    return links[0] ?? this.createLink(sessionToken, { name: "Amaka Foods - General", amountKobo: "0" });
   }
 
-  async createLink(dto: CreatePaymentLinkDto) {
-    const user = await this.usersService.getCurrentUser();
+  async createLink(sessionToken: string | undefined, dto: CreatePaymentLinkDto) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     const slug = `${user.businessName?.toLowerCase().replace(/\s+/g, "-") ?? "trace"}-${Date.now()}`;
     return this.paymentLinksRepository.save({
       userId: user.id,
@@ -57,8 +57,8 @@ export class PaymentsService {
     return this.paymentLinksRepository.save(link);
   }
 
-  async initiatePayment(dto: InitiatePaymentDto) {
-    const user = await this.usersService.getCurrentUser();
+  async initiatePayment(sessionToken: string | undefined, dto: InitiatePaymentDto) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     const reference = `PAY-${Date.now()}`;
 
     const transaction = await this.transactionsRepository.save({

@@ -18,7 +18,6 @@ import {
   KeyboardArrowUp,
   CheckCircle,
   NorthEast,
-  Remove,
   WarningAmber,
 } from "@mui/icons-material";
 import {
@@ -30,7 +29,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { lenderOffers, scoreFaqs, scoreFactors, scoreHistory } from "@/lib/demo-data";
 import { formatNairaFromKobo } from "@/lib/backend";
 
 export function ScorePage() {
@@ -38,28 +36,24 @@ export function ScorePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [lenderVisible, setLenderVisible] = useState(true);
   const [insightOpen, setInsightOpen] = useState(false);
-  const score = backendScore?.score ?? 742;
+  const score = backendScore?.score ?? 0;
   const pct = (score / 900) * 100;
   const circumference = 2 * Math.PI * 80;
-  const activeHistory = backendHistory.length
-    ? backendHistory.map((item) => ({
-        month: new Date(item.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" }),
-        score: item.score,
-      }))
-    : scoreHistory;
-  const activeOffers = offers.length
-    ? offers.map((offer, index) => ({
-        id: offer.id,
-        name: offer.lenderName,
-        amount: formatNairaFromKobo(offer.amountKobo),
-        rate: offer.rateLabel,
-        tenor: offer.tenorLabel,
-        monthly: offer.monthlyRepaymentLabel,
-        badge: index === 0 ? "Live" : "Available",
-        badgeColor: index === 0 ? "#16a34a" : "#ff6b00",
-        badgeBg: index === 0 ? "#dcfce7" : "#3b1d09",
-      }))
-    : lenderOffers;
+  const activeHistory = backendHistory.map((item) => ({
+    month: new Date(item.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" }),
+    score: item.score,
+  }));
+  const activeOffers = offers.map((offer, index) => ({
+    id: offer.id,
+    name: offer.lenderName,
+    amount: formatNairaFromKobo(offer.amountKobo),
+    rate: offer.rateLabel,
+    tenor: offer.tenorLabel,
+    monthly: offer.monthlyRepaymentLabel,
+    badge: index === 0 ? "Live" : "Available",
+    badgeColor: index === 0 ? "#16a34a" : "#ff6b00",
+    badgeBg: index === 0 ? "#dcfce7" : "#3b1d09",
+  }));
 
   return (
     <AppShell role="user">
@@ -207,26 +201,26 @@ export function ScorePage() {
             </button>
           </div>
           <div className="space-y-5">
-            {scoreFactors.map((f) => (
-              <div key={f.label} className="p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-[#f0f0f0]">{f.label}</span>
-                    <span className="text-xs text-[#94a3b8]">· weight {f.weight}</span>
+            {explanation?.factors?.length ? (
+              explanation.factors.map((f, index) => {
+                const factorScore = typeof f.score === "number" ? f.score : Math.max(40, 85 - index * 8);
+                const color = f.direction === "positive" ? "#16a34a" : "#ff6b00";
+                const label = typeof f.label === "string" ? f.label : typeof f.text === "string" ? f.text : `Factor ${index + 1}`;
+                return (
+                  <div key={index} className="p-4 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-semibold text-[#f0f0f0]">{label}</span>
+                      <span className="text-sm font-bold text-[#f0f0f0]">{factorScore}/100</span>
+                    </div>
+                    <div className="h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e1e1e" }}>
+                      <div className="h-full rounded-full transition-all" style={{ width: `${factorScore}%`, backgroundColor: color }} />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: `${f.color}15`, color: f.color }}>
-                      {f.status}
-                    </span>
-                    <span className="text-sm font-bold text-[#f0f0f0]">{f.score}/100</span>
-                  </div>
-                </div>
-                <div className="h-2.5 rounded-full overflow-hidden mb-2" style={{ backgroundColor: "#1e1e1e" }}>
-                  <div className="h-full rounded-full transition-all" style={{ width: `${f.score}%`, backgroundColor: f.color }} />
-                </div>
-                <p className="text-xs text-[#cbd5e1]">{f.desc}</p>
-              </div>
-            ))}
+                );
+              })
+            ) : (
+              <div className="flex items-center justify-center h-24 text-sm text-[#94a3b8]">Score factors not yet available</div>
+            )}
           </div>
         </div>
 
@@ -276,7 +270,12 @@ export function ScorePage() {
             How TraceScore Works
           </h2>
           <div className="space-y-2">
-            {scoreFaqs.map((faq, i) => (
+            {[
+              { q: "What is TraceScore?", a: "TraceScore is your verified financial identity — a real-time credit score built from your transaction history, loan repayments, and business activity on the Trace platform." },
+              { q: "How is it calculated?", a: "We analyze your payment consistency, revenue trends, loan repayment history, and marketplace activity to generate a score between 0 and 900." },
+              { q: "How do I improve my score?", a: "Make payments on time, maintain steady revenue, repay loans on schedule, and keep your business active on the platform." },
+              { q: "Who can see my score?", a: "Only lenders you've granted visibility to can see your TraceScore. You control your data with the Lender Visibility toggle." },
+            ].map((faq, i) => (
               <div key={faq.q} className="rounded-xl overflow-hidden" style={{ border: "1px solid #1e1e1e" }}>
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -311,47 +310,35 @@ export function ScorePage() {
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-4 pb-2 max-h-[60vh] overflow-y-auto space-y-3">
-            {(explanation?.factors?.length
-              ? explanation.factors.map((factor, index) => ({
-                  label: index % 2 === 0 ? "Positive signal" : "Watch signal",
-                  score: Math.max(40, 82 - index * 8),
-                  color: index % 2 === 0 ? "#16a34a" : "#ff6b00",
-                  direction: factor.direction === "positive" ? "up" : "watch",
-                  whatHelped: typeof factor.text === "string" ? factor.text : "Recent transaction performance supports this factor.",
-                  nextMove: "Keep collections stable and avoid customer concentration spikes.",
-                }))
-              : scoreFactors).map((factor) => {
-              const icon =
-                factor.direction === "up" ? (
-                  <NorthEast style={{ fontSize: 16, color: "#16a34a" }} />
-                ) : factor.direction === "steady" ? (
-                  <Remove style={{ fontSize: 16, color: "#f59e0b" }} />
-                ) : (
-                  <WarningAmber style={{ fontSize: 16, color: "#ff6b00" }} />
-                );
-
-              return (
-                <div key={factor.label} className="rounded-2xl p-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-2">
-                      {icon}
-                      <p className="text-sm font-semibold text-[#f0f0f0]">{factor.label}</p>
+            {explanation?.factors?.length ? (
+              explanation.factors.map((factor, index) => {
+                const isPositive = factor.direction === "positive";
+                const color = isPositive ? "#16a34a" : "#ff6b00";
+                const factorScore = Math.max(40, 82 - index * 8);
+                const label = typeof factor.label === "string" ? factor.label : typeof factor.text === "string" ? factor.text : `Factor ${index + 1}`;
+                const icon = isPositive
+                  ? <NorthEast style={{ fontSize: 16, color: "#16a34a" }} />
+                  : <WarningAmber style={{ fontSize: 16, color: "#ff6b00" }} />;
+                return (
+                  <div key={index} className="rounded-2xl p-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-2">
+                        {icon}
+                        <p className="text-sm font-semibold text-[#f0f0f0]">{label}</p>
+                      </div>
+                      <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: `${color}15`, color }}>
+                        {factorScore}/100
+                      </span>
                     </div>
-                    <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{ backgroundColor: `${factor.color}15`, color: factor.color }}>
-                      {factor.score}/100
-                    </span>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <p className="text-[#cbd5e1]">
-                      <span className="font-semibold text-[#f0f0f0]">What helped:</span> {factor.whatHelped}
-                    </p>
-                    <p className="text-[#94a3b8]">
-                      <span className="font-semibold text-[#f0f0f0]">Next move:</span> {factor.nextMove}
+                    <p className="text-sm text-[#cbd5e1]">
+                      {typeof factor.text === "string" ? factor.text : "Recent activity is factored into this signal."}
                     </p>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="flex items-center justify-center h-24 text-sm text-[#94a3b8]">No factor data available yet</div>
+            )}
           </div>
           <DrawerFooter>
             <Link

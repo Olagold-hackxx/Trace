@@ -15,6 +15,7 @@ import { ScoreSnapshot } from "./entities/score-snapshot.entity";
 import { Transaction } from "./entities/transaction.entity";
 import { User } from "./entities/user.entity";
 import { VirtualAccount } from "./entities/virtual-account.entity";
+import { Session } from "./entities/session.entity";
 import { JobsModule } from "./jobs/jobs.module";
 import { LenderModule } from "./lender/lender.module";
 import { LoansModule } from "./loans/loans.module";
@@ -50,7 +51,7 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
           database: configService.get<string>("DB_NAME"),
           synchronize: dbSync === true || dbSync === "true",
           autoLoadEntities: false,
-          entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot]
+          entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session]
         };
       }
     }),

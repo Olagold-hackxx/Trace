@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Version } from "@nestjs/common";
+import { Request } from "express";
 import { CreatePaymentLinkDto } from "./dto/create-payment-link.dto";
 import { InitiatePaymentDto } from "./dto/initiate-payment.dto";
 import { PaymentsService } from "./payments.service";
@@ -9,20 +10,20 @@ export class PaymentsController {
 
   @Version("1")
   @Get("links")
-  getLinks() {
-    return this.paymentsService.getLinks();
+  getLinks(@Req() req: Request) {
+    return this.paymentsService.getLinks(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Get("links/default")
-  getDefaultLink() {
-    return this.paymentsService.getDefaultLink();
+  getDefaultLink(@Req() req: Request) {
+    return this.paymentsService.getDefaultLink(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Post("links")
-  createLink(@Body() dto: CreatePaymentLinkDto) {
-    return this.paymentsService.createLink(dto);
+  createLink(@Req() req: Request, @Body() dto: CreatePaymentLinkDto) {
+    return this.paymentsService.createLink(req.cookies?.kudiscore_session, dto);
   }
 
   @Version("1")
@@ -33,8 +34,8 @@ export class PaymentsController {
 
   @Version("1")
   @Post("initiate")
-  initiatePayment(@Body() dto: InitiatePaymentDto) {
-    return this.paymentsService.initiatePayment(dto);
+  initiatePayment(@Req() req: Request, @Body() dto: InitiatePaymentDto) {
+    return this.paymentsService.initiatePayment(req.cookies?.kudiscore_session, dto);
   }
 
   @Version("1")

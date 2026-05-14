@@ -12,22 +12,22 @@ export class ScoreService {
     private readonly usersService: UsersService
   ) {}
 
-  async getCurrentScore() {
-    const user = await this.usersService.getCurrentUser();
+  async getCurrentScore(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     const snapshot = await this.ensureSeedSnapshot(user.id);
     return snapshot;
   }
 
-  async getExplanation() {
-    const snapshot = await this.getCurrentScore();
+  async getExplanation(sessionToken?: string) {
+    const snapshot = await this.getCurrentScore(sessionToken);
     return {
       score: snapshot.score,
       factors: snapshot.factors
     };
   }
 
-  async getHistory() {
-    const user = await this.usersService.getCurrentUser();
+  async getHistory(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.snapshotsRepository.find({
       where: { userId: user.id },
       order: { createdAt: "ASC" }

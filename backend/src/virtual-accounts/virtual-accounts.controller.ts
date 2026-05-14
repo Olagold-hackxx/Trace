@@ -1,4 +1,5 @@
-import { Controller, Get, Version } from "@nestjs/common";
+import { Controller, Get, Req, Version } from "@nestjs/common";
+import { Request } from "express";
 import { VirtualAccountsService } from "./virtual-accounts.service";
 
 @Controller("virtual-accounts")
@@ -7,7 +8,7 @@ export class VirtualAccountsController {
 
   @Version("1")
   @Get("me")
-  getMine() {
-    return this.virtualAccountsService.getCurrentUserAccount();
+  getMine(@Req() req: Request) {
+    return this.virtualAccountsService.getCurrentUserAccount(req.cookies?.kudiscore_session);
   }
 }

@@ -23,10 +23,10 @@ export class LoansService {
     private readonly squadService: SquadService
   ) {}
 
-  async getSummary() {
-    const applications = await this.getApplications();
-    const offers = await this.getOffers();
-    const active = await this.getActiveLoan();
+  async getSummary(sessionToken?: string) {
+    const applications = await this.getApplications(sessionToken);
+    const offers = await this.getOffers(sessionToken);
+    const active = await this.getActiveLoan(sessionToken);
 
     return {
       applicationsCount: applications.length,
@@ -35,8 +35,8 @@ export class LoansService {
     };
   }
 
-  async getOffers() {
-    const user = await this.usersService.getCurrentUser();
+  async getOffers(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     const offers = await this.offersRepository.find({
       where: { userId: user.id },
       order: { createdAt: "DESC" }
@@ -66,8 +66,8 @@ export class LoansService {
     ]);
   }
 
-  async createApplication(dto: CreateLoanApplicationDto) {
-    const user = await this.usersService.getCurrentUser();
+  async createApplication(sessionToken: string | undefined, dto: CreateLoanApplicationDto) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.applicationsRepository.save({
       userId: user.id,
       ...dto,
@@ -75,8 +75,8 @@ export class LoansService {
     });
   }
 
-  async getApplications() {
-    const user = await this.usersService.getCurrentUser();
+  async getApplications(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.applicationsRepository.find({
       where: { userId: user.id },
       order: { createdAt: "DESC" }
@@ -122,8 +122,8 @@ export class LoansService {
     return loan;
   }
 
-  async getActiveLoan() {
-    const user = await this.usersService.getCurrentUser();
+  async getActiveLoan(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.loansRepository.findOne({
       where: { userId: user.id, status: "active" },
       order: { createdAt: "DESC" }

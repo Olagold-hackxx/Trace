@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { Spinner } from "@/components/ui/spinner";
 import {
   BackendJob,
   fetchBackend,
@@ -53,7 +54,12 @@ export function MarketplaceDetailPage({
   if (!job) {
     return (
       <AppShell role={role}>
-        <div className="p-6 max-w-6xl mx-auto text-sm text-[#94a3b8]">Loading job...</div>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center gap-3">
+            <Spinner className="size-8 text-[#ff6b00]" />
+            <p className="text-sm text-[#94a3b8]">Loading job details...</p>
+          </div>
+        </div>
       </AppShell>
     );
   }

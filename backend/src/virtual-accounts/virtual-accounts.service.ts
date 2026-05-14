@@ -16,8 +16,8 @@ export class VirtualAccountsService {
     private readonly squadService: SquadService
   ) {}
 
-  async getCurrentUserAccount() {
-    const user = await this.usersService.getCurrentUser();
+  async getCurrentUserAccount(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.provisionForUser(user);
   }
 

@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, Version } from "@nestjs/common";
+import { Request } from "express";
 import { CreateJobDto } from "./dto/create-job.dto";
 import { JobsService } from "./jobs.service";
 
@@ -8,14 +9,14 @@ export class JobsController {
 
   @Version("1")
   @Get("jobs/mine")
-  getMyJobs() {
-    return this.jobsService.getMyJobs();
+  getMyJobs(@Req() req: Request) {
+    return this.jobsService.getMyJobs(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Post("jobs")
-  createJob(@Body() dto: CreateJobDto) {
-    return this.jobsService.createJob(dto);
+  createJob(@Req() req: Request, @Body() dto: CreateJobDto) {
+    return this.jobsService.createJob(req.cookies?.kudiscore_session, dto);
   }
 
   @Version("1")
@@ -32,14 +33,14 @@ export class JobsController {
 
   @Version("1")
   @Get("job-applications/mine")
-  getMyApplications() {
-    return this.jobsService.getMyApplications();
+  getMyApplications(@Req() req: Request) {
+    return this.jobsService.getMyApplications(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Get("marketplace/jobs")
-  getMarketplaceJobs() {
-    return this.jobsService.getMarketplaceJobs();
+  getMarketplaceJobs(@Req() req: Request) {
+    return this.jobsService.getMarketplaceJobs(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
@@ -50,8 +51,8 @@ export class JobsController {
 
   @Version("1")
   @Post("marketplace/jobs/:jobId/apply")
-  applyToMarketplaceJob(@Param("jobId") jobId: string) {
-    return this.jobsService.applyToJob(jobId);
+  applyToMarketplaceJob(@Req() req: Request, @Param("jobId") jobId: string) {
+    return this.jobsService.applyToJob(req.cookies?.kudiscore_session, jobId);
   }
 
   @Version("1")

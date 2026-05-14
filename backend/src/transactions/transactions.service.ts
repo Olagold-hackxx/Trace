@@ -12,8 +12,8 @@ export class TransactionsService {
     private readonly usersService: UsersService
   ) {}
 
-  async getTransactions(limit = 20) {
-    const user = await this.usersService.getCurrentUser();
+  async getTransactions(sessionToken: string | undefined, limit = 20) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     return this.transactionsRepository.find({
       where: { userId: user.id },
       order: { occurredAt: "DESC" },
@@ -21,8 +21,8 @@ export class TransactionsService {
     });
   }
 
-  async getSummary() {
-    const user = await this.usersService.getCurrentUser();
+  async getSummary(sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
     const items = await this.transactionsRepository.find({ where: { userId: user.id } });
 
     const totalInflow = items

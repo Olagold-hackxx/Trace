@@ -1,7 +1,7 @@
 "use client";
 
 export const BACKEND_API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:3005/api/v1";
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:3001/api/v1";
 export const BACKEND_BASE_URL = BACKEND_API_BASE_URL.replace(/\/api\/v1$/, "");
 
 export const DEMO_TRADER_SIGNUP_DEFAULTS = {
@@ -184,6 +184,12 @@ export async function fetchBackend<T>(path: string, options: FetchOptions = {}):
   });
 
   if (!response.ok) {
+    if (response.status === 401 && typeof window !== "undefined") {
+      window.localStorage.removeItem(TRADER_SESSION_STORAGE_KEY);
+      window.location.href = "/auth/login";
+      throw new Error("Session expired. Redirecting to login.");
+    }
+
     let message = `Request failed with status ${response.status}`;
 
     try {

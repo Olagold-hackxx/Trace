@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, Version } from "@nestjs/common";
+import { Request } from "express";
 import { CreateLoanApplicationDto } from "./dto/create-loan-application.dto";
 import { LoansService } from "./loans.service";
 
@@ -8,26 +9,26 @@ export class LoansController {
 
   @Version("1")
   @Get("summary")
-  getSummary() {
-    return this.loansService.getSummary();
+  getSummary(@Req() req: Request) {
+    return this.loansService.getSummary(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Get("offers")
-  getOffers() {
-    return this.loansService.getOffers();
+  getOffers(@Req() req: Request) {
+    return this.loansService.getOffers(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
   @Post("applications")
-  createApplication(@Body() dto: CreateLoanApplicationDto) {
-    return this.loansService.createApplication(dto);
+  createApplication(@Req() req: Request, @Body() dto: CreateLoanApplicationDto) {
+    return this.loansService.createApplication(req.cookies?.kudiscore_session, dto);
   }
 
   @Version("1")
   @Get("applications")
-  getApplications() {
-    return this.loansService.getApplications();
+  getApplications(@Req() req: Request) {
+    return this.loansService.getApplications(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
@@ -38,8 +39,8 @@ export class LoansController {
 
   @Version("1")
   @Get("active")
-  getActiveLoan() {
-    return this.loansService.getActiveLoan();
+  getActiveLoan(@Req() req: Request) {
+    return this.loansService.getActiveLoan(req.cookies?.kudiscore_session);
   }
 
   @Version("1")
