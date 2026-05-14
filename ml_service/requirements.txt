@@ -19,6 +19,6 @@ python-dotenv
 jupyter
 sentence-transformers>=2.7,<3
 transformers>=4.36,<5
-torch==2.2.2
+torch
 # pgvector
 # qdrant-client
