@@ -1,12 +1,16 @@
-import { Body, Controller, Post, Res, Version } from "@nestjs/common";
-import { Response } from "express";
+import { Body, Controller, Post, Req, Res, Version } from "@nestjs/common";
+import { Request, Response } from "express";
 import { LoginDto } from "./dto/login.dto";
 import { SignupDto } from "./dto/signup.dto";
 import { AuthService } from "./auth.service";
+import { SessionService } from "../session/session.service";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly sessionService: SessionService
+  ) {}
 
   @Version("1")
   @Post("signup")
@@ -34,7 +38,11 @@ export class AuthController {
 
   @Version("1")
   @Post("logout")
-  logout(@Res({ passthrough: true }) response: Response) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) response: Response) {
+    const token = req.cookies?.kudiscore_session;
+    if (token) {
+      await this.sessionService.clearSession(token);
+    }
     response.clearCookie("kudiscore_session");
     return { success: true };
   }

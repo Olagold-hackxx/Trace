@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/common/brand-logo";
 import { useTraderIdentity } from "@/hooks/use-trader-identity";
 import { cn } from "@/lib/utils";
+import { fetchBackend, TRADER_SESSION_STORAGE_KEY } from "@/lib/backend";
 import {
   Dashboard,
   Wallet,
@@ -41,7 +42,18 @@ const lenderNav = [
 
 export function Sidebar({ role = "user" }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const traderIdentity = useTraderIdentity(role === "user");
+
+  const handleSignOut = async () => {
+    try {
+      await fetchBackend("/auth/logout", { method: "POST" });
+    } catch {
+      // best-effort
+    }
+    window.localStorage.removeItem(TRADER_SESSION_STORAGE_KEY);
+    router.push("/auth/login");
+  };
   const nav = role === "lender" ? lenderNav : userNav;
   const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
   const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
@@ -113,6 +125,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
       {/* Bottom */}
       <div className="px-3 pb-4 border-t pt-4" style={{ borderColor: "#1e1e1e" }}>
         <button
+          onClick={handleSignOut}
           className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium transition-all text-[#cbd5e1] hover:bg-[#161616] hover:text-white"
           style={{ backgroundColor: "transparent" }}
         >

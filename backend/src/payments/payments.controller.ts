@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, Version } from "@nestjs/common";
+import { Response } from "express";
 import { Request } from "express";
 import { CreatePaymentLinkDto } from "./dto/create-payment-link.dto";
 import { InitiatePaymentDto } from "./dto/initiate-payment.dto";
@@ -46,10 +47,21 @@ export class PaymentsController {
 
   @Version("1")
   @Get("callback")
-  paymentCallback(
+  async paymentCallback(
+    @Res() res: Response,
+    @Query("reference") reference?: string,
     @Query("transaction_ref") transactionRef?: string,
     @Query("status") status?: string
   ) {
-    return this.paymentsService.handleCallback(transactionRef, status);
+    const ref = reference ?? transactionRef ?? "";
+    if (ref) {
+      try {
+        await this.paymentsService.verifyPayment(ref);
+      } catch {
+        // best-effort — webhook may have already handled it
+      }
+    }
+    const frontendBase = process.env.FRONTEND_URL ?? "http://localhost:3000";
+    return res.redirect(`${frontendBase}/payments?ref=${ref}&status=${status ?? "success"}`);
   }
 }

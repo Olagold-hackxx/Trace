@@ -59,7 +59,13 @@ export default function LoginPage() {
 
       persistTraderSession({ user, virtualAccount });
       setLoading(false);
-      router.push("/dashboard");
+      if (user.role === "lender") {
+        router.push("/lender");
+      } else if (user.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (submitError) {
       setLoading(false);
       setErrors({
