@@ -18,3 +18,11 @@ shap
 sentence-transformers>=2.7,<3
 transformers>=4.36,<5
 torch
+
+# Batch feature engineering (self-join queries)
+duckdb
+
+# Cash-flow forecasting
+prophet
+scikit-learn
+joblib

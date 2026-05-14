@@ -330,18 +330,25 @@ class FraudInjector:
         Fix #2: Find users with a real 30+ day gap inside their history.
         Spike is placed at the END of an actual gap — not after the data window ends.
         """
-        # Candidates: users who have at least one 30+ day internal gap
+        # Threshold: p90 of max_gap_days across all users, floor at 3 days.
+        # Synthetic data has max gap ~6 days (dense daily generation),
+        # so a fixed 30-day threshold yields 0 candidates.
+        gap_p90 = float(self._user_stats["max_gap_days"].quantile(0.90))
+        gap_threshold = max(3.0, gap_p90)
         candidates = self._user_stats[
-            self._user_stats["max_gap_days"] > 30
+            self._user_stats["max_gap_days"] >= gap_threshold
         ].index.tolist()
         candidates = [
             u for u in candidates
             if self._user_scenario_count.get(u, 0) < self.config.max_scenarios_per_user
         ]
+        # Shuffle so we don't always pick alphabetically-first user_ids
+        self.rng.shuffle(candidates)
 
-        rows = []
+        rows      = []
+        n_emitted = 0
         for user_id in candidates:
-            if len({r["fraud_scenario_id"] for r in rows}) >= n_scenarios:
+            if n_emitted >= n_scenarios:
                 break
 
             # Find the actual gap in this user's history
@@ -351,7 +358,7 @@ class FraudInjector:
                 .reset_index(drop=True)
             )
             gaps_days = user_ts.diff().dt.total_seconds().div(86400)
-            large_gaps = gaps_days[gaps_days > 30]
+            large_gaps = gaps_days[gaps_days >= gap_threshold]
             if large_gaps.empty:
                 continue
 
@@ -362,6 +369,7 @@ class FraudInjector:
             self._user_scenario_count[user_id] = (
                 self._user_scenario_count.get(user_id, 0) + 1
             )
+            n_emitted += 1
             sid    = self._scenario_id()
             n_txns = int(self.rng.integers(8, 16))
             offsets = sorted(self.rng.uniform(0, 23 * 60, size=n_txns).tolist())

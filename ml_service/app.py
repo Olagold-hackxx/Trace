@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from db import get_db, fetch_transactions, fetch_user_meta
+from forecasting.api import forecast_router, init_forecast_state
 from inference.artifact_loader import Artifact
 from inference.credit_predictor import CreditPredictor
 from inference.shap_explainer import get_phrasing, shap_to_score_delta
@@ -52,11 +53,15 @@ async def lifespan(app: FastAPI):
     state['match_engine'] = None
     state['jobs_df']      = None
 
+    # Forecasting — load archetype profiles for cold-start users
+    init_forecast_state()
+
     yield
     state.clear()
 
 
 app = FastAPI(title="Trace ML Service", version="1.0", lifespan=lifespan)
+app.include_router(forecast_router, prefix="/predict")
 
 
 def _now_utc() -> datetime:
