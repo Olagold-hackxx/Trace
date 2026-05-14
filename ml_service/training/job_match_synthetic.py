@@ -7,7 +7,7 @@ Strategy: Option B — handcrafted templates, no scraping.
   - Lagos neighborhood-level geography (18 neighbourhoods with real centroids)
   - Fixed seed = 42 everywhere — byte-identical output every run
 
-Eval cases (committed to eval_cases.json for demo use):
+Eval cases (committed to test_cases.json for demo use):
   1. job_001 — Welder, Lekki (happy path: nearest skilled welder wins)
   2. job_pidgin_gen — Pidgin generator post, Yaba (multilingual retrieval)
   3. job_domestic_lekki — Domestic worker, Lekki (rate + geography reranking)
@@ -787,7 +787,7 @@ def generate_workers(n: int = 200, seed: int = SEED) -> pd.DataFrame:
 
 # ─── Eval cases ────────────────────────────────────────────────────────────
 
-EVAL_CASES = [
+TEST_CASES = [
     {
         'name': 'Happy path — welder near Lekki',
         'job_id': 'job_001',
@@ -820,8 +820,8 @@ def save_to_json(output_dir: str = 'data') -> None:
 
     jobs.to_json(out / 'jobs.json', orient='records', indent=2)
     workers_serialisable.to_json(out / 'workers.json', orient='records', indent=2)
-    with open(out / 'eval_cases.json', 'w') as f:
-        json.dump(EVAL_CASES, f, indent=2)
+    with open(out / 'test_cases.json', 'w') as f:
+        json.dump(TEST_CASES, f, indent=2)
 
     print(f"Saved {len(jobs)} jobs, {len(workers)} workers to {out}/")
     print(f"Cold-start workers: {(workers['kudiscore_tier'].isna()).sum()}")
