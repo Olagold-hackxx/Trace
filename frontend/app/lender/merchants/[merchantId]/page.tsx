@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
 import { fetchMerchantSnapshot } from "@/hooks/use-lender-data";
@@ -16,6 +17,7 @@ import {
   LocationOn,
   CalendarToday,
 } from "@mui/icons-material";
+import { Spinner } from "@/components/ui/spinner";
 import {
   LineChart,
   Line,
@@ -34,21 +36,28 @@ function Badge({ label, color, bg }: { label: string; color: string; bg: string 
   );
 }
 
-export default function MerchantCreditFilePage({ params }: { params: { merchantId: string } }) {
+export default function MerchantCreditFilePage({ params }: { params: Promise<{ merchantId: string }> }) {
+  const router = useRouter();
+  const [merchantId, setMerchantId] = useState<string | null>(null);
   const [snapshot, setSnapshot] = useState<Awaited<ReturnType<typeof fetchMerchantSnapshot>> | null>(null);
-  const [applications, setApplications] = useState<Array<{ id: string; status: string; amountKobo: string; purpose: string }>>([]);
+  const [applications, setApplications] = useState<Array<{ id: string; userId: string; status: string; amountKobo: string; purpose: string }>>([]);
   const [decision, setDecision] = useState<"approve" | "decline" | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
+    void params.then(({ merchantId: id }) => setMerchantId(id));
+  }, [params]);
+
+  useEffect(() => {
+    if (!merchantId) return;
     void Promise.all([
-      fetchMerchantSnapshot(params.merchantId),
+      fetchMerchantSnapshot(merchantId),
       fetchBackend<Array<{ id: string; userId: string; status: string; amountKobo: string; purpose: string }>>("/lender/applications"),
     ]).then(([merchantSnapshot, allApplications]) => {
       setSnapshot(merchantSnapshot);
-      setApplications(allApplications.filter((item) => item.userId === params.merchantId));
+      setApplications(allApplications.filter((item) => item.userId === merchantId));
     });
-  }, [params.merchantId]);
+  }, [merchantId]);
 
   const latestApplication = applications[0] ?? null;
 
@@ -65,12 +74,20 @@ export default function MerchantCreditFilePage({ params }: { params: { merchantI
     });
     setDecision(nextDecision);
     setSubmitted(true);
+    if (nextDecision === "approve") {
+      setTimeout(() => router.push("/lender/approvals"), 1200);
+    }
   };
 
   if (!snapshot) {
     return (
       <AppShell role="lender">
-        <div className="p-6 max-w-7xl mx-auto text-sm text-[#94a3b8]">Loading merchant profile...</div>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="flex flex-col items-center gap-3">
+            <Spinner className="size-8 text-[#ff6b00]" />
+            <p className="text-sm text-[#94a3b8]">Loading merchant profile...</p>
+          </div>
+        </div>
       </AppShell>
     );
   }

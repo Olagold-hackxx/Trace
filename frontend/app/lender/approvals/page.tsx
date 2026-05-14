@@ -3,6 +3,7 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FilterList, Search, CheckCircle, Cancel, Visibility } from "@mui/icons-material";
 import { useLenderData } from "@/hooks/use-lender-data";
 import { fetchBackend, formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
@@ -21,6 +22,7 @@ const statusStyle: Record<string, { color: string; bg: string }> = {
 };
 
 export default function ApprovalsPage() {
+  const router = useRouter();
   const { applications, merchants } = useLenderData();
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
@@ -49,12 +51,15 @@ export default function ApprovalsPage() {
 
   const totalRequestedKobo = filtered.reduce((sum, item) => sum + Number(item.amountKobo), 0);
 
-  const decide = async (id: string, decision: "approve" | "decline") => {
+  const decide = async (id: string, decision: "approve" | "decline", userId: string) => {
     await fetchBackend(`/lender/applications/${id}/decision`, {
       method: "POST",
       bodyJson: { decision },
     });
     setDecisions((current) => ({ ...current, [id]: decision }));
+    if (decision === "approve") {
+      router.push(`/lender/merchants/${userId}`);
+    }
   };
 
   return (
@@ -139,21 +144,23 @@ export default function ApprovalsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-4">
-                        {!dec && (
-                          <div className="flex items-center gap-2">
-                            <Link href={`/lender/merchants/${app.userId}`}>
-                              <button className="p-1.5 rounded-lg border transition-all hover:bg-[#161616]" style={{ borderColor: "#1e1e1e" }} title="View">
-                                <Visibility style={{ fontSize: 14, color: "#cbd5e1" }} />
+                        <div className="flex items-center gap-2">
+                          <Link href={`/lender/merchants/${app.userId}`}>
+                            <button className="p-1.5 rounded-lg border transition-all hover:bg-[#161616]" style={{ borderColor: "#1e1e1e" }} title="View profile">
+                              <Visibility style={{ fontSize: 14, color: "#cbd5e1" }} />
+                            </button>
+                          </Link>
+                          {!dec && normalizedStatus === "pending" && (
+                            <>
+                              <button onClick={() => void decide(app.id, "approve", app.userId)} className="p-1.5 rounded-lg transition-all hover:bg-[#dcfce7]" style={{ border: "1px solid #bbf7d0" }} title="Approve">
+                                <CheckCircle style={{ fontSize: 14, color: "#16a34a" }} />
                               </button>
-                            </Link>
-                            <button onClick={() => void decide(app.id, "approve")} className="p-1.5 rounded-lg transition-all hover:bg-[#dcfce7]" style={{ border: "1px solid #bbf7d0" }} title="Approve">
-                              <CheckCircle style={{ fontSize: 14, color: "#16a34a" }} />
-                            </button>
-                            <button onClick={() => void decide(app.id, "decline")} className="p-1.5 rounded-lg transition-all hover:bg-[#fee2e2]" style={{ border: "1px solid #fecaca" }} title="Decline">
-                              <Cancel style={{ fontSize: 14, color: "#dc2626" }} />
-                            </button>
-                          </div>
-                        )}
+                              <button onClick={() => void decide(app.id, "decline", app.userId)} className="p-1.5 rounded-lg transition-all hover:bg-[#fee2e2]" style={{ border: "1px solid #fecaca" }} title="Decline">
+                                <Cancel style={{ fontSize: 14, color: "#dc2626" }} />
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

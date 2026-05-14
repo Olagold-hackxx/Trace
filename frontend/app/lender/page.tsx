@@ -116,8 +116,8 @@ export default function LenderDashboardPage() {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="space-y-2 mt-2">
-                  {sectorData.map((s) => (
-                    <div key={s.name} className="flex items-center justify-between text-xs">
+                  {sectorData.map((s, index) => (
+                    <div key={`${s.name}-${index}`} className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.color }} />
                         <span className="text-[#cbd5e1]">{s.name}</span>

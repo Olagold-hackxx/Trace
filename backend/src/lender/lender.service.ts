@@ -48,14 +48,35 @@ export class LenderService {
     });
   }
 
-  async decideApplication(id: string, dto: LoanDecisionDto) {
+  async decideApplication(id: string, dto: LoanDecisionDto, lenderSessionToken?: string) {
     const application = await this.applicationsRepository.findOne({ where: { id } });
     if (!application) {
       throw new NotFoundException("Loan application not found");
     }
 
     application.status = dto.decision === "approve" ? "approved" : "declined";
-    return this.applicationsRepository.save(application);
+    await this.applicationsRepository.save(application);
+
+    if (dto.decision === "approve") {
+      const lenderId = await this.sessionService.getUserId(lenderSessionToken);
+      const lender = lenderId ? await this.usersRepository.findOne({ where: { id: lenderId } }) : null;
+      const lenderName = lender?.businessName ?? lender?.fullName ?? "Trace Lender";
+
+      const loan = this.loansRepository.create({
+        userId: application.userId,
+        lenderName,
+        principalKobo: application.amountKobo,
+        amountRepaidKobo: "0",
+        rateLabel: "5% p/m",
+        tenorLabel: application.tenor ?? "3 months",
+        repaymentMethod: "cash_flow_indexed",
+        repaymentPctLabel: "5%",
+        status: "active",
+      });
+      await this.loansRepository.save(loan);
+    }
+
+    return { ...application, userId: application.userId };
   }
 
   async getMerchants() {

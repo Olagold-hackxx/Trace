@@ -27,8 +27,8 @@ export class LenderController {
 
   @Version("1")
   @Post("applications/:id/decision")
-  decideApplication(@Param("id") id: string, @Body() dto: LoanDecisionDto) {
-    return this.lenderService.decideApplication(id, dto);
+  decideApplication(@Param("id") id: string, @Body() dto: LoanDecisionDto, @Req() req: Request) {
+    return this.lenderService.decideApplication(id, dto, req.cookies?.kudiscore_session);
   }
 
   @Version("1")

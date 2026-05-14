@@ -190,8 +190,8 @@ export default function LenderAnalyticsPage() {
               Watchlist Signals
             </h2>
             <div className="space-y-3">
-              {watchlist.map((item) => (
-                <div key={item.name} className="rounded-xl p-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+              {watchlist.map((item, index) => (
+                <div key={`${item.name}-${index}`} className="rounded-xl p-4" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="font-semibold text-[#f0f0f0]">{item.name}</p>
