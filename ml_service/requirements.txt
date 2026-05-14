@@ -14,7 +14,7 @@ uvicorn
 gunicorn
 requests
 sqlalchemy
-psycopg[binary]
+psycopg2-binary
 python-dotenv
 jupyter
 sentence-transformers>=2.7,<3
