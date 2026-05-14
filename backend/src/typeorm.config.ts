@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { config as loadEnv } from "dotenv";
+import { getDatabaseOptions } from "./database/database-options";
 import { Job } from "./entities/job.entity";
 import { JobApplication } from "./entities/job-application.entity";
 import { Loan } from "./entities/loan.entity";
@@ -14,21 +15,9 @@ import { VirtualAccount } from "./entities/virtual-account.entity";
 
 loadEnv();
 
-const databaseUrl = process.env.DATABASE_URL;
-
 export default new DataSource({
   type: "postgres",
-  ...(databaseUrl
-    ? {
-        url: databaseUrl
-      }
-    : {
-        host: process.env.DB_HOST ?? "localhost",
-        port: Number(process.env.DB_PORT ?? 5432),
-        username: process.env.DB_USER ?? "postgres",
-        password: process.env.DB_PASSWORD ?? "postgres",
-        database: process.env.DB_NAME ?? "kudiscore"
-      }),
+  ...getDatabaseOptions(process.env),
   entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot],
   migrations: ["src/migrations/*.ts"],
   synchronize: process.env.DB_SYNC === "true"

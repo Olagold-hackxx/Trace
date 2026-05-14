@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { getDatabaseOptions } from "./database/database-options";
 import { AdminModule } from "./admin/admin.module";
 import { AuthModule } from "./auth/auth.module";
 import { envValidationSchema } from "./env.validation";
@@ -40,22 +41,11 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const databaseUrl = configService.get<string>("DATABASE_URL");
         const dbSync = configService.get<string | boolean>("DB_SYNC");
 
         return {
           type: "postgres",
-          ...(databaseUrl
-            ? {
-                url: databaseUrl
-              }
-            : {
-                host: configService.get<string>("DB_HOST"),
-                port: Number(configService.get<string>("DB_PORT") ?? 5432),
-                username: configService.get<string>("DB_USER"),
-                password: configService.get<string>("DB_PASSWORD"),
-                database: configService.get<string>("DB_NAME")
-              }),
+          ...getDatabaseOptions(configService),
           synchronize: dbSync === true || dbSync === "true",
           autoLoadEntities: false,
           entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session]
