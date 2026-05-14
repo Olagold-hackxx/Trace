@@ -23,7 +23,7 @@ from training.feature_engine import compute_features
 # JobMatchEngine and synthetic data imports are deferred to _ensure_match_engine()
 # to avoid loading torch/sentence-transformers at startup (adds 30-60s to boot time)
 
-ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'model_artifact_v1.pkl'
+ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'deeper_model_artifact_v1.pkl'
 EMBEDDINGS_PATH = Path(__file__).parent / 'models' / 'worker_embeddings.npy'
 FIXTURES_DIR    = Path(__file__).parent / 'fixtures'   # committed, not gitignored
 MATCH_MODEL     = 'paraphrase-multilingual-mpnet-base-v2'
