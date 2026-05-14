@@ -1,24 +1,20 @@
+# Core serving
 numpy
 pandas
-pyarrow
-# matplotlib
-# seaborn
-# scipy
-# scikit-learn
-lightgbm
-shap
-# optuna
-# fairlearn
 fastapi
 uvicorn
 gunicorn
-requests
+python-dotenv
+
+# Database
 sqlalchemy
 psycopg2-binary
-python-dotenv
-jupyter
+
+# Credit scoring
+lightgbm
+shap
+
+# Job matching
 sentence-transformers>=2.7,<3
 transformers>=4.36,<5
 torch
-# pgvector
-# qdrant-client

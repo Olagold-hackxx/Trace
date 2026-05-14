@@ -27,20 +27,9 @@ class Artifact:
         return instance
     
     def _validate(self):
-        """Sanity-check the loaded artifact."""
+        """Sanity-check schema only — no model.predict() call at startup."""
         assert len(self.feature_cols) > 0, "feature_cols is empty"
         assert all(c in self.feature_cols for c in self.categorical_cols), \
             "categorical_cols contains features not in feature_cols"
         assert all(c in self.known_categories for c in self.categorical_cols), \
             "categorical_cols missing from known_categories"
-        # Smoke-test model can predict
-        import numpy as np
-        import pandas as pd
-        dummy = pd.DataFrame({c: [0] for c in self.feature_cols})
-        for c in self.categorical_cols:
-            dummy[c] = self.known_categories[c][0]
-            dummy[c] = dummy[c].astype('category')
-        try:
-            _ = self.model.predict(dummy)
-        except Exception as e:
-            raise RuntimeError(f"Model smoke test failed: {e}")

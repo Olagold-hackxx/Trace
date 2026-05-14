@@ -1,11 +1,11 @@
 """
 Two-stage job matching engine for the Trace prototype.
 
-Stage 1 — LaBSE bi-encoder + cosine similarity (numpy, in-memory, ~5ms for 200 workers)
+Stage 1 — paraphrase-multilingual-mpnet-base-v2 bi-encoder + cosine similarity (numpy, in-memory, ~5ms for 200 workers)
 Stage 2 — Heuristic weighted reranker (transparent, explainable, no training needed)
 
 Production path (architecture slide):
-  LaBSE → pgvector HNSW → LightGBM LambdaRank trained on real match-outcome data.
+  paraphrase-multilingual-mpnet-base-v2 → pgvector HNSW → LightGBM LambdaRank trained on real match-outcome data.
   We skip LambdaRank here because training a reranker on synthetic labels then
   evaluating on more synthetic labels is a closed loop that proves nothing.
 """
@@ -111,7 +111,7 @@ class JobMatchEngine:
             return
 
         texts = [self._worker_text(row) for _, row in workers_df.iterrows()]
-        print(f"Encoding {len(texts)} worker profiles with LaBSE...")
+        print(f"Encoding {len(texts)} worker profiles...")
         raw = self.model.encode(texts, batch_size=32, show_progress_bar=True,
                                 convert_to_numpy=True)
         self._embeddings = self._l2_normalise(raw)

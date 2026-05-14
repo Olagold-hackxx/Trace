@@ -20,10 +20,10 @@ from schemas.credit import (
 )
 from schemas.match import MatchRequest, MatchResponse, WorkerResult
 from training.feature_engine import compute_features
-from training.job_match_engine import JobMatchEngine
-from training.job_match_synthetic import load_jobs, generate_workers
+# JobMatchEngine and synthetic data imports are deferred to _ensure_match_engine()
+# to avoid loading torch/sentence-transformers at startup (adds 30-60s to boot time)
 
-ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'deeper_model_artifact_v1.pkl'
+ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'model_artifact_v1.pkl'
 EMBEDDINGS_PATH = Path(__file__).parent / 'models' / 'worker_embeddings.npy'
 FIXTURES_DIR    = Path(__file__).parent / 'fixtures'   # committed, not gitignored
 MATCH_MODEL     = 'paraphrase-multilingual-mpnet-base-v2'
@@ -42,29 +42,15 @@ async def lifespan(app: FastAPI):
     logger.info(f"Loaded model_version={artifact.model_version}, "
                 f"features={len(artifact.feature_cols)}")
 
-    logger.info("Building SHAP TreeExplainer...")
-    explainer = shap.TreeExplainer(artifact.model)
-    logger.info("SHAP explainer ready")
-
-    state['predictor'] = CreditPredictor(artifact, shap_explainer=explainer)
+    state['predictor'] = CreditPredictor(artifact, shap_explainer=None)
     state['artifact']  = artifact
-    state['explainer'] = explainer
+    # SHAP TreeExplainer is built lazily on first /predict/explain call
+    # — building it at startup blocks gunicorn workers for 30-60s on large models
+    state['explainer'] = None
 
-    # ── Job matching model ────────────────────────────────────────────────
-    logger.info("Loading job matching engine...")
-
-    workers_path = FIXTURES_DIR / 'workers.json'
-    workers_df = pd.read_json(workers_path) if workers_path.exists() else generate_workers(n=200)
-
-    jobs_path = FIXTURES_DIR / 'jobs.json'
-    jobs_df = pd.read_json(jobs_path) if jobs_path.exists() else load_jobs()
-
-    match_engine = JobMatchEngine(model_name=MATCH_MODEL)
-    match_engine.load_workers(workers_df, cache_path=str(EMBEDDINGS_PATH))
-    logger.info(f"Job matching engine ready — {len(workers_df)} workers indexed")
-
-    state['match_engine'] = match_engine
-    state['jobs_df']      = jobs_df
+    # Job matching engine is loaded lazily on first /predict/match request
+    state['match_engine'] = None
+    state['jobs_df']      = None
 
     yield
     state.clear()
@@ -128,10 +114,17 @@ def predict_score(req: ScoreRequest, db: Session = Depends(get_db)):
 @app.post('/predict/explain', response_model=ExplainResponse)
 def predict_explain(req: ExplainRequest, db: Session = Depends(get_db)):
     predictor: CreditPredictor = state.get('predictor')
-    explainer = state.get('explainer')
     artifact: Artifact = state.get('artifact')
-    if predictor is None or explainer is None:
+    if predictor is None:
         raise HTTPException(503, "Model not loaded")
+
+    # Build SHAP explainer on first call and cache it
+    if state.get('explainer') is None:
+        logger.info("Building SHAP TreeExplainer (first explain request)...")
+        state['explainer'] = shap.TreeExplainer(artifact.model)
+        predictor.shap_explainer = state['explainer']
+        logger.info("SHAP explainer ready")
+    explainer = state['explainer']
 
     as_of = req.as_of or _now_utc()
 
@@ -222,13 +215,29 @@ def predict_fraud(req: FraudRequest, db: Session = Depends(get_db)):
 
 # ── Job matching ──────────────────────────────────────────────────────────────
 
+def _ensure_match_engine():
+    """Load the job matching engine on first call and cache it in state."""
+    if state.get('match_engine') is None:
+        # Deferred imports — keeps torch/sentence-transformers out of startup
+        from training.job_match_engine import JobMatchEngine
+        from training.job_match_synthetic import load_jobs, generate_workers
+
+        logger.info("Loading job matching engine (first match request)...")
+        workers_path = FIXTURES_DIR / 'workers.json'
+        workers_df = pd.read_json(workers_path) if workers_path.exists() else generate_workers(n=200)
+        jobs_path = FIXTURES_DIR / 'jobs.json'
+        jobs_df = pd.read_json(jobs_path) if jobs_path.exists() else load_jobs()
+        engine = JobMatchEngine(model_name=MATCH_MODEL)
+        engine.load_workers(workers_df, cache_path=str(EMBEDDINGS_PATH))
+        state['match_engine'] = engine
+        state['jobs_df']      = jobs_df
+        logger.info(f"Job matching engine ready — {len(workers_df)} workers indexed")
+    return state['match_engine'], state['jobs_df']
+
+
 @app.post('/predict/match', response_model=MatchResponse)
 def predict_match(req: MatchRequest):
-    engine: JobMatchEngine = state.get('match_engine')
-    jobs_df: pd.DataFrame  = state.get('jobs_df')
-    if engine is None:
-        raise HTTPException(503, "Matching model not loaded")
-
+    engine, jobs_df = _ensure_match_engine()
     job_rows = jobs_df[jobs_df['job_id'] == req.job_id]
     if job_rows.empty:
         raise HTTPException(404, f"job_id '{req.job_id}' not found")
