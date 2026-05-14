@@ -4,12 +4,13 @@ export const envValidationSchema = Joi.object({
   PORT: Joi.number().default(3001),
   NODE_ENV: Joi.string().valid("development", "test", "production").default("development"),
   DATABASE_URL: Joi.string().uri().empty("").optional(),
-  DB_HOST: Joi.string().optional(),
+  DB_HOST: Joi.string().empty("").optional(),
   DB_PORT: Joi.number().default(5432),
-  DB_NAME: Joi.string().optional(),
-  DB_USER: Joi.string().optional(),
+  DB_NAME: Joi.string().empty("").optional(),
+  DB_USER: Joi.string().empty("").optional(),
   DB_PASSWORD: Joi.string().allow("").optional(),
   DB_SYNC: Joi.boolean().truthy("true").falsy("false").empty("").default(false),
+  REDIS_URL: Joi.string().pattern(/^rediss?:\/\//).empty("").optional(),
   REDIS_HOST: Joi.string().empty("").default("localhost"),
   REDIS_PORT: Joi.number().empty("").default(6379),
   REDIS_PASSWORD: Joi.string().allow("").optional(),
@@ -17,14 +18,15 @@ export const envValidationSchema = Joi.object({
   SQUAD_SECRET_KEY: Joi.string().allow("").optional(),
   SQUAD_PUBLIC_KEY: Joi.string().allow("").optional(),
   SQUAD_WEBHOOK_SECRET: Joi.string().allow("").optional(),
-  SQUAD_BASE_URL: Joi.string().uri().default("https://sandbox-api-d.squadco.com"),
+  SQUAD_BASE_URL: Joi.string().uri().empty("").default("https://sandbox-api-d.squadco.com"),
   SQUAD_BENEFICIARY_ACCOUNT: Joi.string().allow("").optional(),
   SQUAD_PAYOUT_ACCOUNT_NUMBER: Joi.string().allow("").optional(),
   SQUAD_PAYOUT_BANK_CODE: Joi.string().allow("").optional(),
   SQUAD_MERCHANT_ID: Joi.string().allow("").optional(),
-  APP_BASE_URL: Joi.string().uri().default("http://localhost:3001"),
-  SQUAD_REDIRECT_URL: Joi.string().uri().default("http://localhost:3001/api/v1/payments/callback"),
-  PUBLIC_WEBHOOK_URL: Joi.string().uri().default("http://localhost:3001/webhooks/squad")
+  APP_BASE_URL: Joi.string().uri().empty("").default("http://localhost:3001"),
+  FRONTEND_URL: Joi.string().uri().empty("").default("http://localhost:3000"),
+  SQUAD_REDIRECT_URL: Joi.string().uri().empty("").default("http://localhost:3001/api/v1/payments/callback"),
+  PUBLIC_WEBHOOK_URL: Joi.string().uri().empty("").default("http://localhost:3001/webhooks/squad")
 })
   .or("DATABASE_URL", "DB_HOST")
   .with("DB_HOST", ["DB_NAME", "DB_USER"])

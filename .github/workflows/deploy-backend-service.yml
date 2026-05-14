@@ -54,6 +54,7 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_SYNC: ${{ secrets.DB_SYNC }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           REDIS_PORT: ${{ secrets.REDIS_PORT }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
@@ -67,13 +68,14 @@ jobs:
           SQUAD_PAYOUT_BANK_CODE: ${{ secrets.SQUAD_PAYOUT_BANK_CODE }}
           SQUAD_MERCHANT_ID: ${{ secrets.SQUAD_MERCHANT_ID }}
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
           SQUAD_REDIRECT_URL: ${{ secrets.SQUAD_REDIRECT_URL }}
           PUBLIC_WEBHOOK_URL: ${{ secrets.PUBLIC_WEBHOOK_URL }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: ECR_TOKEN,ECR_REGISTRY,IMAGE,DATABASE_URL,DB_HOST,DB_PORT,DB_NAME,DB_USER,DB_PASSWORD,DB_SYNC,REDIS_HOST,REDIS_PORT,REDIS_PASSWORD,JWT_SECRET,SQUAD_SECRET_KEY,SQUAD_PUBLIC_KEY,SQUAD_WEBHOOK_SECRET,SQUAD_BASE_URL,SQUAD_BENEFICIARY_ACCOUNT,SQUAD_PAYOUT_ACCOUNT_NUMBER,SQUAD_PAYOUT_BANK_CODE,SQUAD_MERCHANT_ID,APP_BASE_URL,SQUAD_REDIRECT_URL,PUBLIC_WEBHOOK_URL
+          envs: ECR_TOKEN,ECR_REGISTRY,IMAGE,DATABASE_URL,DB_HOST,DB_PORT,DB_NAME,DB_USER,DB_PASSWORD,DB_SYNC,REDIS_URL,REDIS_HOST,REDIS_PORT,REDIS_PASSWORD,JWT_SECRET,SQUAD_SECRET_KEY,SQUAD_PUBLIC_KEY,SQUAD_WEBHOOK_SECRET,SQUAD_BASE_URL,SQUAD_BENEFICIARY_ACCOUNT,SQUAD_PAYOUT_ACCOUNT_NUMBER,SQUAD_PAYOUT_BANK_CODE,SQUAD_MERCHANT_ID,APP_BASE_URL,FRONTEND_URL,SQUAD_REDIRECT_URL,PUBLIC_WEBHOOK_URL
           script: |
             echo "$ECR_TOKEN" | sudo docker login --username AWS --password-stdin "$ECR_REGISTRY"
 
@@ -82,7 +84,9 @@ jobs:
               exit 1
             fi
 
+            DB_PORT_VALUE="${DB_PORT:-5432}"
             DB_SYNC_VALUE="${DB_SYNC:-false}"
+            REDIS_URL_VALUE="${REDIS_URL:-}"
             REDIS_HOST_VALUE="${REDIS_HOST:-localhost}"
             REDIS_PORT_VALUE="${REDIS_PORT:-6379}"
 
@@ -101,11 +105,12 @@ jobs:
               -e NODE_ENV=production \
               -e DATABASE_URL="$DATABASE_URL" \
               -e DB_HOST="$DB_HOST" \
-              -e DB_PORT="$DB_PORT" \
+              -e DB_PORT="$DB_PORT_VALUE" \
               -e DB_NAME="$DB_NAME" \
               -e DB_USER="$DB_USER" \
               -e DB_PASSWORD="$DB_PASSWORD" \
               -e DB_SYNC="$DB_SYNC_VALUE" \
+              -e REDIS_URL="$REDIS_URL_VALUE" \
               -e REDIS_HOST="$REDIS_HOST_VALUE" \
               -e REDIS_PORT="$REDIS_PORT_VALUE" \
               -e REDIS_PASSWORD="$REDIS_PASSWORD" \
@@ -119,6 +124,7 @@ jobs:
               -e SQUAD_PAYOUT_BANK_CODE="$SQUAD_PAYOUT_BANK_CODE" \
               -e SQUAD_MERCHANT_ID="$SQUAD_MERCHANT_ID" \
               -e APP_BASE_URL="$APP_BASE_URL" \
+              -e FRONTEND_URL="$FRONTEND_URL" \
               -e SQUAD_REDIRECT_URL="$SQUAD_REDIRECT_URL" \
               -e PUBLIC_WEBHOOK_URL="$PUBLIC_WEBHOOK_URL" \
               "$IMAGE"

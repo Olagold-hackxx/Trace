@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, Version } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
 import { Request } from "express";
 import { CreatePaymentLinkDto } from "./dto/create-payment-link.dto";
@@ -7,7 +8,10 @@ import { PaymentsService } from "./payments.service";
 
 @Controller("payments")
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Version("1")
   @Get("links")
@@ -61,7 +65,7 @@ export class PaymentsController {
         // best-effort — webhook may have already handled it
       }
     }
-    const frontendBase = process.env.FRONTEND_URL ?? "http://localhost:3000";
+    const frontendBase = this.configService.get<string>("FRONTEND_URL") ?? "http://localhost:3000";
     return res.redirect(`${frontendBase}/payments?ref=${ref}&status=${status ?? "success"}`);
   }
 }
