@@ -122,6 +122,6 @@ jobs:
               sleep 5
             done
 
-            echo "ERROR: health check failed after 60s"
+            echo "ERROR: health check failed after 60s failure"
             sudo docker logs --tail 50 backend-service
             exit 1
