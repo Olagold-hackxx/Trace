@@ -36,31 +36,38 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: Get ECR login token (on the runner, which has AWS credentials)
+        id: ecr-token
+        run: |
+          echo "token=$(aws ecr get-login-password --region ${{ secrets.AWS_REGION }})" >> $GITHUB_OUTPUT
+
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1
+        env:
+          ECR_TOKEN: ${{ steps.ecr-token.outputs.token }}
+          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          IMAGE: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_ML_REPOSITORY }}:latest
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: ECR_TOKEN,ECR_REGISTRY,IMAGE,DATABASE_URL
           script: |
-            ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
-            IMAGE="$ECR_REGISTRY/${{ secrets.ECR_ML_REPOSITORY }}:latest"
+            echo "$ECR_TOKEN" | sudo docker login --username AWS --password-stdin "$ECR_REGISTRY"
 
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
-              | docker login --username AWS --password-stdin $ECR_REGISTRY
+            sudo docker pull "$IMAGE"
 
-            docker pull $IMAGE
+            sudo docker stop ml-service 2>/dev/null || true
+            sudo docker rm   ml-service 2>/dev/null || true
 
-            docker stop ml-service 2>/dev/null || true
-            docker rm   ml-service 2>/dev/null || true
-
-            docker run -d \
+            sudo docker run -d \
               --name ml-service \
               --restart unless-stopped \
               -p 8000:8000 \
-              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -e DATABASE_URL="$DATABASE_URL" \
               -e PYTHONUNBUFFERED=1 \
-              $IMAGE
+              "$IMAGE"
 
             echo "Waiting for service to be healthy..."
             for i in $(seq 1 12); do
@@ -73,5 +80,5 @@ jobs:
             done
 
             echo "ERROR: health check failed after 60s"
-            docker logs --tail 50 ml-service
+            sudo docker logs --tail 50 ml-service
             exit 1
