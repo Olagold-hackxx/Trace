@@ -22,6 +22,20 @@ function readValue(source: DatabaseOptionSource, key: string): string | undefine
   return source[key];
 }
 
+function sanitizeDatabaseUrl(databaseUrl: string, hasExplicitSslConfig: boolean): string {
+  if (!hasExplicitSslConfig) {
+    return databaseUrl;
+  }
+
+  const parsedUrl = new URL(databaseUrl);
+  parsedUrl.searchParams.delete("sslmode");
+  parsedUrl.searchParams.delete("sslcert");
+  parsedUrl.searchParams.delete("sslkey");
+  parsedUrl.searchParams.delete("sslrootcert");
+
+  return parsedUrl.toString();
+}
+
 export function getDatabaseOptions(source: DatabaseOptionSource) {
   const databaseUrl = readValue(source, "DATABASE_URL");
   const databaseCaCert = normalizeMultilineSecret(readValue(source, "DATABASE_CA_CERT"));
@@ -35,7 +49,7 @@ export function getDatabaseOptions(source: DatabaseOptionSource) {
   return {
     ...(databaseUrl
       ? {
-          url: databaseUrl
+          url: sanitizeDatabaseUrl(databaseUrl, Boolean(ssl))
         }
       : {
           host: readValue(source, "DB_HOST") ?? "localhost",
