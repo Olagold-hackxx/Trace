@@ -13,6 +13,7 @@ import {
 } from "@/lib/backend";
 
 interface LenderDataState {
+  user: BackendUser | null;
   summary: BackendLenderPortfolioSummary | null;
   applications: BackendLoanApplication[];
   merchants: BackendUser[];
@@ -22,6 +23,7 @@ interface LenderDataState {
 
 export function useLenderData() {
   const [state, setState] = useState<LenderDataState>({
+    user: null,
     summary: null,
     applications: [],
     merchants: [],
@@ -31,18 +33,13 @@ export function useLenderData() {
 
   useEffect(() => {
     void Promise.all([
+      fetchBackend<BackendUser>("/users/me"),
       fetchBackend<BackendLenderPortfolioSummary>("/lender/portfolio/summary"),
       fetchBackend<BackendLoanApplication[]>("/lender/applications"),
       fetchBackend<BackendUser[]>("/lender/merchants"),
       fetchBackend<BackendJob[]>("/lender/portfolio/jobs"),
-    ]).then(([summary, applications, merchants, jobs]) => {
-      setState({
-        summary,
-        applications,
-        merchants,
-        jobs,
-        loading: false,
-      });
+    ]).then(([user, summary, applications, merchants, jobs]) => {
+      setState({ user, summary, applications, merchants, jobs, loading: false });
     });
   }, []);
 

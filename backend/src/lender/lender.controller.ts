@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Post, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Req, Version } from "@nestjs/common";
+import { Request } from "express";
 import { LoanDecisionDto } from "./dto/loan-decision.dto";
 import { LenderService } from "./lender.service";
 
@@ -74,8 +75,8 @@ export class LenderController {
 
   @Version("1")
   @Get("settings")
-  getSettings() {
-    return this.lenderService.getSettings();
+  getSettings(@Req() req: Request) {
+    return this.lenderService.getSettings(req.cookies?.kudiscore_session);
   }
 
   @Version("1")

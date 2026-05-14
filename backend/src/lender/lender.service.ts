@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { SessionService } from "../session/session.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Job } from "../entities/job.entity";
@@ -23,7 +24,8 @@ export class LenderService {
     @InjectRepository(ScoreSnapshot)
     private readonly scoresRepository: Repository<ScoreSnapshot>,
     @InjectRepository(Job)
-    private readonly jobsRepository: Repository<Job>
+    private readonly jobsRepository: Repository<Job>,
+    private readonly sessionService: SessionService
   ) {}
 
   async getPortfolioSummary() {
@@ -107,9 +109,13 @@ export class LenderService {
     });
   }
 
-  getSettings() {
+  async getSettings(sessionToken?: string) {
+    const userId = await this.sessionService.getUserId(sessionToken);
+    const user = userId ? await this.usersRepository.findOne({ where: { id: userId } }) : null;
     return {
-      institutionName: "Zenith Capital Finance",
+      institutionName: user?.businessName ?? user?.fullName ?? "",
+      contactEmail: user?.email ?? "",
+      phone: user?.phone ?? "",
       minScore: 600,
       maxAmountKobo: 500000000,
       riskTolerance: "medium"

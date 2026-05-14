@@ -26,13 +26,13 @@ export default function LenderSettingsPage() {
   const [showKey, setShowKey] = useState(false);
   const [saved, setSaved] = useState(false);
   const [apiKeys, setApiKeys] = useState<ApiKeysPayload | null>(null);
-  const [settlementAccount, setSettlementAccount] = useState("Zenith Bank — 1234567890");
+  const [settlementAccount, setSettlementAccount] = useState("");
   const [settings, setSettings] = useState({
-    institutionName: "Zenith Capital Finance",
-    contactEmail: "loans@zenithcapital.ng",
-    phone: "+234 1 234 5678",
-    address: "14 Marina Street, Lagos Island",
-    rcNumber: "RC-0012834",
+    institutionName: "",
+    contactEmail: "",
+    phone: "",
+    address: "",
+    rcNumber: "",
     minScore: "600",
     maxAmount: "5000000",
     defaultRate: "18",
@@ -53,10 +53,13 @@ export default function LenderSettingsPage() {
         riskTolerance: string;
       }>("/lender/settings"),
       fetchBackend<ApiKeysPayload>("/lender/api-keys"),
-    ]).then(([backendSettings, backendApiKeys]) => {
+      fetchBackend<{ fullName: string; email: string; phone?: string; businessName?: string }>("/users/me"),
+    ]).then(([backendSettings, backendApiKeys, me]) => {
       setSettings((current) => ({
         ...current,
-        institutionName: backendSettings.institutionName,
+        institutionName: backendSettings.institutionName || me.businessName || me.fullName,
+        contactEmail: me.email,
+        phone: me.phone ?? current.phone,
         minScore: String(backendSettings.minScore),
         maxAmount: String(Math.round(backendSettings.maxAmountKobo / 100)),
         riskTolerance: backendSettings.riskTolerance,

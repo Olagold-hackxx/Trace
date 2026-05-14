@@ -10,16 +10,16 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ role = "user", title }: AppHeaderProps) {
-  const traderIdentity = useTraderIdentity(role === "user");
-  const user =
-    role === "lender"
-      ? { name: "Zenith Capital", sub: "Partner Institution", initials: "ZC", color: "#ff6b00" }
-      : {
-          name: traderIdentity.user?.fullName ?? "Amaka Okonkwo",
-          sub: traderIdentity.user?.businessName ?? "Business Account",
-          initials: getInitials(traderIdentity.user?.fullName ?? "Amaka Okonkwo"),
-          color: "#ff6b00",
-        };
+  const traderIdentity = useTraderIdentity(true);
+  const name = traderIdentity.user?.fullName ?? "";
+  const user = {
+    name: name || (role === "lender" ? "Lender" : "Trader"),
+    sub: role === "lender"
+      ? (traderIdentity.user?.businessName ?? "Partner Institution")
+      : (traderIdentity.user?.businessName ?? "Business Account"),
+    initials: getInitials(name) || (role === "lender" ? "LN" : "TR"),
+    color: "#ff6b00",
+  };
   const borderColor = "#1e1e1e";
   const surfaceColor = "#111111";
   const mutedColor = "#64748b";

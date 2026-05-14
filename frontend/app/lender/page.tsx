@@ -35,7 +35,7 @@ function Badge({ label, style }: { label: string; style: { color: string; bg: st
 const SECTOR_COLORS = ["#ff6b00", "#2563eb", "#7c3aed", "#d97706", "#16a34a", "#0891b2", "#be185d"];
 
 export default function LenderDashboardPage() {
-  const { summary, applications, merchants, loading } = useLenderData();
+  const { user, summary, applications, merchants, loading } = useLenderData();
   const topMerchants = merchants.slice(0, 5);
 
   // Derive sector distribution from real merchant data
@@ -66,7 +66,7 @@ export default function LenderDashboardPage() {
       <div className="p-6 max-w-7xl mx-auto">
         {/* Greeting */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Lender Dashboard</h1>
+          <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Welcome back, {user?.businessName ?? user?.fullName ?? "Lender"}</h1>
           <p className="text-sm text-[#94a3b8] mt-1">Live portfolio overview from the backend</p>
         </div>
 
