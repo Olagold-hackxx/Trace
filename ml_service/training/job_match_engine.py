@@ -65,7 +65,7 @@ class JobMatchEngine:
         results = engine.match(job, top_k=5)
     """
 
-    def __init__(self, model_name: str = 'sentence-transformers/LaBSE') -> None:
+    def __init__(self, model_name: str = 'paraphrase-multilingual-mpnet-base-v2') -> None:
         print(f"Loading {model_name}...")
         self.model = SentenceTransformer(model_name)
         self.workers_df: Optional[pd.DataFrame] = None
