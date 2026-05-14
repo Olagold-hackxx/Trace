@@ -1,0 +1,5329 @@
+[
+  {
+    "worker_id":"w_0000",
+    "name":"Obinna",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "masonry",
+      "electrical"
+    ],
+    "bio":"Experienced welder with 7 years in gate fabrication and structural steel.",
+    "skills":[
+      "fabrication",
+      "mild steel"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.06886,
+    "location_lng":7.49166,
+    "service_radius_km":10,
+    "daily_rate_naira":16585,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0001",
+    "name":"Biodun",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Certified diesel technician specialising in generator overhaul and AVR repair.",
+    "skills":[
+      "AVR",
+      "generator repair",
+      "diesel engine",
+      "electrical",
+      "mechanical"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.60625,
+    "location_lng":3.40704,
+    "service_radius_km":30,
+    "daily_rate_naira":8024,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":24,
+    "last_active_at":"2026-04-19T12:00:00"
+  },
+  {
+    "worker_id":"w_0002",
+    "name":"Tunde",
+    "primary_category":"electrical",
+    "secondary_categories":[
+
+    ],
+    "bio":"Electrical contractor based in Festac. Clean work, no shortcuts.",
+    "skills":[
+      "inverter setup",
+      "solar installation"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.45089,
+    "location_lng":3.28288,
+    "service_radius_km":50,
+    "daily_rate_naira":16766,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0003",
+    "name":"Amaka",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Fashion designer wey sabi Ankara, aso-ebi, corporate uniforms and agbada.",
+    "skills":[
+      "native wear",
+      "tailoring",
+      "fashion design",
+      "Ankara",
+      "aso-ebi"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.58998,
+    "location_lng":3.41443,
+    "service_radius_km":50,
+    "daily_rate_naira":6674,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0004",
+    "name":"Maryam",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced plumber in Abuja \u2014 Wuse 2. Fast response for emergencies.",
+    "skills":[
+      "drainage",
+      "plumbing",
+      "pipe fitting"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.06769,
+    "location_lng":7.5128,
+    "service_radius_km":30,
+    "daily_rate_naira":9286,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0005",
+    "name":"Folake",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "painting"
+    ],
+    "bio":"Carpenter specialising in furniture, wardrobes, and ceiling work. 3 years experience.",
+    "skills":[
+      "furniture making",
+      "cabinet making",
+      "wardrobe",
+      "carpentry"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.46083,
+    "location_lng":3.26978,
+    "service_radius_km":30,
+    "daily_rate_naira":10951,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0006",
+    "name":"Faith",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "masonry",
+      "carpentry"
+    ],
+    "bio":"Professional painter: emulsion, gloss, texture, ceiling \u2014 all covered.",
+    "skills":[
+      "emulsion",
+      "POP ceiling",
+      "painting"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.46599,
+    "location_lng":3.3626,
+    "service_radius_km":30,
+    "daily_rate_naira":10388,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0007",
+    "name":"Musa",
+    "primary_category":"tiling",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced tiler specialising in luxury floor and wall tile finishes.",
+    "skills":[
+      "marble",
+      "tiling",
+      "wall tiles",
+      "grout"
+    ],
+    "location_name":"Isolo",
+    "location_lat":6.53628,
+    "location_lng":3.33669,
+    "service_radius_km":20,
+    "daily_rate_naira":9829,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0008",
+    "name":"Biodun",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+      "catering"
+    ],
+    "bio":"Professional cleaner and housekeeper. References available.",
+    "skills":[
+      "disinfection",
+      "cleaning",
+      "laundry",
+      "domestic help"
+    ],
+    "location_name":"Kano City Centre",
+    "location_lat":12.00894,
+    "location_lng":8.59084,
+    "service_radius_km":5,
+    "daily_rate_naira":4637,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":16,
+    "last_active_at":"2026-04-27T12:00:00"
+  },
+  {
+    "worker_id":"w_0009",
+    "name":"Hadiza",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional driver with 5 years. Valid license, clean record.",
+    "skills":[
+      "dispatch riding",
+      "chauffeur"
+    ],
+    "location_name":"Port Harcourt Trans-Amadi",
+    "location_lat":4.82273,
+    "location_lng":7.02607,
+    "service_radius_km":10,
+    "daily_rate_naira":11879,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0010",
+    "name":"Sani",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Security professional with 5 years in facility and warehouse security.",
+    "skills":[
+      "surveillance",
+      "security",
+      "CCTV"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.60013,
+    "location_lng":3.31276,
+    "service_radius_km":20,
+    "daily_rate_naira":5794,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0011",
+    "name":"Faith",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Experienced chef for corporate catering and events.",
+    "skills":[
+      "cooking",
+      "catering"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.61406,
+    "location_lng":3.33406,
+    "service_radius_km":10,
+    "daily_rate_naira":6266,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":2,
+    "last_active_at":"2026-05-11T12:00:00"
+  },
+  {
+    "worker_id":"w_0012",
+    "name":"Ada",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Technician for phone repair \u2014 screen, motherboard, software \u2014 no wahala.",
+    "skills":[
+      "screen replacement",
+      "motherboard",
+      "electronics",
+      "phone repair"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.07968,
+    "location_lng":7.47315,
+    "service_radius_km":50,
+    "daily_rate_naira":11403,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0013",
+    "name":"Zainab",
+    "primary_category":"hvac",
+    "secondary_categories":[
+
+    ],
+    "bio":"Certified HVAC technician, 5 years in AC installation and repair.",
+    "skills":[
+      "AC repair",
+      "HVAC"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.06311,
+    "location_lng":7.48857,
+    "service_radius_km":20,
+    "daily_rate_naira":15677,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":28,
+    "last_active_at":"2026-04-15T12:00:00"
+  },
+  {
+    "worker_id":"w_0014",
+    "name":"Zainab",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "tiling",
+      "carpentry"
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "bricklaying",
+      "block laying",
+      "plastering",
+      "masonry",
+      "concrete"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.46979,
+    "location_lng":3.27133,
+    "service_radius_km":30,
+    "daily_rate_naira":9821,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":2,
+    "last_active_at":"2026-05-11T12:00:00"
+  },
+  {
+    "worker_id":"w_0015",
+    "name":"Obiora",
+    "primary_category":"welding",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do welding since 2015. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "TIG welding",
+      "arc welding",
+      "mild steel",
+      "welding"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.461,
+    "location_lng":7.50413,
+    "service_radius_km":10,
+    "daily_rate_naira":10023,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0016",
+    "name":"Usman",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Certified diesel technician specialising in generator overhaul and AVR repair.",
+    "skills":[
+      "AVR",
+      "generator repair"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.11538,
+    "location_lng":7.36338,
+    "service_radius_km":30,
+    "daily_rate_naira":12018,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0017",
+    "name":"Chukwuemeka",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac",
+      "generator_repair"
+    ],
+    "bio":"Licensed electrician with 4 years in residential and commercial wiring.",
+    "skills":[
+      "solar installation",
+      "three-phase"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.51133,
+    "location_lng":3.36126,
+    "service_radius_km":5,
+    "daily_rate_naira":12433,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":20,
+    "last_active_at":"2026-04-23T12:00:00"
+  },
+  {
+    "worker_id":"w_0018",
+    "name":"Funmilayo",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Fashion designer wey sabi Ankara, aso-ebi, corporate uniforms and agbada.",
+    "skills":[
+      "aso-ebi",
+      "native wear",
+      "corporate wear",
+      "fashion design",
+      "Ankara"
+    ],
+    "location_name":"Ibadan \u2014 Ring Road",
+    "location_lat":7.38111,
+    "location_lng":3.93382,
+    "service_radius_km":30,
+    "daily_rate_naira":9550,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0019",
+    "name":"Adeola",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Experienced plumber in Aba. Fast response for emergencies.",
+    "skills":[
+      "overhead tank",
+      "plumbing",
+      "pipe fitting",
+      "emergency repair"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.11791,
+    "location_lng":7.34941,
+    "service_radius_km":5,
+    "daily_rate_naira":9893,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":24,
+    "last_active_at":"2026-04-19T12:00:00"
+  },
+  {
+    "worker_id":"w_0020",
+    "name":"Ngozi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "masonry",
+      "painting"
+    ],
+    "bio":"Carpenter wey sabi furniture making \u2014 office desk, kitchen cabinet, wardrobe.",
+    "skills":[
+      "wardrobe",
+      "furniture making",
+      "carpentry"
+    ],
+    "location_name":"Port Harcourt Trans-Amadi",
+    "location_lat":4.83476,
+    "location_lng":7.02943,
+    "service_radius_km":30,
+    "daily_rate_naira":10072,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":16,
+    "last_active_at":"2026-04-27T12:00:00"
+  },
+  {
+    "worker_id":"w_0021",
+    "name":"Musa",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "carpentry",
+      "masonry"
+    ],
+    "bio":"Professional painter: emulsion, gloss, texture, ceiling \u2014 all covered.",
+    "skills":[
+      "interior painting",
+      "emulsion"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.61996,
+    "location_lng":3.30584,
+    "service_radius_km":20,
+    "daily_rate_naira":9033,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0022",
+    "name":"Ifeoma",
+    "primary_category":"tiling",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional tiler with 9 years. Italian tiles, Spanish tiles \u2014 all covered.",
+    "skills":[
+      "grout",
+      "tiling",
+      "floor tiles",
+      "marble",
+      "wall tiles"
+    ],
+    "location_name":"Benin City",
+    "location_lat":6.34575,
+    "location_lng":5.61131,
+    "service_radius_km":20,
+    "daily_rate_naira":12496,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":24,
+    "last_active_at":"2026-04-19T12:00:00"
+  },
+  {
+    "worker_id":"w_0023",
+    "name":"Monday",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional cleaner and housekeeper. References available.",
+    "skills":[
+      "disinfection",
+      "laundry",
+      "housekeeping"
+    ],
+    "location_name":"Gbagada",
+    "location_lat":6.54369,
+    "location_lng":3.39712,
+    "service_radius_km":20,
+    "daily_rate_naira":4087,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":28,
+    "last_active_at":"2026-04-15T12:00:00"
+  },
+  {
+    "worker_id":"w_0024",
+    "name":"Seun",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Driver wey know every road for Apapa. Punctual, professional, reliable.",
+    "skills":[
+      "chauffeur",
+      "dispatch riding",
+      "driving",
+      "logistics",
+      "truck driving"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.4356,
+    "location_lng":3.3645,
+    "service_radius_km":10,
+    "daily_rate_naira":11785,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0025",
+    "name":"Ugochi",
+    "primary_category":"security",
+    "secondary_categories":[
+
+    ],
+    "bio":"Licensed security officer trained in surveillance and access control.",
+    "skills":[
+      "surveillance",
+      "access control",
+      "security"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.58844,
+    "location_lng":3.34978,
+    "service_radius_km":30,
+    "daily_rate_naira":5154,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0026",
+    "name":"Halima",
+    "primary_category":"catering",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional caterer, 2 years cooking Nigerian and continental dishes.",
+    "skills":[
+      "continental",
+      "suya"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.61327,
+    "location_lng":3.38524,
+    "service_radius_km":30,
+    "daily_rate_naira":5175,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0027",
+    "name":"Ifeoma",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Phone and electronics technician, 2 years. I fix all brands, all faults.",
+    "skills":[
+      "electronics",
+      "screen replacement",
+      "phone repair"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.62178,
+    "location_lng":3.33648,
+    "service_radius_km":50,
+    "daily_rate_naira":7178,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":14,
+    "last_active_at":"2026-04-29T12:00:00"
+  },
+  {
+    "worker_id":"w_0028",
+    "name":"David",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "generator_repair",
+      "electrical"
+    ],
+    "bio":"Refrigeration and air conditioning engineer. Own gauges and tools.",
+    "skills":[
+      "gas recharge",
+      "AC repair",
+      "split unit"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.78876,
+    "location_lng":6.99396,
+    "service_radius_km":20,
+    "daily_rate_naira":9837,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0029",
+    "name":"Bayo",
+    "primary_category":"masonry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Block layer and mason, 7 years on residential and commercial sites.",
+    "skills":[
+      "masonry",
+      "plastering",
+      "block laying",
+      "bricklaying",
+      "concrete"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.45267,
+    "location_lng":7.50914,
+    "service_radius_km":10,
+    "daily_rate_naira":6998,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0030",
+    "name":"Adewale",
+    "primary_category":"welding",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional welder wey sabi TIG, MIG, and arc. Based in Ojota.",
+    "skills":[
+      "arc welding",
+      "mild steel",
+      "fabrication"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.5917,
+    "location_lng":3.38764,
+    "service_radius_km":10,
+    "daily_rate_naira":9322,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0031",
+    "name":"Hadiza",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Generator and electrical technician, 14 years field experience. I repair all brands.",
+    "skills":[
+      "mechanical",
+      "diesel engine",
+      "generator repair",
+      "AVR"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.40909,
+    "location_lng":3.42411,
+    "service_radius_km":5,
+    "daily_rate_naira":8185,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":28,
+    "last_active_at":"2026-04-15T12:00:00"
+  },
+  {
+    "worker_id":"w_0032",
+    "name":"Ifeanyi",
+    "primary_category":"electrical",
+    "secondary_categories":[
+
+    ],
+    "bio":"Electrician wey sabi three-phase, solar system, inverter \u2014 everything electrical.",
+    "skills":[
+      "inverter setup",
+      "solar installation",
+      "three-phase"
+    ],
+    "location_name":"Gbagada",
+    "location_lat":6.56832,
+    "location_lng":3.39117,
+    "service_radius_km":30,
+    "daily_rate_naira":11752,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0033",
+    "name":"Chioma",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Fashion designer wey sabi Ankara, aso-ebi, corporate uniforms and agbada.",
+    "skills":[
+      "corporate wear",
+      "Ankara",
+      "aso-ebi",
+      "native wear"
+    ],
+    "location_name":"Maryland",
+    "location_lat":6.57907,
+    "location_lng":3.34981,
+    "service_radius_km":30,
+    "daily_rate_naira":6005,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0034",
+    "name":"Hadiza",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "tiling"
+    ],
+    "bio":"Plumber wey sabi all kind pipe work \u2014 burst pipe, bathroom renovation, drainage.",
+    "skills":[
+      "emergency repair",
+      "overhead tank",
+      "drainage",
+      "plumbing",
+      "pipe fitting"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.45204,
+    "location_lng":3.39018,
+    "service_radius_km":30,
+    "daily_rate_naira":13700,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0035",
+    "name":"Obi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Carpenter wey sabi furniture making \u2014 office desk, kitchen cabinet, wardrobe.",
+    "skills":[
+      "wardrobe",
+      "ceiling",
+      "carpentry"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.02591,
+    "location_lng":7.45126,
+    "service_radius_km":20,
+    "daily_rate_naira":11161,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0036",
+    "name":"David",
+    "primary_category":"painting",
+    "secondary_categories":[
+
+    ],
+    "bio":"House painter, 4 years. Interior, exterior, POP, texture finish.",
+    "skills":[
+      "interior painting",
+      "POP ceiling",
+      "texture finish",
+      "painting"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.81984,
+    "location_lng":7.00002,
+    "service_radius_km":50,
+    "daily_rate_naira":6708,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0037",
+    "name":"David",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "plumbing"
+    ],
+    "bio":"Professional tiler with 8 years. Italian tiles, Spanish tiles \u2014 all covered.",
+    "skills":[
+      "tiling",
+      "floor tiles",
+      "grout",
+      "marble",
+      "wall tiles"
+    ],
+    "location_name":"Ikorodu",
+    "location_lat":6.60154,
+    "location_lng":3.51125,
+    "service_radius_km":5,
+    "daily_rate_naira":11084,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":true,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0038",
+    "name":"Musa",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"Reliable house cleaner, 2 years residential and office experience.",
+    "skills":[
+      "laundry",
+      "disinfection"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.09386,
+    "location_lng":7.35557,
+    "service_radius_km":50,
+    "daily_rate_naira":3070,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0039",
+    "name":"Lawal",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional driver with 2 years. Valid license, clean record.",
+    "skills":[
+      "truck driving",
+      "driving"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.59074,
+    "location_lng":3.33985,
+    "service_radius_km":10,
+    "daily_rate_naira":11254,
+    "completed_gigs":0,
+    "avg_rating":null,
+    "completion_rate":null,
+    "kudiscore_tier":null,
+    "bvn_verified":false,
+    "days_since_last_active":1,
+    "last_active_at":"2026-05-12T12:00:00"
+  },
+  {
+    "worker_id":"w_0040",
+    "name":"Tochi",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Security professional with 14 years in facility and warehouse security.",
+    "skills":[
+      "security",
+      "patrol",
+      "surveillance",
+      "access control",
+      "CCTV"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.44576,
+    "location_lng":3.29444,
+    "service_radius_km":30,
+    "daily_rate_naira":5501,
+    "completed_gigs":125,
+    "avg_rating":4.05,
+    "completion_rate":0.825,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0041",
+    "name":"Shade",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Experienced chef for corporate catering and events.",
+    "skills":[
+      "meal planning",
+      "catering",
+      "Nigerian cuisine"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.4592,
+    "location_lng":7.50441,
+    "service_radius_km":50,
+    "daily_rate_naira":8812,
+    "completed_gigs":32,
+    "avg_rating":3.22,
+    "completion_rate":0.883,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0042",
+    "name":"Obinna",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Phone and electronics technician, 11 years. I fix all brands, all faults.",
+    "skills":[
+      "phone repair",
+      "screen replacement",
+      "motherboard"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.0759,
+    "location_lng":7.48136,
+    "service_radius_km":50,
+    "daily_rate_naira":7964,
+    "completed_gigs":159,
+    "avg_rating":4.39,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":28,
+    "last_active_at":"2026-04-15T12:00:00"
+  },
+  {
+    "worker_id":"w_0043",
+    "name":"Yakubu",
+    "primary_category":"hvac",
+    "secondary_categories":[
+
+    ],
+    "bio":"AC technician wey sabi \u2014 gas recharge, compressor, all AC wahala.",
+    "skills":[
+      "gas recharge",
+      "AC repair",
+      "refrigeration",
+      "split unit"
+    ],
+    "location_name":"Oshodi",
+    "location_lat":6.55652,
+    "location_lng":3.36504,
+    "service_radius_km":50,
+    "daily_rate_naira":11914,
+    "completed_gigs":61,
+    "avg_rating":4.59,
+    "completion_rate":0.732,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":17,
+    "last_active_at":"2026-04-26T12:00:00"
+  },
+  {
+    "worker_id":"w_0044",
+    "name":"Bayo",
+    "primary_category":"masonry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Block layer and mason, 14 years on residential and commercial sites.",
+    "skills":[
+      "bricklaying",
+      "plastering",
+      "masonry",
+      "block laying"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.09563,
+    "location_lng":7.47198,
+    "service_radius_km":10,
+    "daily_rate_naira":9071,
+    "completed_gigs":146,
+    "avg_rating":3.51,
+    "completion_rate":0.798,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0045",
+    "name":"Adebayo",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Professional welder wey sabi TIG, MIG, and arc. Based in Ajah.",
+    "skills":[
+      "stainless steel",
+      "TIG welding",
+      "arc welding",
+      "mild steel",
+      "welding"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.4811,
+    "location_lng":3.6236,
+    "service_radius_km":10,
+    "daily_rate_naira":17313,
+    "completed_gigs":38,
+    "avg_rating":4.68,
+    "completion_rate":0.911,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":14,
+    "last_active_at":"2026-04-29T12:00:00"
+  },
+  {
+    "worker_id":"w_0046",
+    "name":"Obiora",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Generator and electrical technician, 13 years field experience. I repair all brands.",
+    "skills":[
+      "AVR",
+      "generator repair",
+      "electrical",
+      "mechanical"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.59671,
+    "location_lng":3.34946,
+    "service_radius_km":20,
+    "daily_rate_naira":13393,
+    "completed_gigs":158,
+    "avg_rating":4.84,
+    "completion_rate":0.887,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0047",
+    "name":"Grace",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac",
+      "generator_repair"
+    ],
+    "bio":"Licensed electrician with 7 years in residential and commercial wiring.",
+    "skills":[
+      "conduit",
+      "solar installation",
+      "inverter setup"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.52567,
+    "location_lng":3.38645,
+    "service_radius_km":5,
+    "daily_rate_naira":15035,
+    "completed_gigs":57,
+    "avg_rating":3.67,
+    "completion_rate":0.835,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0048",
+    "name":"Tochi",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional tailor with 9 years in ladies and gents fashion.",
+    "skills":[
+      "fashion design",
+      "tailoring",
+      "native wear",
+      "aso-ebi"
+    ],
+    "location_name":"Benin City",
+    "location_lat":6.32091,
+    "location_lng":5.64445,
+    "service_radius_km":50,
+    "daily_rate_naira":6627,
+    "completed_gigs":75,
+    "avg_rating":4.52,
+    "completion_rate":0.851,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0049",
+    "name":"Ngozi",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+
+    ],
+    "bio":"Plumber wey sabi all kind pipe work \u2014 burst pipe, bathroom renovation, drainage.",
+    "skills":[
+      "pipe fitting",
+      "overhead tank"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.46251,
+    "location_lng":3.38515,
+    "service_radius_km":20,
+    "daily_rate_naira":9390,
+    "completed_gigs":129,
+    "avg_rating":3.1,
+    "completion_rate":1.0,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0050",
+    "name":"Ramatu",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "masonry",
+      "painting"
+    ],
+    "bio":"Professional woodwork artisan based in Ojota.",
+    "skills":[
+      "wardrobe",
+      "cabinet making",
+      "furniture making"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.57629,
+    "location_lng":3.39377,
+    "service_radius_km":20,
+    "daily_rate_naira":12777,
+    "completed_gigs":7,
+    "avg_rating":4.36,
+    "completion_rate":0.878,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0051",
+    "name":"Chukwuemeka",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "carpentry"
+    ],
+    "bio":"Professional painter: emulsion, gloss, texture, ceiling \u2014 all covered.",
+    "skills":[
+      "painting",
+      "texture finish",
+      "POP ceiling"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.10108,
+    "location_lng":7.50187,
+    "service_radius_km":50,
+    "daily_rate_naira":9106,
+    "completed_gigs":199,
+    "avg_rating":3.77,
+    "completion_rate":0.864,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0052",
+    "name":"Monday",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "plumbing",
+      "masonry"
+    ],
+    "bio":"Tiler wey do am clean. My work dey speak for itself.",
+    "skills":[
+      "grout",
+      "tiling",
+      "marble"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.47768,
+    "location_lng":3.26186,
+    "service_radius_km":50,
+    "daily_rate_naira":8444,
+    "completed_gigs":7,
+    "avg_rating":4.36,
+    "completion_rate":0.823,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0053",
+    "name":"Adewale",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do house cleaning, laundry, and domestic work. Very trustworthy.",
+    "skills":[
+      "domestic help",
+      "disinfection",
+      "laundry",
+      "cleaning",
+      "housekeeping"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.41017,
+    "location_lng":3.42614,
+    "service_radius_km":5,
+    "daily_rate_naira":4950,
+    "completed_gigs":193,
+    "avg_rating":4.2,
+    "completion_rate":0.959,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0054",
+    "name":"Obinna",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Driver wey know every road for Yaba. Punctual, professional, reliable.",
+    "skills":[
+      "chauffeur",
+      "truck driving"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.49631,
+    "location_lng":3.36767,
+    "service_radius_km":10,
+    "daily_rate_naira":5796,
+    "completed_gigs":150,
+    "avg_rating":4.15,
+    "completion_rate":0.766,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":13,
+    "last_active_at":"2026-04-30T12:00:00"
+  },
+  {
+    "worker_id":"w_0055",
+    "name":"Faith",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Licensed security officer trained in surveillance and access control.",
+    "skills":[
+      "CCTV",
+      "patrol"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.46438,
+    "location_lng":3.37182,
+    "service_radius_km":10,
+    "daily_rate_naira":4176,
+    "completed_gigs":151,
+    "avg_rating":4.3,
+    "completion_rate":0.746,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0056",
+    "name":"Usman",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Professional caterer, 2 years cooking Nigerian and continental dishes.",
+    "skills":[
+      "catering",
+      "cooking"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.46917,
+    "location_lng":3.37548,
+    "service_radius_km":20,
+    "daily_rate_naira":6763,
+    "completed_gigs":40,
+    "avg_rating":3.57,
+    "completion_rate":0.785,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":16,
+    "last_active_at":"2026-04-27T12:00:00"
+  },
+  {
+    "worker_id":"w_0057",
+    "name":"Sani",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Electronics repair specialist based in Abuja \u2014 Wuse 2. Fast turnaround guaranteed.",
+    "skills":[
+      "software flashing",
+      "screen replacement"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.06336,
+    "location_lng":7.497,
+    "service_radius_km":5,
+    "daily_rate_naira":6870,
+    "completed_gigs":86,
+    "avg_rating":4.63,
+    "completion_rate":0.817,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":17,
+    "last_active_at":"2026-04-26T12:00:00"
+  },
+  {
+    "worker_id":"w_0058",
+    "name":"Tunde",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "electrical",
+      "generator_repair"
+    ],
+    "bio":"Certified HVAC technician, 14 years in AC installation and repair.",
+    "skills":[
+      "AC repair",
+      "HVAC",
+      "refrigeration"
+    ],
+    "location_name":"Ibadan \u2014 Ring Road",
+    "location_lat":7.36354,
+    "location_lng":3.94733,
+    "service_radius_km":30,
+    "daily_rate_naira":13527,
+    "completed_gigs":31,
+    "avg_rating":4.18,
+    "completion_rate":0.958,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0059",
+    "name":"Hauwa",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "carpentry"
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "bricklaying",
+      "masonry"
+    ],
+    "location_name":"Oshodi",
+    "location_lat":6.55954,
+    "location_lng":3.35649,
+    "service_radius_km":5,
+    "daily_rate_naira":8059,
+    "completed_gigs":190,
+    "avg_rating":3.54,
+    "completion_rate":0.804,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":17,
+    "last_active_at":"2026-04-26T12:00:00"
+  },
+  {
+    "worker_id":"w_0060",
+    "name":"Ibrahim",
+    "primary_category":"welding",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do welding since 2019. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "fabrication",
+      "TIG welding",
+      "arc welding",
+      "stainless steel"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.44387,
+    "location_lng":7.49492,
+    "service_radius_km":20,
+    "daily_rate_naira":8952,
+    "completed_gigs":132,
+    "avg_rating":4.41,
+    "completion_rate":0.816,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0061",
+    "name":"Maryam",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Generator and electrical technician, 8 years field experience. I repair all brands.",
+    "skills":[
+      "electrical",
+      "diesel engine",
+      "AVR",
+      "generator repair",
+      "mechanical"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.80026,
+    "location_lng":7.01844,
+    "service_radius_km":30,
+    "daily_rate_naira":9885,
+    "completed_gigs":103,
+    "avg_rating":4.01,
+    "completion_rate":0.772,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0062",
+    "name":"Maryam",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Electrician wey sabi three-phase, solar system, inverter \u2014 everything electrical.",
+    "skills":[
+      "electrical wiring",
+      "inverter setup"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.6093,
+    "location_lng":3.33867,
+    "service_radius_km":50,
+    "daily_rate_naira":8274,
+    "completed_gigs":165,
+    "avg_rating":3.96,
+    "completion_rate":0.895,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":1,
+    "last_active_at":"2026-05-12T12:00:00"
+  },
+  {
+    "worker_id":"w_0063",
+    "name":"Folake",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Fashion designer wey sabi Ankara, aso-ebi, corporate uniforms and agbada.",
+    "skills":[
+      "Ankara",
+      "corporate wear"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.03426,
+    "location_lng":7.47831,
+    "service_radius_km":5,
+    "daily_rate_naira":9416,
+    "completed_gigs":172,
+    "avg_rating":4.78,
+    "completion_rate":0.94,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0064",
+    "name":"Hauwa",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "tiling",
+      "masonry"
+    ],
+    "bio":"Experienced plumber in Apapa. Fast response for emergencies.",
+    "skills":[
+      "emergency repair",
+      "drainage"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.43859,
+    "location_lng":3.3617,
+    "service_radius_km":5,
+    "daily_rate_naira":13667,
+    "completed_gigs":87,
+    "avg_rating":4.33,
+    "completion_rate":0.694,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0065",
+    "name":"Ramatu",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "painting"
+    ],
+    "bio":"Carpenter specialising in furniture, wardrobes, and ceiling work. 7 years experience.",
+    "skills":[
+      "ceiling",
+      "hardwood"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.80864,
+    "location_lng":6.99383,
+    "service_radius_km":50,
+    "daily_rate_naira":11724,
+    "completed_gigs":36,
+    "avg_rating":3.76,
+    "completion_rate":0.94,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0066",
+    "name":"Kehinde",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Professional painter: emulsion, gloss, texture, ceiling \u2014 all covered.",
+    "skills":[
+      "emulsion",
+      "texture finish",
+      "painting",
+      "exterior painting"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.80524,
+    "location_lng":7.02696,
+    "service_radius_km":20,
+    "daily_rate_naira":10941,
+    "completed_gigs":167,
+    "avg_rating":4.23,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0067",
+    "name":"Chidi",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "plumbing",
+      "masonry"
+    ],
+    "bio":"Tiler wey do am clean. My work dey speak for itself.",
+    "skills":[
+      "floor tiles",
+      "wall tiles"
+    ],
+    "location_name":"Surulere",
+    "location_lat":6.49104,
+    "location_lng":3.37208,
+    "service_radius_km":30,
+    "daily_rate_naira":12644,
+    "completed_gigs":61,
+    "avg_rating":3.83,
+    "completion_rate":0.965,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0068",
+    "name":"Kehinde",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do house cleaning, laundry, and domestic work. Very trustworthy.",
+    "skills":[
+      "cleaning",
+      "housekeeping",
+      "laundry",
+      "disinfection",
+      "domestic help"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.49806,
+    "location_lng":3.36935,
+    "service_radius_km":10,
+    "daily_rate_naira":4608,
+    "completed_gigs":16,
+    "avg_rating":3.6,
+    "completion_rate":0.921,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":26,
+    "last_active_at":"2026-04-17T12:00:00"
+  },
+  {
+    "worker_id":"w_0069",
+    "name":"Abubakar",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional driver with 8 years. Valid license, clean record.",
+    "skills":[
+      "logistics",
+      "chauffeur",
+      "dispatch riding",
+      "truck driving"
+    ],
+    "location_name":"Isolo",
+    "location_lat":6.53858,
+    "location_lng":3.3294,
+    "service_radius_km":20,
+    "daily_rate_naira":10380,
+    "completed_gigs":28,
+    "avg_rating":3.48,
+    "completion_rate":0.761,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0070",
+    "name":"Sunday",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Security professional with 7 years in facility and warehouse security.",
+    "skills":[
+      "surveillance",
+      "security"
+    ],
+    "location_name":"Oshodi",
+    "location_lat":6.57179,
+    "location_lng":3.35633,
+    "service_radius_km":50,
+    "daily_rate_naira":4478,
+    "completed_gigs":42,
+    "avg_rating":4.02,
+    "completion_rate":0.785,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":20,
+    "last_active_at":"2026-04-23T12:00:00"
+  },
+  {
+    "worker_id":"w_0071",
+    "name":"Maryam",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Experienced chef for corporate catering and events.",
+    "skills":[
+      "catering",
+      "suya",
+      "cooking"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.0735,
+    "location_lng":7.49064,
+    "service_radius_km":50,
+    "daily_rate_naira":4540,
+    "completed_gigs":144,
+    "avg_rating":4.77,
+    "completion_rate":0.975,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":29,
+    "last_active_at":"2026-04-14T12:00:00"
+  },
+  {
+    "worker_id":"w_0072",
+    "name":"Tunde",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Phone and electronics technician, 11 years. I fix all brands, all faults.",
+    "skills":[
+      "screen replacement",
+      "software flashing",
+      "motherboard",
+      "electronics",
+      "phone repair"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.48593,
+    "location_lng":3.62063,
+    "service_radius_km":10,
+    "daily_rate_naira":7708,
+    "completed_gigs":162,
+    "avg_rating":3.68,
+    "completion_rate":0.874,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":13,
+    "last_active_at":"2026-04-30T12:00:00"
+  },
+  {
+    "worker_id":"w_0073",
+    "name":"Chioma",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "electrical",
+      "generator_repair"
+    ],
+    "bio":"Refrigeration and air conditioning engineer. Own gauges and tools.",
+    "skills":[
+      "refrigeration",
+      "gas recharge",
+      "split unit",
+      "HVAC"
+    ],
+    "location_name":"Maryland",
+    "location_lat":6.58658,
+    "location_lng":3.35203,
+    "service_radius_km":50,
+    "daily_rate_naira":14571,
+    "completed_gigs":12,
+    "avg_rating":3.89,
+    "completion_rate":0.798,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":26,
+    "last_active_at":"2026-04-17T12:00:00"
+  },
+  {
+    "worker_id":"w_0074",
+    "name":"Saratu",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "tiling"
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "bricklaying",
+      "concrete"
+    ],
+    "location_name":"Ibadan \u2014 Ring Road",
+    "location_lat":7.3762,
+    "location_lng":3.96612,
+    "service_radius_km":5,
+    "daily_rate_naira":8057,
+    "completed_gigs":48,
+    "avg_rating":3.78,
+    "completion_rate":0.904,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":16,
+    "last_active_at":"2026-04-27T12:00:00"
+  },
+  {
+    "worker_id":"w_0075",
+    "name":"Grace",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Professional welder wey sabi TIG, MIG, and arc. Based in Abuja \u2014 Garki.",
+    "skills":[
+      "fabrication",
+      "welding"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.02318,
+    "location_lng":7.46351,
+    "service_radius_km":50,
+    "daily_rate_naira":17531,
+    "completed_gigs":136,
+    "avg_rating":3.39,
+    "completion_rate":0.895,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0076",
+    "name":"Prosper",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey fix gen since 2020. Mikano, FG Wilson, Perkins, Cummins \u2014 I sabi all.",
+    "skills":[
+      "AVR",
+      "electrical",
+      "generator repair",
+      "diesel engine",
+      "mechanical"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.47938,
+    "location_lng":3.62383,
+    "service_radius_km":50,
+    "daily_rate_naira":7391,
+    "completed_gigs":105,
+    "avg_rating":3.79,
+    "completion_rate":0.897,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0077",
+    "name":"David",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac",
+      "generator_repair"
+    ],
+    "bio":"Electrical contractor based in Alimosho. Clean work, no shortcuts.",
+    "skills":[
+      "conduit",
+      "solar installation",
+      "three-phase"
+    ],
+    "location_name":"Alimosho",
+    "location_lat":6.62653,
+    "location_lng":3.26006,
+    "service_radius_km":30,
+    "daily_rate_naira":9614,
+    "completed_gigs":180,
+    "avg_rating":3.13,
+    "completion_rate":0.819,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0078",
+    "name":"Taiwo",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Skilled tailor from Ajah. Native wear, contemporary \u2014 I do all.",
+    "skills":[
+      "Ankara",
+      "aso-ebi"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.48526,
+    "location_lng":3.5993,
+    "service_radius_km":30,
+    "daily_rate_naira":8075,
+    "completed_gigs":144,
+    "avg_rating":4.45,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":19,
+    "last_active_at":"2026-04-24T12:00:00"
+  },
+  {
+    "worker_id":"w_0079",
+    "name":"Maryam",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional plumber, 3 years residential and commercial experience.",
+    "skills":[
+      "emergency repair",
+      "overhead tank"
+    ],
+    "location_name":"Alimosho",
+    "location_lat":6.60702,
+    "location_lng":3.23867,
+    "service_radius_km":20,
+    "daily_rate_naira":10598,
+    "completed_gigs":148,
+    "avg_rating":4.18,
+    "completion_rate":0.811,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":17,
+    "last_active_at":"2026-04-26T12:00:00"
+  },
+  {
+    "worker_id":"w_0080",
+    "name":"Chidi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Carpenter specialising in furniture, wardrobes, and ceiling work. 8 years experience.",
+    "skills":[
+      "furniture making",
+      "ceiling"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.58117,
+    "location_lng":3.39022,
+    "service_radius_km":30,
+    "daily_rate_naira":7576,
+    "completed_gigs":8,
+    "avg_rating":3.67,
+    "completion_rate":0.868,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":26,
+    "last_active_at":"2026-04-17T12:00:00"
+  },
+  {
+    "worker_id":"w_0081",
+    "name":"Grace",
+    "primary_category":"painting",
+    "secondary_categories":[
+
+    ],
+    "bio":"Painter wey sabi do am neat. No drips, no mess. Based in Festac.",
+    "skills":[
+      "texture finish",
+      "interior painting",
+      "POP ceiling",
+      "exterior painting"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.45862,
+    "location_lng":3.29907,
+    "service_radius_km":50,
+    "daily_rate_naira":9511,
+    "completed_gigs":114,
+    "avg_rating":4.34,
+    "completion_rate":0.798,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0082",
+    "name":"Aliyu",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "plumbing"
+    ],
+    "bio":"Experienced tiler specialising in luxury floor and wall tile finishes.",
+    "skills":[
+      "tiling",
+      "floor tiles",
+      "wall tiles"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.46543,
+    "location_lng":3.28684,
+    "service_radius_km":5,
+    "daily_rate_naira":7150,
+    "completed_gigs":35,
+    "avg_rating":5.0,
+    "completion_rate":0.892,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0083",
+    "name":"Ifeoma",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+      "catering"
+    ],
+    "bio":"I dey do house cleaning, laundry, and domestic work. Very trustworthy.",
+    "skills":[
+      "housekeeping",
+      "cleaning",
+      "domestic help",
+      "laundry",
+      "disinfection"
+    ],
+    "location_name":"Benin City",
+    "location_lat":6.34635,
+    "location_lng":5.62454,
+    "service_radius_km":20,
+    "daily_rate_naira":3690,
+    "completed_gigs":158,
+    "avg_rating":3.86,
+    "completion_rate":0.929,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0084",
+    "name":"Obi",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced dispatch rider and delivery driver.",
+    "skills":[
+      "dispatch riding",
+      "logistics",
+      "driving",
+      "chauffeur",
+      "truck driving"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.46112,
+    "location_lng":3.40231,
+    "service_radius_km":50,
+    "daily_rate_naira":8589,
+    "completed_gigs":13,
+    "avg_rating":2.94,
+    "completion_rate":0.754,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":29,
+    "last_active_at":"2026-04-14T12:00:00"
+  },
+  {
+    "worker_id":"w_0085",
+    "name":"Hauwa",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Experienced security guard. Very vigilant, no sleeping on duty.",
+    "skills":[
+      "surveillance",
+      "patrol",
+      "CCTV",
+      "access control",
+      "security"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.80364,
+    "location_lng":7.0059,
+    "service_radius_km":5,
+    "daily_rate_naira":3627,
+    "completed_gigs":45,
+    "avg_rating":4.38,
+    "completion_rate":0.828,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":6,
+    "last_active_at":"2026-05-07T12:00:00"
+  },
+  {
+    "worker_id":"w_0086",
+    "name":"Faith",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Professional caterer, 7 years cooking Nigerian and continental dishes.",
+    "skills":[
+      "cooking",
+      "continental"
+    ],
+    "location_name":"Isolo",
+    "location_lat":6.50487,
+    "location_lng":3.31458,
+    "service_radius_km":50,
+    "daily_rate_naira":9245,
+    "completed_gigs":58,
+    "avg_rating":3.32,
+    "completion_rate":0.919,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":14,
+    "last_active_at":"2026-04-29T12:00:00"
+  },
+  {
+    "worker_id":"w_0087",
+    "name":"Hadiza",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Technician for phone repair \u2014 screen, motherboard, software \u2014 no wahala.",
+    "skills":[
+      "motherboard",
+      "electronics",
+      "phone repair"
+    ],
+    "location_name":"Isolo",
+    "location_lat":6.53845,
+    "location_lng":3.32051,
+    "service_radius_km":10,
+    "daily_rate_naira":7374,
+    "completed_gigs":138,
+    "avg_rating":4.83,
+    "completion_rate":0.878,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0088",
+    "name":"Maryam",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "generator_repair"
+    ],
+    "bio":"AC technician wey sabi \u2014 gas recharge, compressor, all AC wahala.",
+    "skills":[
+      "gas recharge",
+      "AC repair"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.41004,
+    "location_lng":3.42033,
+    "service_radius_km":20,
+    "daily_rate_naira":13692,
+    "completed_gigs":67,
+    "avg_rating":4.24,
+    "completion_rate":0.866,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0089",
+    "name":"Tunde",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "tiling"
+    ],
+    "bio":"Block layer and mason, 4 years on residential and commercial sites.",
+    "skills":[
+      "bricklaying",
+      "concrete",
+      "plastering",
+      "block laying"
+    ],
+    "location_name":"Ibadan \u2014 Ring Road",
+    "location_lat":7.35885,
+    "location_lng":3.93143,
+    "service_radius_km":30,
+    "daily_rate_naira":9531,
+    "completed_gigs":170,
+    "avg_rating":4.15,
+    "completion_rate":0.943,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0090",
+    "name":"Ifeoma",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Professional welder wey sabi TIG, MIG, and arc. Based in Abuja \u2014 Wuse 2.",
+    "skills":[
+      "TIG welding",
+      "fabrication",
+      "stainless steel"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.04441,
+    "location_lng":7.50502,
+    "service_radius_km":5,
+    "daily_rate_naira":16554,
+    "completed_gigs":193,
+    "avg_rating":4.99,
+    "completion_rate":0.964,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0091",
+    "name":"Obiora",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Certified diesel technician specialising in generator overhaul and AVR repair.",
+    "skills":[
+      "mechanical",
+      "AVR",
+      "generator repair",
+      "electrical"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.46254,
+    "location_lng":3.62377,
+    "service_radius_km":10,
+    "daily_rate_naira":7903,
+    "completed_gigs":20,
+    "avg_rating":4.27,
+    "completion_rate":0.672,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0092",
+    "name":"Funmilayo",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "generator_repair",
+      "hvac"
+    ],
+    "bio":"Electrician wey sabi three-phase, solar system, inverter \u2014 everything electrical.",
+    "skills":[
+      "three-phase",
+      "solar installation",
+      "conduit"
+    ],
+    "location_name":"Surulere",
+    "location_lat":6.49042,
+    "location_lng":3.36481,
+    "service_radius_km":10,
+    "daily_rate_naira":14789,
+    "completed_gigs":33,
+    "avg_rating":4.11,
+    "completion_rate":0.87,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":17,
+    "last_active_at":"2026-04-26T12:00:00"
+  },
+  {
+    "worker_id":"w_0093",
+    "name":"Tunde",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional tailor with 11 years in ladies and gents fashion.",
+    "skills":[
+      "corporate wear",
+      "tailoring",
+      "Ankara",
+      "aso-ebi",
+      "native wear"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.02862,
+    "location_lng":7.46889,
+    "service_radius_km":50,
+    "daily_rate_naira":4728,
+    "completed_gigs":29,
+    "avg_rating":4.22,
+    "completion_rate":0.854,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0094",
+    "name":"Adebayo",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "tiling",
+      "masonry"
+    ],
+    "bio":"Professional plumber, 11 years residential and commercial experience.",
+    "skills":[
+      "pipe fitting",
+      "overhead tank",
+      "plumbing"
+    ],
+    "location_name":"Benin City",
+    "location_lat":6.33987,
+    "location_lng":5.61793,
+    "service_radius_km":5,
+    "daily_rate_naira":6404,
+    "completed_gigs":195,
+    "avg_rating":4.04,
+    "completion_rate":0.95,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0095",
+    "name":"Obi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Carpenter wey sabi furniture making \u2014 office desk, kitchen cabinet, wardrobe.",
+    "skills":[
+      "carpentry",
+      "cabinet making",
+      "wardrobe",
+      "ceiling"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.81796,
+    "location_lng":7.00355,
+    "service_radius_km":50,
+    "daily_rate_naira":11337,
+    "completed_gigs":146,
+    "avg_rating":4.65,
+    "completion_rate":0.837,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0096",
+    "name":"Olumide",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"House painter, 14 years. Interior, exterior, POP, texture finish.",
+    "skills":[
+      "POP ceiling",
+      "exterior painting"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.42487,
+    "location_lng":3.42248,
+    "service_radius_km":50,
+    "daily_rate_naira":5074,
+    "completed_gigs":88,
+    "avg_rating":3.79,
+    "completion_rate":0.881,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0097",
+    "name":"Eze",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Tiler wey do am clean. My work dey speak for itself.",
+    "skills":[
+      "tiling",
+      "floor tiles",
+      "wall tiles",
+      "grout",
+      "marble"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.4623,
+    "location_lng":3.37007,
+    "service_radius_km":30,
+    "daily_rate_naira":9157,
+    "completed_gigs":52,
+    "avg_rating":3.04,
+    "completion_rate":0.664,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":6,
+    "last_active_at":"2026-05-07T12:00:00"
+  },
+  {
+    "worker_id":"w_0098",
+    "name":"Grace",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+      "catering"
+    ],
+    "bio":"Professional cleaner and housekeeper. References available.",
+    "skills":[
+      "domestic help",
+      "housekeeping",
+      "laundry",
+      "disinfection"
+    ],
+    "location_name":"Ikorodu",
+    "location_lat":6.61456,
+    "location_lng":3.50828,
+    "service_radius_km":30,
+    "daily_rate_naira":2721,
+    "completed_gigs":25,
+    "avg_rating":3.91,
+    "completion_rate":0.775,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0099",
+    "name":"Amaka",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional driver with 7 years. Valid license, clean record.",
+    "skills":[
+      "logistics",
+      "driving",
+      "truck driving"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.60179,
+    "location_lng":3.30968,
+    "service_radius_km":5,
+    "daily_rate_naira":10205,
+    "completed_gigs":161,
+    "avg_rating":4.05,
+    "completion_rate":0.863,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0100",
+    "name":"Emeka",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Experienced security guard. Very vigilant, no sleeping on duty.",
+    "skills":[
+      "security",
+      "CCTV",
+      "patrol"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.80735,
+    "location_lng":7.01664,
+    "service_radius_km":20,
+    "daily_rate_naira":4461,
+    "completed_gigs":96,
+    "avg_rating":4.55,
+    "completion_rate":0.853,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0101",
+    "name":"Prosper",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Experienced chef for corporate catering and events.",
+    "skills":[
+      "catering",
+      "cooking"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.43904,
+    "location_lng":3.35361,
+    "service_radius_km":20,
+    "daily_rate_naira":8265,
+    "completed_gigs":146,
+    "avg_rating":3.38,
+    "completion_rate":0.844,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0102",
+    "name":"Prosper",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Technician for phone repair \u2014 screen, motherboard, software \u2014 no wahala.",
+    "skills":[
+      "software flashing",
+      "motherboard"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.45292,
+    "location_lng":3.26878,
+    "service_radius_km":30,
+    "daily_rate_naira":11853,
+    "completed_gigs":96,
+    "avg_rating":4.08,
+    "completion_rate":0.878,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0103",
+    "name":"Ada",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "generator_repair",
+      "electrical"
+    ],
+    "bio":"Certified HVAC technician, 10 years in AC installation and repair.",
+    "skills":[
+      "gas recharge",
+      "AC repair",
+      "refrigeration",
+      "split unit",
+      "HVAC"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.46327,
+    "location_lng":7.512,
+    "service_radius_km":20,
+    "daily_rate_naira":11964,
+    "completed_gigs":175,
+    "avg_rating":4.21,
+    "completion_rate":0.945,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0104",
+    "name":"Emmanuel",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "tiling"
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "bricklaying",
+      "masonry",
+      "plastering",
+      "concrete",
+      "block laying"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.48792,
+    "location_lng":3.59467,
+    "service_radius_km":20,
+    "daily_rate_naira":6688,
+    "completed_gigs":125,
+    "avg_rating":3.82,
+    "completion_rate":0.809,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":2,
+    "last_active_at":"2026-05-11T12:00:00"
+  },
+  {
+    "worker_id":"w_0105",
+    "name":"Tochi",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"I dey do welding since 2020. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "TIG welding",
+      "arc welding",
+      "fabrication",
+      "mild steel"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.09301,
+    "location_lng":7.38018,
+    "service_radius_km":20,
+    "daily_rate_naira":13842,
+    "completed_gigs":26,
+    "avg_rating":4.03,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0106",
+    "name":"Chioma",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Certified diesel technician specialising in generator overhaul and AVR repair.",
+    "skills":[
+      "mechanical",
+      "diesel engine"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.44663,
+    "location_lng":3.29654,
+    "service_radius_km":10,
+    "daily_rate_naira":12813,
+    "completed_gigs":170,
+    "avg_rating":3.72,
+    "completion_rate":0.89,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":1,
+    "last_active_at":"2026-05-12T12:00:00"
+  },
+  {
+    "worker_id":"w_0107",
+    "name":"Ada",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Licensed electrician with 3 years in residential and commercial wiring.",
+    "skills":[
+      "conduit",
+      "three-phase",
+      "inverter setup",
+      "solar installation"
+    ],
+    "location_name":"Maryland",
+    "location_lat":6.55701,
+    "location_lng":3.36891,
+    "service_radius_km":20,
+    "daily_rate_naira":16364,
+    "completed_gigs":69,
+    "avg_rating":3.94,
+    "completion_rate":0.763,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0108",
+    "name":"Biodun",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional tailor with 13 years in ladies and gents fashion.",
+    "skills":[
+      "fashion design",
+      "native wear",
+      "Ankara"
+    ],
+    "location_name":"Mushin",
+    "location_lat":6.54029,
+    "location_lng":3.35181,
+    "service_radius_km":20,
+    "daily_rate_naira":5693,
+    "completed_gigs":89,
+    "avg_rating":4.14,
+    "completion_rate":0.851,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0109",
+    "name":"Hadiza",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Plumber wey sabi all kind pipe work \u2014 burst pipe, bathroom renovation, drainage.",
+    "skills":[
+      "emergency repair",
+      "overhead tank",
+      "pipe fitting"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.10588,
+    "location_lng":7.38423,
+    "service_radius_km":5,
+    "daily_rate_naira":7308,
+    "completed_gigs":175,
+    "avg_rating":4.53,
+    "completion_rate":0.871,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0110",
+    "name":"Tochi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Carpenter specialising in furniture, wardrobes, and ceiling work. 6 years experience.",
+    "skills":[
+      "hardwood",
+      "wardrobe",
+      "cabinet making"
+    ],
+    "location_name":"Mushin",
+    "location_lat":6.53353,
+    "location_lng":3.3497,
+    "service_radius_km":5,
+    "daily_rate_naira":13796,
+    "completed_gigs":197,
+    "avg_rating":4.29,
+    "completion_rate":0.485,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0111",
+    "name":"Bayo",
+    "primary_category":"painting",
+    "secondary_categories":[
+
+    ],
+    "bio":"Painter wey sabi do am neat. No drips, no mess. Based in Enugu GRA.",
+    "skills":[
+      "painting",
+      "interior painting",
+      "POP ceiling",
+      "emulsion"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.43102,
+    "location_lng":7.52273,
+    "service_radius_km":30,
+    "daily_rate_naira":7048,
+    "completed_gigs":15,
+    "avg_rating":4.3,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0112",
+    "name":"Kemi",
+    "primary_category":"tiling",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced tiler specialising in luxury floor and wall tile finishes.",
+    "skills":[
+      "marble",
+      "wall tiles"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.42562,
+    "location_lng":3.42746,
+    "service_radius_km":20,
+    "daily_rate_naira":11523,
+    "completed_gigs":59,
+    "avg_rating":3.73,
+    "completion_rate":0.942,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0113",
+    "name":"Chinyere",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+      "catering"
+    ],
+    "bio":"Professional cleaner and housekeeper. References available.",
+    "skills":[
+      "disinfection",
+      "domestic help"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.02779,
+    "location_lng":7.47389,
+    "service_radius_km":10,
+    "daily_rate_naira":3482,
+    "completed_gigs":85,
+    "avg_rating":4.65,
+    "completion_rate":0.809,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0114",
+    "name":"Emmanuel",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Driver wey know every road for Alimosho. Punctual, professional, reliable.",
+    "skills":[
+      "dispatch riding",
+      "driving",
+      "truck driving"
+    ],
+    "location_name":"Alimosho",
+    "location_lat":6.60961,
+    "location_lng":3.2712,
+    "service_radius_km":50,
+    "daily_rate_naira":8678,
+    "completed_gigs":169,
+    "avg_rating":4.42,
+    "completion_rate":0.71,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0115",
+    "name":"Tochi",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Security professional with 7 years in facility and warehouse security.",
+    "skills":[
+      "security",
+      "access control",
+      "surveillance",
+      "CCTV",
+      "patrol"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.43808,
+    "location_lng":3.44157,
+    "service_radius_km":10,
+    "daily_rate_naira":4828,
+    "completed_gigs":149,
+    "avg_rating":4.05,
+    "completion_rate":0.885,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0116",
+    "name":"Adewale",
+    "primary_category":"catering",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional caterer, 6 years cooking Nigerian and continental dishes.",
+    "skills":[
+      "Nigerian cuisine",
+      "meal planning"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.08156,
+    "location_lng":7.50298,
+    "service_radius_km":10,
+    "daily_rate_naira":6806,
+    "completed_gigs":140,
+    "avg_rating":4.42,
+    "completion_rate":0.85,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0117",
+    "name":"Chidi",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Electronics repair specialist based in Maryland. Fast turnaround guaranteed.",
+    "skills":[
+      "software flashing",
+      "screen replacement",
+      "phone repair",
+      "motherboard"
+    ],
+    "location_name":"Maryland",
+    "location_lat":6.5739,
+    "location_lng":3.36672,
+    "service_radius_km":20,
+    "daily_rate_naira":10398,
+    "completed_gigs":156,
+    "avg_rating":3.27,
+    "completion_rate":0.745,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0118",
+    "name":"Shade",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "electrical",
+      "generator_repair"
+    ],
+    "bio":"Refrigeration and air conditioning engineer. Own gauges and tools.",
+    "skills":[
+      "AC repair",
+      "HVAC",
+      "gas recharge"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.02687,
+    "location_lng":7.45961,
+    "service_radius_km":50,
+    "daily_rate_naira":9109,
+    "completed_gigs":149,
+    "avg_rating":4.41,
+    "completion_rate":0.639,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":6,
+    "last_active_at":"2026-05-07T12:00:00"
+  },
+  {
+    "worker_id":"w_0119",
+    "name":"Yakubu",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "carpentry"
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "bricklaying",
+      "block laying",
+      "plastering",
+      "concrete"
+    ],
+    "location_name":"Port Harcourt GRA",
+    "location_lat":4.8074,
+    "location_lng":7.0036,
+    "service_radius_km":10,
+    "daily_rate_naira":7538,
+    "completed_gigs":138,
+    "avg_rating":4.34,
+    "completion_rate":0.797,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0120",
+    "name":"Obinna",
+    "primary_category":"welding",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do welding since 2022. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "fabrication",
+      "mild steel",
+      "TIG welding",
+      "welding",
+      "stainless steel"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.51911,
+    "location_lng":3.37736,
+    "service_radius_km":50,
+    "daily_rate_naira":17359,
+    "completed_gigs":163,
+    "avg_rating":3.67,
+    "completion_rate":0.796,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0121",
+    "name":"Halima",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"I dey fix gen since 2012. Mikano, FG Wilson, Perkins, Cummins \u2014 I sabi all.",
+    "skills":[
+      "electrical",
+      "generator repair",
+      "AVR",
+      "diesel engine"
+    ],
+    "location_name":"Port Harcourt Trans-Amadi",
+    "location_lat":4.85523,
+    "location_lng":7.04773,
+    "service_radius_km":30,
+    "daily_rate_naira":7167,
+    "completed_gigs":94,
+    "avg_rating":4.84,
+    "completion_rate":0.865,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":19,
+    "last_active_at":"2026-04-24T12:00:00"
+  },
+  {
+    "worker_id":"w_0122",
+    "name":"Obinna",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Licensed electrician with 6 years in residential and commercial wiring.",
+    "skills":[
+      "inverter setup",
+      "conduit",
+      "electrical wiring"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.58611,
+    "location_lng":3.39904,
+    "service_radius_km":30,
+    "daily_rate_naira":11509,
+    "completed_gigs":116,
+    "avg_rating":4.07,
+    "completion_rate":0.743,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0123",
+    "name":"Adebayo",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Skilled tailor from Agege. Native wear, contemporary \u2014 I do all.",
+    "skills":[
+      "aso-ebi",
+      "corporate wear",
+      "fashion design",
+      "tailoring",
+      "Ankara"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.63137,
+    "location_lng":3.30703,
+    "service_radius_km":50,
+    "daily_rate_naira":8199,
+    "completed_gigs":35,
+    "avg_rating":4.76,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":26,
+    "last_active_at":"2026-04-17T12:00:00"
+  },
+  {
+    "worker_id":"w_0124",
+    "name":"Yakubu",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "masonry",
+      "tiling"
+    ],
+    "bio":"Experienced plumber in Port Harcourt Trans-Amadi. Fast response for emergencies.",
+    "skills":[
+      "emergency repair",
+      "plumbing",
+      "pipe fitting",
+      "drainage"
+    ],
+    "location_name":"Port Harcourt Trans-Amadi",
+    "location_lat":4.86073,
+    "location_lng":7.01139,
+    "service_radius_km":30,
+    "daily_rate_naira":7103,
+    "completed_gigs":93,
+    "avg_rating":3.33,
+    "completion_rate":0.915,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0125",
+    "name":"Fatima",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "masonry",
+      "painting"
+    ],
+    "bio":"Carpenter wey sabi furniture making \u2014 office desk, kitchen cabinet, wardrobe.",
+    "skills":[
+      "hardwood",
+      "ceiling",
+      "carpentry",
+      "cabinet making"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.45709,
+    "location_lng":3.38413,
+    "service_radius_km":20,
+    "daily_rate_naira":9065,
+    "completed_gigs":105,
+    "avg_rating":4.89,
+    "completion_rate":0.899,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0126",
+    "name":"Ugochi",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Painter wey sabi do am neat. No drips, no mess. Based in Abuja \u2014 Maitama.",
+    "skills":[
+      "painting",
+      "exterior painting"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.07393,
+    "location_lng":7.48515,
+    "service_radius_km":30,
+    "daily_rate_naira":7548,
+    "completed_gigs":153,
+    "avg_rating":4.45,
+    "completion_rate":0.714,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0127",
+    "name":"Chinyere",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Tiler wey do am clean. My work dey speak for itself.",
+    "skills":[
+      "wall tiles",
+      "marble",
+      "tiling",
+      "floor tiles"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.05457,
+    "location_lng":7.48696,
+    "service_radius_km":5,
+    "daily_rate_naira":8411,
+    "completed_gigs":33,
+    "avg_rating":4.14,
+    "completion_rate":0.963,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":9,
+    "last_active_at":"2026-05-04T12:00:00"
+  },
+  {
+    "worker_id":"w_0128",
+    "name":"Lawal",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional cleaner and housekeeper. References available.",
+    "skills":[
+      "disinfection",
+      "cleaning"
+    ],
+    "location_name":"Gbagada",
+    "location_lat":6.55235,
+    "location_lng":3.3617,
+    "service_radius_km":30,
+    "daily_rate_naira":2632,
+    "completed_gigs":170,
+    "avg_rating":4.01,
+    "completion_rate":0.823,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0129",
+    "name":"Ifeoma",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Driver wey know every road for Gbagada. Punctual, professional, reliable.",
+    "skills":[
+      "dispatch riding",
+      "truck driving",
+      "driving",
+      "logistics",
+      "chauffeur"
+    ],
+    "location_name":"Gbagada",
+    "location_lat":6.53772,
+    "location_lng":3.36487,
+    "service_radius_km":30,
+    "daily_rate_naira":5456,
+    "completed_gigs":87,
+    "avg_rating":4.74,
+    "completion_rate":0.856,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0130",
+    "name":"Yemi",
+    "primary_category":"security",
+    "secondary_categories":[
+      "driving"
+    ],
+    "bio":"Experienced security guard. Very vigilant, no sleeping on duty.",
+    "skills":[
+      "CCTV",
+      "surveillance",
+      "security"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.61797,
+    "location_lng":3.33151,
+    "service_radius_km":30,
+    "daily_rate_naira":5285,
+    "completed_gigs":45,
+    "avg_rating":4.11,
+    "completion_rate":0.919,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0131",
+    "name":"Lawal",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Professional caterer, 2 years cooking Nigerian and continental dishes.",
+    "skills":[
+      "catering",
+      "suya"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.45685,
+    "location_lng":3.59881,
+    "service_radius_km":50,
+    "daily_rate_naira":9027,
+    "completed_gigs":171,
+    "avg_rating":3.82,
+    "completion_rate":0.92,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0132",
+    "name":"Ramatu",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Phone and electronics technician, 7 years. I fix all brands, all faults.",
+    "skills":[
+      "motherboard",
+      "phone repair",
+      "screen replacement",
+      "electronics",
+      "software flashing"
+    ],
+    "location_name":"Surulere",
+    "location_lat":6.5188,
+    "location_lng":3.37482,
+    "service_radius_km":30,
+    "daily_rate_naira":11734,
+    "completed_gigs":54,
+    "avg_rating":3.61,
+    "completion_rate":0.764,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0133",
+    "name":"Grace",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "generator_repair",
+      "electrical"
+    ],
+    "bio":"AC technician wey sabi \u2014 gas recharge, compressor, all AC wahala.",
+    "skills":[
+      "split unit",
+      "gas recharge"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.11502,
+    "location_lng":7.34716,
+    "service_radius_km":10,
+    "daily_rate_naira":12244,
+    "completed_gigs":99,
+    "avg_rating":4.04,
+    "completion_rate":0.75,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0134",
+    "name":"Hadiza",
+    "primary_category":"masonry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "block laying",
+      "plastering",
+      "concrete",
+      "bricklaying",
+      "masonry"
+    ],
+    "location_name":"Isolo",
+    "location_lat":6.53786,
+    "location_lng":3.33255,
+    "service_radius_km":10,
+    "daily_rate_naira":7926,
+    "completed_gigs":136,
+    "avg_rating":4.42,
+    "completion_rate":0.849,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0135",
+    "name":"Musa",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"I dey do welding since 2014. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "mild steel",
+      "fabrication",
+      "welding",
+      "stainless steel",
+      "arc welding"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.47078,
+    "location_lng":3.38995,
+    "service_radius_km":20,
+    "daily_rate_naira":9719,
+    "completed_gigs":71,
+    "avg_rating":5.0,
+    "completion_rate":0.727,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":6,
+    "last_active_at":"2026-05-07T12:00:00"
+  },
+  {
+    "worker_id":"w_0136",
+    "name":"Maryam",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey fix gen since 2016. Mikano, FG Wilson, Perkins, Cummins \u2014 I sabi all.",
+    "skills":[
+      "generator repair",
+      "AVR"
+    ],
+    "location_name":"Maryland",
+    "location_lat":6.55576,
+    "location_lng":3.34447,
+    "service_radius_km":20,
+    "daily_rate_naira":10317,
+    "completed_gigs":39,
+    "avg_rating":4.05,
+    "completion_rate":0.785,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0137",
+    "name":"Oluwaseun",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Licensed electrician with 8 years in residential and commercial wiring.",
+    "skills":[
+      "inverter setup",
+      "electrical wiring",
+      "solar installation"
+    ],
+    "location_name":"Ojota",
+    "location_lat":6.59023,
+    "location_lng":3.37781,
+    "service_radius_km":10,
+    "daily_rate_naira":10931,
+    "completed_gigs":161,
+    "avg_rating":3.74,
+    "completion_rate":0.585,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":26,
+    "last_active_at":"2026-04-17T12:00:00"
+  },
+  {
+    "worker_id":"w_0138",
+    "name":"Hauwa",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Fashion designer wey sabi Ankara, aso-ebi, corporate uniforms and agbada.",
+    "skills":[
+      "tailoring",
+      "native wear"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.43961,
+    "location_lng":3.38888,
+    "service_radius_km":30,
+    "daily_rate_naira":6443,
+    "completed_gigs":152,
+    "avg_rating":4.75,
+    "completion_rate":0.891,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0139",
+    "name":"Hadiza",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Experienced plumber in Abuja \u2014 Maitama. Fast response for emergencies.",
+    "skills":[
+      "drainage",
+      "plumbing",
+      "overhead tank"
+    ],
+    "location_name":"Abuja \u2014 Maitama",
+    "location_lat":9.06297,
+    "location_lng":7.48275,
+    "service_radius_km":20,
+    "daily_rate_naira":8591,
+    "completed_gigs":185,
+    "avg_rating":3.54,
+    "completion_rate":0.732,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0140",
+    "name":"Nkechi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Carpenter wey sabi furniture making \u2014 office desk, kitchen cabinet, wardrobe.",
+    "skills":[
+      "ceiling",
+      "cabinet making",
+      "hardwood"
+    ],
+    "location_name":"Alimosho",
+    "location_lat":6.62954,
+    "location_lng":3.24843,
+    "service_radius_km":5,
+    "daily_rate_naira":12637,
+    "completed_gigs":67,
+    "avg_rating":4.41,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0141",
+    "name":"Kehinde",
+    "primary_category":"painting",
+    "secondary_categories":[
+
+    ],
+    "bio":"Painter wey sabi do am neat. No drips, no mess. Based in Yaba.",
+    "skills":[
+      "interior painting",
+      "POP ceiling",
+      "texture finish"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.51827,
+    "location_lng":3.37395,
+    "service_radius_km":20,
+    "daily_rate_naira":7452,
+    "completed_gigs":161,
+    "avg_rating":4.01,
+    "completion_rate":0.694,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0142",
+    "name":"Hadiza",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "plumbing"
+    ],
+    "bio":"Experienced tiler specialising in luxury floor and wall tile finishes.",
+    "skills":[
+      "grout",
+      "tiling",
+      "floor tiles",
+      "marble"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.04442,
+    "location_lng":7.46707,
+    "service_radius_km":30,
+    "daily_rate_naira":8747,
+    "completed_gigs":78,
+    "avg_rating":4.97,
+    "completion_rate":0.802,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0143",
+    "name":"Obinna",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do house cleaning, laundry, and domestic work. Very trustworthy.",
+    "skills":[
+      "housekeeping",
+      "cleaning",
+      "laundry",
+      "domestic help",
+      "disinfection"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.59136,
+    "location_lng":3.32748,
+    "service_radius_km":10,
+    "daily_rate_naira":3906,
+    "completed_gigs":121,
+    "avg_rating":4.4,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":19,
+    "last_active_at":"2026-04-24T12:00:00"
+  },
+  {
+    "worker_id":"w_0144",
+    "name":"David",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced dispatch rider and delivery driver.",
+    "skills":[
+      "chauffeur",
+      "driving",
+      "dispatch riding",
+      "truck driving",
+      "logistics"
+    ],
+    "location_name":"Surulere",
+    "location_lat":6.4995,
+    "location_lng":3.37276,
+    "service_radius_km":5,
+    "daily_rate_naira":9052,
+    "completed_gigs":10,
+    "avg_rating":4.7,
+    "completion_rate":0.633,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":7,
+    "last_active_at":"2026-05-06T12:00:00"
+  },
+  {
+    "worker_id":"w_0145",
+    "name":"Sani",
+    "primary_category":"security",
+    "secondary_categories":[
+
+    ],
+    "bio":"Security professional with 9 years in facility and warehouse security.",
+    "skills":[
+      "CCTV",
+      "security",
+      "patrol",
+      "access control",
+      "surveillance"
+    ],
+    "location_name":"Mushin",
+    "location_lat":6.52783,
+    "location_lng":3.33132,
+    "service_radius_km":20,
+    "daily_rate_naira":5466,
+    "completed_gigs":57,
+    "avg_rating":3.88,
+    "completion_rate":0.811,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0146",
+    "name":"Ngozi",
+    "primary_category":"catering",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced chef for corporate catering and events.",
+    "skills":[
+      "cooking",
+      "catering",
+      "Nigerian cuisine",
+      "suya",
+      "meal planning"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.51616,
+    "location_lng":3.39822,
+    "service_radius_km":10,
+    "daily_rate_naira":9799,
+    "completed_gigs":27,
+    "avg_rating":4.41,
+    "completion_rate":0.925,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0147",
+    "name":"Ada",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Electronics repair specialist based in Isolo. Fast turnaround guaranteed.",
+    "skills":[
+      "phone repair",
+      "software flashing",
+      "motherboard"
+    ],
+    "location_name":"Isolo",
+    "location_lat":6.54409,
+    "location_lng":3.33439,
+    "service_radius_km":10,
+    "daily_rate_naira":11460,
+    "completed_gigs":28,
+    "avg_rating":4.5,
+    "completion_rate":0.782,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":2,
+    "last_active_at":"2026-05-11T12:00:00"
+  },
+  {
+    "worker_id":"w_0148",
+    "name":"Adeola",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "generator_repair"
+    ],
+    "bio":"AC technician wey sabi \u2014 gas recharge, compressor, all AC wahala.",
+    "skills":[
+      "split unit",
+      "HVAC",
+      "AC repair",
+      "refrigeration",
+      "gas recharge"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.60995,
+    "location_lng":3.33647,
+    "service_radius_km":20,
+    "daily_rate_naira":8191,
+    "completed_gigs":135,
+    "avg_rating":4.09,
+    "completion_rate":0.694,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0149",
+    "name":"Chidi",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "tiling"
+    ],
+    "bio":"Mason wey know the work. Fast, neat, no wastage. Plenty estates for Ikeja.",
+    "skills":[
+      "bricklaying",
+      "block laying",
+      "plastering"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.59427,
+    "location_lng":3.33979,
+    "service_radius_km":30,
+    "daily_rate_naira":7071,
+    "completed_gigs":41,
+    "avg_rating":4.54,
+    "completion_rate":0.877,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":2,
+    "last_active_at":"2026-05-11T12:00:00"
+  },
+  {
+    "worker_id":"w_0150",
+    "name":"Obiora",
+    "primary_category":"welding",
+    "secondary_categories":[
+
+    ],
+    "bio":"I dey do welding since 2014. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "stainless steel",
+      "arc welding",
+      "TIG welding",
+      "mild steel"
+    ],
+    "location_name":"Mushin",
+    "location_lat":6.54818,
+    "location_lng":3.33433,
+    "service_radius_km":5,
+    "daily_rate_naira":13825,
+    "completed_gigs":89,
+    "avg_rating":4.32,
+    "completion_rate":0.797,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0151",
+    "name":"Amaka",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+      "hvac",
+      "electrical"
+    ],
+    "bio":"Certified diesel technician specialising in generator overhaul and AVR repair.",
+    "skills":[
+      "electrical",
+      "diesel engine",
+      "mechanical",
+      "generator repair"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.47215,
+    "location_lng":3.34872,
+    "service_radius_km":30,
+    "daily_rate_naira":12646,
+    "completed_gigs":153,
+    "avg_rating":4.28,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0152",
+    "name":"Obi",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac",
+      "generator_repair"
+    ],
+    "bio":"Licensed electrician with 4 years in residential and commercial wiring.",
+    "skills":[
+      "conduit",
+      "solar installation",
+      "three-phase",
+      "inverter setup"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.4295,
+    "location_lng":3.43853,
+    "service_radius_km":50,
+    "daily_rate_naira":16583,
+    "completed_gigs":193,
+    "avg_rating":4.53,
+    "completion_rate":0.812,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0153",
+    "name":"Taiwo",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Skilled tailor from Festac. Native wear, contemporary \u2014 I do all.",
+    "skills":[
+      "aso-ebi",
+      "native wear"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.48037,
+    "location_lng":3.26447,
+    "service_radius_km":10,
+    "daily_rate_naira":9203,
+    "completed_gigs":29,
+    "avg_rating":4.3,
+    "completion_rate":0.689,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":29,
+    "last_active_at":"2026-04-14T12:00:00"
+  },
+  {
+    "worker_id":"w_0154",
+    "name":"Kemi",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "tiling"
+    ],
+    "bio":"Plumber wey sabi all kind pipe work \u2014 burst pipe, bathroom renovation, drainage.",
+    "skills":[
+      "pipe fitting",
+      "overhead tank",
+      "plumbing",
+      "drainage"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.43993,
+    "location_lng":3.42373,
+    "service_radius_km":10,
+    "daily_rate_naira":9104,
+    "completed_gigs":99,
+    "avg_rating":3.94,
+    "completion_rate":0.834,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0155",
+    "name":"Blessing",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "masonry",
+      "painting"
+    ],
+    "bio":"Professional woodwork artisan based in Kano City Centre.",
+    "skills":[
+      "cabinet making",
+      "hardwood",
+      "wardrobe",
+      "furniture making"
+    ],
+    "location_name":"Kano City Centre",
+    "location_lat":11.99786,
+    "location_lng":8.57559,
+    "service_radius_km":20,
+    "daily_rate_naira":7542,
+    "completed_gigs":21,
+    "avg_rating":4.33,
+    "completion_rate":0.663,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":1,
+    "last_active_at":"2026-05-12T12:00:00"
+  },
+  {
+    "worker_id":"w_0156",
+    "name":"Obinna",
+    "primary_category":"painting",
+    "secondary_categories":[
+
+    ],
+    "bio":"Painter wey sabi do am neat. No drips, no mess. Based in Agege.",
+    "skills":[
+      "painting",
+      "texture finish",
+      "POP ceiling",
+      "exterior painting",
+      "interior painting"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.60655,
+    "location_lng":3.32213,
+    "service_radius_km":20,
+    "daily_rate_naira":8985,
+    "completed_gigs":17,
+    "avg_rating":3.81,
+    "completion_rate":0.919,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0157",
+    "name":"Binta",
+    "primary_category":"tiling",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Professional tiler with 12 years. Italian tiles, Spanish tiles \u2014 all covered.",
+    "skills":[
+      "floor tiles",
+      "grout",
+      "wall tiles",
+      "marble"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.04319,
+    "location_lng":7.47364,
+    "service_radius_km":30,
+    "daily_rate_naira":8211,
+    "completed_gigs":29,
+    "avg_rating":3.67,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0158",
+    "name":"Faith",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+      "catering"
+    ],
+    "bio":"Reliable house cleaner, 7 years residential and office experience.",
+    "skills":[
+      "laundry",
+      "disinfection",
+      "cleaning",
+      "housekeeping",
+      "domestic help"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.12443,
+    "location_lng":7.36123,
+    "service_radius_km":20,
+    "daily_rate_naira":3313,
+    "completed_gigs":38,
+    "avg_rating":4.51,
+    "completion_rate":0.942,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":20,
+    "last_active_at":"2026-04-23T12:00:00"
+  },
+  {
+    "worker_id":"w_0159",
+    "name":"Adebayo",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced dispatch rider and delivery driver.",
+    "skills":[
+      "logistics",
+      "driving"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.44055,
+    "location_lng":3.38457,
+    "service_radius_km":20,
+    "daily_rate_naira":10341,
+    "completed_gigs":102,
+    "avg_rating":4.22,
+    "completion_rate":0.842,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":28,
+    "last_active_at":"2026-04-15T12:00:00"
+  },
+  {
+    "worker_id":"w_0160",
+    "name":"Kehinde",
+    "primary_category":"security",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced security guard. Very vigilant, no sleeping on duty.",
+    "skills":[
+      "patrol",
+      "surveillance",
+      "access control",
+      "security",
+      "CCTV"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.47359,
+    "location_lng":3.36655,
+    "service_radius_km":5,
+    "daily_rate_naira":4694,
+    "completed_gigs":129,
+    "avg_rating":4.25,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0161",
+    "name":"Yakubu",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Experienced chef for corporate catering and events.",
+    "skills":[
+      "catering",
+      "meal planning",
+      "suya",
+      "Nigerian cuisine",
+      "continental"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.12247,
+    "location_lng":7.36512,
+    "service_radius_km":30,
+    "daily_rate_naira":4831,
+    "completed_gigs":42,
+    "avg_rating":4.15,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0162",
+    "name":"Monday",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Phone and electronics technician, 10 years. I fix all brands, all faults.",
+    "skills":[
+      "screen replacement",
+      "motherboard",
+      "electronics"
+    ],
+    "location_name":"Ibadan \u2014 Ring Road",
+    "location_lat":7.38447,
+    "location_lng":3.96542,
+    "service_radius_km":20,
+    "daily_rate_naira":10229,
+    "completed_gigs":103,
+    "avg_rating":3.46,
+    "completion_rate":0.714,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0163",
+    "name":"Lawal",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "electrical",
+      "generator_repair"
+    ],
+    "bio":"Refrigeration and air conditioning engineer. Own gauges and tools.",
+    "skills":[
+      "gas recharge",
+      "AC repair",
+      "HVAC"
+    ],
+    "location_name":"Ajah",
+    "location_lat":6.47961,
+    "location_lng":3.59705,
+    "service_radius_km":50,
+    "daily_rate_naira":9588,
+    "completed_gigs":147,
+    "avg_rating":5.0,
+    "completion_rate":0.704,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0164",
+    "name":"Halima",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "carpentry"
+    ],
+    "bio":"Professional bricklayer and plasterer. Strong work ethic.",
+    "skills":[
+      "bricklaying",
+      "plastering",
+      "concrete",
+      "block laying"
+    ],
+    "location_name":"Yaba",
+    "location_lat":6.50261,
+    "location_lng":3.37125,
+    "service_radius_km":30,
+    "daily_rate_naira":7640,
+    "completed_gigs":39,
+    "avg_rating":4.54,
+    "completion_rate":0.713,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":24,
+    "last_active_at":"2026-04-19T12:00:00"
+  },
+  {
+    "worker_id":"w_0165",
+    "name":"Folake",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "masonry",
+      "electrical"
+    ],
+    "bio":"Experienced welder with 6 years in gate fabrication and structural steel.",
+    "skills":[
+      "stainless steel",
+      "welding",
+      "mild steel",
+      "fabrication"
+    ],
+    "location_name":"Abuja \u2014 Wuse 2",
+    "location_lat":9.04884,
+    "location_lng":7.48643,
+    "service_radius_km":20,
+    "daily_rate_naira":9272,
+    "completed_gigs":51,
+    "avg_rating":3.52,
+    "completion_rate":0.921,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0166",
+    "name":"Halima",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+      "hvac",
+      "electrical"
+    ],
+    "bio":"Generator and electrical technician, 7 years field experience. I repair all brands.",
+    "skills":[
+      "diesel engine",
+      "generator repair",
+      "electrical"
+    ],
+    "location_name":"Kano City Centre",
+    "location_lat":12.01502,
+    "location_lng":8.58163,
+    "service_radius_km":5,
+    "daily_rate_naira":9717,
+    "completed_gigs":81,
+    "avg_rating":3.05,
+    "completion_rate":0.846,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0167",
+    "name":"Tunde",
+    "primary_category":"electrical",
+    "secondary_categories":[
+
+    ],
+    "bio":"Electrical contractor based in Enugu GRA. Clean work, no shortcuts.",
+    "skills":[
+      "inverter setup",
+      "three-phase",
+      "conduit",
+      "electrical wiring"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.43581,
+    "location_lng":7.49114,
+    "service_radius_km":50,
+    "daily_rate_naira":11827,
+    "completed_gigs":16,
+    "avg_rating":4.76,
+    "completion_rate":0.818,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":27,
+    "last_active_at":"2026-04-16T12:00:00"
+  },
+  {
+    "worker_id":"w_0168",
+    "name":"Bayo",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+
+    ],
+    "bio":"Skilled tailor from Oshodi. Native wear, contemporary \u2014 I do all.",
+    "skills":[
+      "native wear",
+      "Ankara",
+      "fashion design",
+      "corporate wear",
+      "aso-ebi"
+    ],
+    "location_name":"Oshodi",
+    "location_lat":6.57505,
+    "location_lng":3.35564,
+    "service_radius_km":10,
+    "daily_rate_naira":6646,
+    "completed_gigs":8,
+    "avg_rating":3.03,
+    "completion_rate":0.912,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":14,
+    "last_active_at":"2026-04-29T12:00:00"
+  },
+  {
+    "worker_id":"w_0169",
+    "name":"Chinyere",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional plumber, 10 years residential and commercial experience.",
+    "skills":[
+      "overhead tank",
+      "pipe fitting",
+      "drainage",
+      "plumbing",
+      "emergency repair"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.10933,
+    "location_lng":7.36819,
+    "service_radius_km":20,
+    "daily_rate_naira":12692,
+    "completed_gigs":198,
+    "avg_rating":4.86,
+    "completion_rate":0.824,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":4,
+    "last_active_at":"2026-05-09T12:00:00"
+  },
+  {
+    "worker_id":"w_0170",
+    "name":"Obi",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "painting"
+    ],
+    "bio":"Professional woodwork artisan based in Lekki Phase 1.",
+    "skills":[
+      "ceiling",
+      "cabinet making",
+      "furniture making",
+      "wardrobe"
+    ],
+    "location_name":"Lekki Phase 1",
+    "location_lat":6.46587,
+    "location_lng":3.57592,
+    "service_radius_km":20,
+    "daily_rate_naira":11244,
+    "completed_gigs":47,
+    "avg_rating":3.32,
+    "completion_rate":0.778,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0171",
+    "name":"Fatima",
+    "primary_category":"painting",
+    "secondary_categories":[
+
+    ],
+    "bio":"House painter, 14 years. Interior, exterior, POP, texture finish.",
+    "skills":[
+      "interior painting",
+      "painting",
+      "POP ceiling",
+      "exterior painting"
+    ],
+    "location_name":"Lekki Phase 1",
+    "location_lat":6.46592,
+    "location_lng":3.59856,
+    "service_radius_km":50,
+    "daily_rate_naira":5018,
+    "completed_gigs":56,
+    "avg_rating":3.9,
+    "completion_rate":0.864,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0172",
+    "name":"Yemi",
+    "primary_category":"tiling",
+    "secondary_categories":[
+
+    ],
+    "bio":"Tiler wey do am clean. My work dey speak for itself.",
+    "skills":[
+      "grout",
+      "floor tiles",
+      "wall tiles"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.63038,
+    "location_lng":3.31091,
+    "service_radius_km":50,
+    "daily_rate_naira":8657,
+    "completed_gigs":197,
+    "avg_rating":4.11,
+    "completion_rate":0.828,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0173",
+    "name":"Lucky",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+      "catering"
+    ],
+    "bio":"Reliable house cleaner, 12 years residential and office experience.",
+    "skills":[
+      "laundry",
+      "cleaning"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.44003,
+    "location_lng":7.51931,
+    "service_radius_km":30,
+    "daily_rate_naira":4602,
+    "completed_gigs":116,
+    "avg_rating":2.99,
+    "completion_rate":0.885,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":6,
+    "last_active_at":"2026-05-07T12:00:00"
+  },
+  {
+    "worker_id":"w_0174",
+    "name":"Ibrahim",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced dispatch rider and delivery driver.",
+    "skills":[
+      "dispatch riding",
+      "truck driving"
+    ],
+    "location_name":"Victoria Island",
+    "location_lat":6.42886,
+    "location_lng":3.4343,
+    "service_radius_km":50,
+    "daily_rate_naira":5623,
+    "completed_gigs":35,
+    "avg_rating":4.57,
+    "completion_rate":0.752,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":11,
+    "last_active_at":"2026-05-02T12:00:00"
+  },
+  {
+    "worker_id":"w_0175",
+    "name":"Adeola",
+    "primary_category":"security",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced security guard. Very vigilant, no sleeping on duty.",
+    "skills":[
+      "patrol",
+      "security",
+      "CCTV",
+      "surveillance"
+    ],
+    "location_name":"Lekki Phase 1",
+    "location_lat":6.46898,
+    "location_lng":3.59967,
+    "service_radius_km":30,
+    "daily_rate_naira":4816,
+    "completed_gigs":83,
+    "avg_rating":4.22,
+    "completion_rate":1.0,
+    "kudiscore_tier":"gold",
+    "bvn_verified":true,
+    "days_since_last_active":29,
+    "last_active_at":"2026-04-14T12:00:00"
+  },
+  {
+    "worker_id":"w_0176",
+    "name":"Chukwuemeka",
+    "primary_category":"catering",
+    "secondary_categories":[
+
+    ],
+    "bio":"Cook wey sabi everything \u2014 jollof, peppersoup, suya, fried rice. Come see my work.",
+    "skills":[
+      "continental",
+      "catering"
+    ],
+    "location_name":"Alimosho",
+    "location_lat":6.62088,
+    "location_lng":3.23711,
+    "service_radius_km":50,
+    "daily_rate_naira":7075,
+    "completed_gigs":83,
+    "avg_rating":4.35,
+    "completion_rate":0.87,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":13,
+    "last_active_at":"2026-04-30T12:00:00"
+  },
+  {
+    "worker_id":"w_0177",
+    "name":"Abubakar",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Electronics repair specialist based in Agege. Fast turnaround guaranteed.",
+    "skills":[
+      "motherboard",
+      "electronics",
+      "phone repair"
+    ],
+    "location_name":"Agege",
+    "location_lat":6.62991,
+    "location_lng":3.31214,
+    "service_radius_km":50,
+    "daily_rate_naira":9608,
+    "completed_gigs":189,
+    "avg_rating":4.37,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0178",
+    "name":"Nkechi",
+    "primary_category":"hvac",
+    "secondary_categories":[
+
+    ],
+    "bio":"Certified HVAC technician, 3 years in AC installation and repair.",
+    "skills":[
+      "AC repair",
+      "gas recharge",
+      "refrigeration",
+      "split unit",
+      "HVAC"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.45097,
+    "location_lng":3.3655,
+    "service_radius_km":50,
+    "daily_rate_naira":9295,
+    "completed_gigs":170,
+    "avg_rating":2.93,
+    "completion_rate":1.0,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0179",
+    "name":"Lawal",
+    "primary_category":"masonry",
+    "secondary_categories":[
+      "carpentry"
+    ],
+    "bio":"Mason wey know the work. Fast, neat, no wastage. Plenty estates for Ibadan \u2014 Ring Road.",
+    "skills":[
+      "block laying",
+      "plastering",
+      "masonry",
+      "bricklaying"
+    ],
+    "location_name":"Ibadan \u2014 Ring Road",
+    "location_lat":7.3923,
+    "location_lng":3.93923,
+    "service_radius_km":30,
+    "daily_rate_naira":9094,
+    "completed_gigs":25,
+    "avg_rating":4.59,
+    "completion_rate":0.851,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":21,
+    "last_active_at":"2026-04-22T12:00:00"
+  },
+  {
+    "worker_id":"w_0180",
+    "name":"Adeola",
+    "primary_category":"welding",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"I dey do welding since 2018. Stainless, mild steel, aluminium \u2014 no wahala.",
+    "skills":[
+      "mild steel",
+      "arc welding",
+      "fabrication",
+      "welding"
+    ],
+    "location_name":"Kano City Centre",
+    "location_lat":12.01199,
+    "location_lng":8.60482,
+    "service_radius_km":10,
+    "daily_rate_naira":9612,
+    "completed_gigs":103,
+    "avg_rating":4.04,
+    "completion_rate":0.967,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":25,
+    "last_active_at":"2026-04-18T12:00:00"
+  },
+  {
+    "worker_id":"w_0181",
+    "name":"Folake",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Generator and electrical technician, 12 years field experience. I repair all brands.",
+    "skills":[
+      "diesel engine",
+      "mechanical",
+      "generator repair",
+      "electrical",
+      "AVR"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.05318,
+    "location_lng":7.48513,
+    "service_radius_km":30,
+    "daily_rate_naira":8973,
+    "completed_gigs":160,
+    "avg_rating":3.22,
+    "completion_rate":0.925,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":24,
+    "last_active_at":"2026-04-19T12:00:00"
+  },
+  {
+    "worker_id":"w_0182",
+    "name":"Prosper",
+    "primary_category":"electrical",
+    "secondary_categories":[
+
+    ],
+    "bio":"Electrical contractor based in Kano City Centre. Clean work, no shortcuts.",
+    "skills":[
+      "solar installation",
+      "three-phase",
+      "conduit",
+      "electrical wiring"
+    ],
+    "location_name":"Kano City Centre",
+    "location_lat":12.02157,
+    "location_lng":8.58608,
+    "service_radius_km":50,
+    "daily_rate_naira":14020,
+    "completed_gigs":125,
+    "avg_rating":4.24,
+    "completion_rate":0.78,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":26,
+    "last_active_at":"2026-04-17T12:00:00"
+  },
+  {
+    "worker_id":"w_0183",
+    "name":"Binta",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Fashion designer wey sabi Ankara, aso-ebi, corporate uniforms and agbada.",
+    "skills":[
+      "fashion design",
+      "tailoring",
+      "aso-ebi"
+    ],
+    "location_name":"Surulere",
+    "location_lat":6.523,
+    "location_lng":3.37114,
+    "service_radius_km":5,
+    "daily_rate_naira":8679,
+    "completed_gigs":123,
+    "avg_rating":4.28,
+    "completion_rate":0.777,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":28,
+    "last_active_at":"2026-04-15T12:00:00"
+  },
+  {
+    "worker_id":"w_0184",
+    "name":"Shade",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Professional plumber, 6 years residential and commercial experience.",
+    "skills":[
+      "plumbing",
+      "drainage",
+      "emergency repair",
+      "pipe fitting"
+    ],
+    "location_name":"Mushin",
+    "location_lat":6.51801,
+    "location_lng":3.35958,
+    "service_radius_km":10,
+    "daily_rate_naira":10508,
+    "completed_gigs":151,
+    "avg_rating":4.03,
+    "completion_rate":0.937,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":0,
+    "last_active_at":"2026-05-13T12:00:00"
+  },
+  {
+    "worker_id":"w_0185",
+    "name":"Ada",
+    "primary_category":"carpentry",
+    "secondary_categories":[
+      "masonry"
+    ],
+    "bio":"Carpenter wey sabi furniture making \u2014 office desk, kitchen cabinet, wardrobe.",
+    "skills":[
+      "wardrobe",
+      "carpentry",
+      "furniture making",
+      "hardwood",
+      "cabinet making"
+    ],
+    "location_name":"Surulere",
+    "location_lat":6.51379,
+    "location_lng":3.3461,
+    "service_radius_km":50,
+    "daily_rate_naira":10673,
+    "completed_gigs":156,
+    "avg_rating":5.0,
+    "completion_rate":0.676,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0186",
+    "name":"Yakubu",
+    "primary_category":"painting",
+    "secondary_categories":[
+      "carpentry",
+      "masonry"
+    ],
+    "bio":"Painter wey sabi do am neat. No drips, no mess. Based in Aba.",
+    "skills":[
+      "texture finish",
+      "POP ceiling",
+      "exterior painting"
+    ],
+    "location_name":"Aba",
+    "location_lat":5.12494,
+    "location_lng":7.3745,
+    "service_radius_km":20,
+    "daily_rate_naira":8813,
+    "completed_gigs":29,
+    "avg_rating":4.23,
+    "completion_rate":0.952,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":13,
+    "last_active_at":"2026-04-30T12:00:00"
+  },
+  {
+    "worker_id":"w_0187",
+    "name":"Bayo",
+    "primary_category":"tiling",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced tiler specialising in luxury floor and wall tile finishes.",
+    "skills":[
+      "marble",
+      "wall tiles",
+      "floor tiles",
+      "tiling"
+    ],
+    "location_name":"Lekki Phase 1",
+    "location_lat":6.48227,
+    "location_lng":3.57918,
+    "service_radius_km":30,
+    "daily_rate_naira":12828,
+    "completed_gigs":184,
+    "avg_rating":3.84,
+    "completion_rate":0.911,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":8,
+    "last_active_at":"2026-05-05T12:00:00"
+  },
+  {
+    "worker_id":"w_0188",
+    "name":"Lawal",
+    "primary_category":"cleaning",
+    "secondary_categories":[
+
+    ],
+    "bio":"Reliable house cleaner, 6 years residential and office experience.",
+    "skills":[
+      "cleaning",
+      "domestic help"
+    ],
+    "location_name":"Lekki Phase 1",
+    "location_lat":6.4534,
+    "location_lng":3.57,
+    "service_radius_km":30,
+    "daily_rate_naira":2678,
+    "completed_gigs":10,
+    "avg_rating":3.63,
+    "completion_rate":0.797,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":3,
+    "last_active_at":"2026-05-10T12:00:00"
+  },
+  {
+    "worker_id":"w_0189",
+    "name":"Chinyere",
+    "primary_category":"driving",
+    "secondary_categories":[
+
+    ],
+    "bio":"Experienced dispatch rider and delivery driver.",
+    "skills":[
+      "driving",
+      "logistics",
+      "truck driving",
+      "dispatch riding"
+    ],
+    "location_name":"Ikorodu",
+    "location_lat":6.62464,
+    "location_lng":3.52289,
+    "service_radius_km":20,
+    "daily_rate_naira":7152,
+    "completed_gigs":72,
+    "avg_rating":3.42,
+    "completion_rate":0.831,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":12,
+    "last_active_at":"2026-05-01T12:00:00"
+  },
+  {
+    "worker_id":"w_0190",
+    "name":"Ifeoma",
+    "primary_category":"security",
+    "secondary_categories":[
+
+    ],
+    "bio":"Security professional with 11 years in facility and warehouse security.",
+    "skills":[
+      "security",
+      "surveillance",
+      "patrol",
+      "CCTV",
+      "access control"
+    ],
+    "location_name":"Benin City",
+    "location_lat":6.32543,
+    "location_lng":5.61314,
+    "service_radius_km":10,
+    "daily_rate_naira":4115,
+    "completed_gigs":20,
+    "avg_rating":4.26,
+    "completion_rate":0.801,
+    "kudiscore_tier":"gold",
+    "bvn_verified":false,
+    "days_since_last_active":22,
+    "last_active_at":"2026-04-21T12:00:00"
+  },
+  {
+    "worker_id":"w_0191",
+    "name":"David",
+    "primary_category":"catering",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Cook wey sabi everything \u2014 jollof, peppersoup, suya, fried rice. Come see my work.",
+    "skills":[
+      "catering",
+      "suya",
+      "continental",
+      "meal planning",
+      "cooking"
+    ],
+    "location_name":"Abuja \u2014 Garki",
+    "location_lat":9.04926,
+    "location_lng":7.48499,
+    "service_radius_km":50,
+    "daily_rate_naira":6122,
+    "completed_gigs":35,
+    "avg_rating":4.14,
+    "completion_rate":0.732,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":18,
+    "last_active_at":"2026-04-25T12:00:00"
+  },
+  {
+    "worker_id":"w_0192",
+    "name":"Adeola",
+    "primary_category":"electronics_repair",
+    "secondary_categories":[
+      "electrical"
+    ],
+    "bio":"Phone and electronics technician, 10 years. I fix all brands, all faults.",
+    "skills":[
+      "software flashing",
+      "motherboard",
+      "phone repair"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.4691,
+    "location_lng":3.26366,
+    "service_radius_km":20,
+    "daily_rate_naira":10507,
+    "completed_gigs":48,
+    "avg_rating":3.64,
+    "completion_rate":1.0,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":23,
+    "last_active_at":"2026-04-20T12:00:00"
+  },
+  {
+    "worker_id":"w_0193",
+    "name":"Adewale",
+    "primary_category":"hvac",
+    "secondary_categories":[
+      "generator_repair",
+      "electrical"
+    ],
+    "bio":"Refrigeration and air conditioning engineer. Own gauges and tools.",
+    "skills":[
+      "AC repair",
+      "HVAC",
+      "split unit",
+      "refrigeration",
+      "gas recharge"
+    ],
+    "location_name":"Enugu GRA",
+    "location_lat":6.45809,
+    "location_lng":7.50773,
+    "service_radius_km":5,
+    "daily_rate_naira":14083,
+    "completed_gigs":100,
+    "avg_rating":4.21,
+    "completion_rate":0.738,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":29,
+    "last_active_at":"2026-04-14T12:00:00"
+  },
+  {
+    "worker_id":"w_0194",
+    "name":"Yemi",
+    "primary_category":"masonry",
+    "secondary_categories":[
+
+    ],
+    "bio":"Mason wey know the work. Fast, neat, no wastage. Plenty estates for Festac.",
+    "skills":[
+      "masonry",
+      "bricklaying",
+      "concrete",
+      "plastering"
+    ],
+    "location_name":"Festac",
+    "location_lat":6.44467,
+    "location_lng":3.28133,
+    "service_radius_km":20,
+    "daily_rate_naira":8407,
+    "completed_gigs":105,
+    "avg_rating":4.25,
+    "completion_rate":0.952,
+    "kudiscore_tier":"silver",
+    "bvn_verified":false,
+    "days_since_last_active":13,
+    "last_active_at":"2026-04-30T12:00:00"
+  },
+  {
+    "worker_id":"w_0195",
+    "name":"Lucky",
+    "primary_category":"welding",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional welder wey sabi TIG, MIG, and arc. Based in Lagos Island.",
+    "skills":[
+      "arc welding",
+      "TIG welding",
+      "fabrication",
+      "welding",
+      "mild steel"
+    ],
+    "location_name":"Lagos Island",
+    "location_lat":6.43502,
+    "location_lng":3.38138,
+    "service_radius_km":10,
+    "daily_rate_naira":11664,
+    "completed_gigs":188,
+    "avg_rating":3.88,
+    "completion_rate":0.846,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":5,
+    "last_active_at":"2026-05-08T12:00:00"
+  },
+  {
+    "worker_id":"w_0196",
+    "name":"Emmanuel",
+    "primary_category":"generator_repair",
+    "secondary_categories":[
+
+    ],
+    "bio":"Certified diesel technician specialising in generator overhaul and AVR repair.",
+    "skills":[
+      "generator repair",
+      "diesel engine"
+    ],
+    "location_name":"Apapa",
+    "location_lat":6.45946,
+    "location_lng":3.36359,
+    "service_radius_km":5,
+    "daily_rate_naira":13077,
+    "completed_gigs":189,
+    "avg_rating":4.12,
+    "completion_rate":0.946,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":false,
+    "days_since_last_active":15,
+    "last_active_at":"2026-04-28T12:00:00"
+  },
+  {
+    "worker_id":"w_0197",
+    "name":"Abubakar",
+    "primary_category":"electrical",
+    "secondary_categories":[
+      "hvac"
+    ],
+    "bio":"Electrical contractor based in Ikeja. Clean work, no shortcuts.",
+    "skills":[
+      "conduit",
+      "solar installation",
+      "three-phase"
+    ],
+    "location_name":"Ikeja",
+    "location_lat":6.58476,
+    "location_lng":3.33038,
+    "service_radius_km":30,
+    "daily_rate_naira":10847,
+    "completed_gigs":198,
+    "avg_rating":4.57,
+    "completion_rate":0.898,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":10,
+    "last_active_at":"2026-05-03T12:00:00"
+  },
+  {
+    "worker_id":"w_0198",
+    "name":"Musa",
+    "primary_category":"tailoring",
+    "secondary_categories":[
+      "cleaning"
+    ],
+    "bio":"Skilled tailor from Lekki Phase 1. Native wear, contemporary \u2014 I do all.",
+    "skills":[
+      "aso-ebi",
+      "corporate wear",
+      "Ankara"
+    ],
+    "location_name":"Lekki Phase 1",
+    "location_lat":6.4842,
+    "location_lng":3.60252,
+    "service_radius_km":30,
+    "daily_rate_naira":5223,
+    "completed_gigs":188,
+    "avg_rating":4.88,
+    "completion_rate":0.762,
+    "kudiscore_tier":"silver",
+    "bvn_verified":true,
+    "days_since_last_active":13,
+    "last_active_at":"2026-04-30T12:00:00"
+  },
+  {
+    "worker_id":"w_0199",
+    "name":"Emmanuel",
+    "primary_category":"plumbing",
+    "secondary_categories":[
+
+    ],
+    "bio":"Professional plumber, 13 years residential and commercial experience.",
+    "skills":[
+      "plumbing",
+      "pipe fitting",
+      "drainage"
+    ],
+    "location_name":"Kano City Centre",
+    "location_lat":12.01414,
+    "location_lng":8.58277,
+    "service_radius_km":10,
+    "daily_rate_naira":6301,
+    "completed_gigs":103,
+    "avg_rating":4.21,
+    "completion_rate":0.824,
+    "kudiscore_tier":"bronze",
+    "bvn_verified":true,
+    "days_since_last_active":20,
+    "last_active_at":"2026-04-23T12:00:00"
+  }
+]

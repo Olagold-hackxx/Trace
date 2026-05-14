@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Happy path \u2014 welder near Lekki",
+    "job_id": "job_001",
+    "description": "Welder in Lekki Phase 1, \u20a615k/day. Top-5 should be welders near Lekki, rate \u2264 \u20a615k, high completion."
+  },
+  {
+    "name": "Multilingual retrieval \u2014 Pidgin generator post",
+    "job_id": "job_006",
+    "description": "Pidgin post about a faulty generator in Yaba. Top-5 should be generator/electrical workers near Yaba \u2014 even if their bios are in English."
+  },
+  {
+    "name": "Rate + geography reranking \u2014 domestic worker Lekki",
+    "job_id": "job_019",
+    "description": "Full-time domestic worker in Lekki, \u20a680k/month (\u2248\u20a63,600/day). Rate cap is tight \u2014 workers asking more should rank below lower-rated but cheaper ones."
+  }
+]

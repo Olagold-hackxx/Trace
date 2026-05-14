@@ -3,6 +3,7 @@ Fraud detection using Isolation Forest on transaction-level features.
 """
 
 from datetime import datetime
+from typing import List
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import IsolationForest

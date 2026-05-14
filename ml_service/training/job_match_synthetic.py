@@ -806,7 +806,7 @@ TEST_CASES = [
 ]
 
 
-def save_to_json(output_dir: str = 'data') -> None:
+def save_to_json(output_dir: str = 'fixtures') -> None:
     """Generate and persist jobs.json and workers.json for deterministic demo use."""
     out = Path(output_dir)
     out.mkdir(exist_ok=True)

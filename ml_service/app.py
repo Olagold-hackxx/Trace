@@ -23,9 +23,9 @@ from training.feature_engine import compute_features
 from training.job_match_engine import JobMatchEngine
 from training.job_match_synthetic import load_jobs, generate_workers
 
-ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'model_artifact_v1.pkl'
+ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'deeper_model_artifact_v1.pkl'
 EMBEDDINGS_PATH = Path(__file__).parent / 'models' / 'worker_embeddings.npy'
-DATA_DIR        = Path(__file__).parent / 'data'
+FIXTURES_DIR    = Path(__file__).parent / 'fixtures'   # committed, not gitignored
 MATCH_MODEL     = 'paraphrase-multilingual-mpnet-base-v2'
 
 logging.basicConfig(level=logging.INFO)
@@ -53,10 +53,10 @@ async def lifespan(app: FastAPI):
     # ── Job matching model ────────────────────────────────────────────────
     logger.info("Loading job matching engine...")
 
-    workers_path = DATA_DIR / 'workers.json'
+    workers_path = FIXTURES_DIR / 'workers.json'
     workers_df = pd.read_json(workers_path) if workers_path.exists() else generate_workers(n=200)
 
-    jobs_path = DATA_DIR / 'jobs.json'
+    jobs_path = FIXTURES_DIR / 'jobs.json'
     jobs_df = pd.read_json(jobs_path) if jobs_path.exists() else load_jobs()
 
     match_engine = JobMatchEngine(model_name=MATCH_MODEL)
@@ -206,7 +206,7 @@ def predict_fraud(req: FraudRequest, db: Session = Depends(get_db)):
                 anomaly_score=0.0,
                 is_anomalous=False,
             )
-        penalty      = predictor.fraud_predictor.compute_user_fraud_penalty(txns, as_of)
+        penalty = predictor.fraud_predictor.compute_user_fraud_penalty(txns, as_of)
         anomaly_score = float(penalty / 100)
         return FraudResponse(
             transaction_id=req.transaction_id,
