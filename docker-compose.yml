@@ -6,7 +6,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DB_HOST: postgres
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/kudiscore
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
