@@ -4,6 +4,7 @@ from pathlib import Path
 import logging
 
 import numpy as np
+import pandas as pd
 import shap
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
@@ -17,9 +18,15 @@ from schemas.credit import (
     ExplainRequest, ExplainResponse, FactorExplanation,
     FraudRequest, FraudResponse,
 )
+from schemas.match import MatchRequest, MatchResponse, WorkerResult
 from training.feature_engine import compute_features
+from training.job_match_engine import JobMatchEngine
+from training.job_match_synthetic import load_jobs, generate_workers
 
-ARTIFACT_PATH = Path(__file__).parent / 'models' / 'model_artifact_v1.pkl'
+ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'model_artifact_v1.pkl'
+EMBEDDINGS_PATH = Path(__file__).parent / 'models' / 'worker_embeddings.npy'
+DATA_DIR        = Path(__file__).parent / 'data'
+MATCH_MODEL     = 'paraphrase-multilingual-mpnet-base-v2'
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,7 +36,8 @@ state = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info(f"Loading artifact from {ARTIFACT_PATH}")
+    # ── Credit scoring model ──────────────────────────────────────────────
+    logger.info(f"Loading credit artifact from {ARTIFACT_PATH}")
     artifact = Artifact.load(ARTIFACT_PATH)
     logger.info(f"Loaded model_version={artifact.model_version}, "
                 f"features={len(artifact.feature_cols)}")
@@ -39,30 +47,56 @@ async def lifespan(app: FastAPI):
     logger.info("SHAP explainer ready")
 
     state['predictor'] = CreditPredictor(artifact, shap_explainer=explainer)
-    state['artifact'] = artifact
+    state['artifact']  = artifact
     state['explainer'] = explainer
+
+    # ── Job matching model ────────────────────────────────────────────────
+    logger.info("Loading job matching engine...")
+
+    workers_path = DATA_DIR / 'workers.json'
+    workers_df = pd.read_json(workers_path) if workers_path.exists() else generate_workers(n=200)
+
+    jobs_path = DATA_DIR / 'jobs.json'
+    jobs_df = pd.read_json(jobs_path) if jobs_path.exists() else load_jobs()
+
+    match_engine = JobMatchEngine(model_name=MATCH_MODEL)
+    match_engine.load_workers(workers_df, cache_path=str(EMBEDDINGS_PATH))
+    logger.info(f"Job matching engine ready — {len(workers_df)} workers indexed")
+
+    state['match_engine'] = match_engine
+    state['jobs_df']      = jobs_df
 
     yield
     state.clear()
 
 
-app = FastAPI(title="KudiScore ML Service", version="1.0", lifespan=lifespan)
+app = FastAPI(title="Trace ML Service", version="1.0", lifespan=lifespan)
 
 
 def _now_utc() -> datetime:
     return datetime.now(timezone.utc)
 
 
+# ── Health ────────────────────────────────────────────────────────────────────
+
 @app.get('/health')
 def health():
     artifact = state.get('artifact')
+    engine   = state.get('match_engine')
+    models_loaded = ((['credit'] if artifact else []) +
+                     (['matching'] if engine else []))
     return {
-        'status': 'ok' if artifact else 'loading',
-        'models_loaded': ['credit'] if artifact else [],
-        'versions': {'credit': artifact.model_version} if artifact else {},
+        'status':       'ok' if artifact and engine else 'loading',
+        'models_loaded': models_loaded,
+        'versions': {
+            'credit':   artifact.model_version if artifact else None,
+            'matching': MATCH_MODEL if engine else None,
+        },
         'metrics': artifact.training_metrics if artifact else {},
     }
 
+
+# ── Credit scoring ────────────────────────────────────────────────────────────
 
 @app.post('/predict/score', response_model=ScoreResponse)
 def predict_score(req: ScoreRequest, db: Session = Depends(get_db)):
@@ -73,10 +107,10 @@ def predict_score(req: ScoreRequest, db: Session = Depends(get_db)):
     as_of = req.as_of or _now_utc()
 
     try:
-        txns = fetch_transactions(db, req.user_id, as_of)
+        txns     = fetch_transactions(db, req.user_id, as_of)
         user_meta = fetch_user_meta(db, req.user_id)
         features = compute_features(txns, as_of, user_meta)
-        result = predictor.predict(features, txns.to_dict('records'))
+        result   = predictor.predict(features, txns.to_dict('records'))
     except Exception as e:
         logger.exception("Prediction failed")
         raise HTTPException(500, f"Prediction failed: {e}")
@@ -102,10 +136,10 @@ def predict_explain(req: ExplainRequest, db: Session = Depends(get_db)):
     as_of = req.as_of or _now_utc()
 
     try:
-        txns = fetch_transactions(db, req.user_id, as_of)
+        txns      = fetch_transactions(db, req.user_id, as_of)
         user_meta = fetch_user_meta(db, req.user_id)
-        features = compute_features(txns, as_of, user_meta)
-        pred = predictor.predict(features, txns.to_dict('records'))
+        features  = compute_features(txns, as_of, user_meta)
+        pred      = predictor.predict(features, txns.to_dict('records'))
     except Exception as e:
         logger.exception("Explain failed")
         raise HTTPException(500, f"Explain failed: {e}")
@@ -119,15 +153,13 @@ def predict_explain(req: ExplainRequest, db: Session = Depends(get_db)):
 
     feature_data = []
     for i, fname in enumerate(artifact.feature_cols):
-        value = df.iloc[0][fname]
+        value    = df.iloc[0][fname]
         shap_val = float(shap_row[i])
         if abs(shap_val) < 0.01:
             continue
         feature_data.append({
-            'feature': fname,
-            'value': value,
-            'shap': shap_val,
-            'abs_shap': abs(shap_val),
+            'feature': fname, 'value': value,
+            'shap': shap_val, 'abs_shap': abs(shap_val),
         })
 
     feature_data.sort(key=lambda x: x['abs_shap'], reverse=True)
@@ -136,7 +168,7 @@ def predict_explain(req: ExplainRequest, db: Session = Depends(get_db)):
 
     def to_factor(f):
         phrasing = get_phrasing(f['feature'], f['value'], f['shap'])
-        delta = shap_to_score_delta(f['shap'], pred['pd'])
+        delta    = shap_to_score_delta(f['shap'], pred['pd'])
         return FactorExplanation(
             feature=f['feature'],
             value=str(f['value']),
@@ -174,8 +206,7 @@ def predict_fraud(req: FraudRequest, db: Session = Depends(get_db)):
                 anomaly_score=0.0,
                 is_anomalous=False,
             )
-
-        penalty = predictor.fraud_predictor.compute_user_fraud_penalty(txns, as_of)
+        penalty      = predictor.fraud_predictor.compute_user_fraud_penalty(txns, as_of)
         anomaly_score = float(penalty / 100)
         return FraudResponse(
             transaction_id=req.transaction_id,
@@ -187,3 +218,55 @@ def predict_fraud(req: FraudRequest, db: Session = Depends(get_db)):
     except Exception as e:
         logger.exception("Fraud detection failed")
         raise HTTPException(500, f"Fraud detection failed: {e}")
+
+
+# ── Job matching ──────────────────────────────────────────────────────────────
+
+@app.post('/predict/match', response_model=MatchResponse)
+def predict_match(req: MatchRequest):
+    engine: JobMatchEngine = state.get('match_engine')
+    jobs_df: pd.DataFrame  = state.get('jobs_df')
+    if engine is None:
+        raise HTTPException(503, "Matching model not loaded")
+
+    job_rows = jobs_df[jobs_df['job_id'] == req.job_id]
+    if job_rows.empty:
+        raise HTTPException(404, f"job_id '{req.job_id}' not found")
+
+    job = job_rows.iloc[0].to_dict()
+
+    try:
+        results = engine.match(job, top_k=req.top_k)
+    except Exception as e:
+        logger.exception("Match failed")
+        raise HTTPException(500, f"Match failed: {e}")
+
+    workers = [
+        WorkerResult(
+            worker_id=row['worker_id'],
+            name=row['name'],
+            primary_category=row.get('primary_category', ''),
+            location_name=row.get('location_name', ''),
+            distance_km=float(row.get('distance_km', 0)),
+            daily_rate_naira=int(row.get('daily_rate_naira', 0)),
+            completed_gigs=int(row.get('completed_gigs', 0)),
+            kudiscore_tier=row.get('kudiscore_tier') or None,
+            bvn_verified=bool(row.get('bvn_verified', False)),
+            semantic_score=float(row['semantic_score']),
+            location_score=float(row['location_score']),
+            performance_score=float(row['performance_score']),
+            rate_score=float(row['rate_score']),
+            final_score=float(row['final_score']),
+        )
+        for _, row in results.iterrows()
+    ]
+
+    return MatchResponse(
+        job_id=req.job_id,
+        job_title=job['title'],
+        job_location=job['location_name'],
+        budget_naira=int(job['budget_naira']),
+        top_workers=workers,
+        model_version=MATCH_MODEL,
+        computed_at=_now_utc().isoformat(),
+    )

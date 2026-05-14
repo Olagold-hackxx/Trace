@@ -10,6 +10,11 @@ DATABASE_URL = os.environ.get(
     "postgresql://postgres:postgres@localhost:5432/trace",
 )
 
+# SQLAlchemy 2.x dropped the legacy 'postgres://' scheme.
+# Heroku and some tools still generate that prefix — normalise it here.
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 
