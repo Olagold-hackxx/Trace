@@ -2,3 +2,9 @@ venv/
 data/
 __pycache__/
 *.pem
+.claude/
+.vscode/
+.pytest_cache/
+.ipynb_checkpoints/
+*.log
+*.csv

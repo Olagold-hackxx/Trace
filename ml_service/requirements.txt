@@ -24,5 +24,6 @@ duckdb
 
 # Cash-flow forecasting
 prophet
+plotly
 scikit-learn
 joblib

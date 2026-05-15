@@ -108,46 +108,61 @@ def evaluate(
     """
     Evaluate on a labelled feature DataFrame (must have 'is_fraud' and 'fraud_type').
 
-    Returns:
-      - score_distribution: describe() of raw anomaly scores
+    Metrics:
+      - score_percentiles: where fraud sits in the overall score distribution
+        (the primary metric at 22.7M scale — precision@1000 is too tight)
       - precision_at_k: fraction of top-k anomalies that are fraud
-      - recall_by_scenario: per fraud_type recall in the top-k
-      - auc_approx: approximate area under precision-recall curve
+      - recall_at_top1pct: recall when flagging the top-1% of scores
+      - recall_by_scenario: per fraud_type recall in the top-1% window
     """
+    available_features = [f for f in FEATURE_NAMES if f in features_df.columns]
     df = features_df.copy()
-    df["_score"] = score_samples(model, df)
-    df["_raw"]   = -model.score_samples(df[FEATURE_NAMES].fillna(0).values)
-    df["_label"] = df["is_fraud"].astype(bool)
+    X  = df[available_features].fillna(0).values
+    df["_raw"]   = -model.score_samples(X)
+    df["_label"] = df["is_fraud"].fillna(False).astype(bool)
 
-    top_k = min(top_k, len(df))
-    top   = df.nlargest(top_k, "_score")
+    # Normalise scores
+    p5, p95 = np.percentile(df["_raw"], [5, 95])
+    span    = max(p95 - p5, 1e-6)
+    df["_score"] = np.clip((df["_raw"] - p5) / span, 0.0, 1.0)
 
+    # Precision@K (still computed but not the primary metric at large scale)
+    top_k  = min(top_k, len(df))
+    top    = df.nlargest(top_k, "_score")
     precision_at_k = float(top["_label"].mean())
+
+    # Primary metric: recall in top-1% (what fraction of each fraud type is caught
+    # when we flag the highest-scored 1% of transactions)
+    top1pct_threshold = df["_score"].quantile(0.99)
+    flagged = df[df["_score"] >= top1pct_threshold]
+
+    recall_at_top1pct = float(flagged["_label"].mean()) if len(flagged) > 0 else 0.0
 
     recall_by_scenario: dict[str, float] = {}
     if "fraud_type" in df.columns:
         for ftype, group in df[df["_label"]].groupby("fraud_type"):
-            n_fraud = len(group)
-            n_caught = top[top.get("fraud_type", pd.Series()) == ftype].shape[0]
+            n_fraud  = len(group)
+            n_caught = flagged[flagged.get("fraud_type", pd.Series(dtype=str)) == ftype].shape[0] \
+                       if "fraud_type" in flagged.columns else 0
             recall_by_scenario[ftype] = round(n_caught / n_fraud, 3) if n_fraud else 0.0
 
-    # Approximate AUC-PR using 10 thresholds
-    thresholds = np.linspace(df["_score"].max(), df["_score"].min(), 10)
-    prec, rec  = [], []
-    for t in thresholds:
-        pred = df["_score"] >= t
-        tp   = (pred & df["_label"]).sum()
-        fp   = (pred & ~df["_label"]).sum()
-        fn   = (~pred & df["_label"]).sum()
-        prec.append(tp / max(tp + fp, 1))
-        rec.append(tp  / max(tp + fn, 1))
-    auc_approx = float(np.trapz(prec, rec)) if len(rec) > 1 else 0.0
+    # Where does each fraud type sit in the score distribution?
+    score_percentiles: dict[str, float] = {}
+    if "fraud_type" in df.columns:
+        clean_scores = np.sort(df.loc[~df["_label"], "_raw"].values)
+        for ftype, group in df[df["_label"]].groupby("fraud_type"):
+            fscores = group["_raw"].values
+            avg_pct = float(np.mean(
+                np.searchsorted(clean_scores, fscores) / len(clean_scores)
+            ))
+            score_percentiles[ftype] = round(avg_pct, 3)
 
     return {
-        "score_distribution":  df["_score"].describe().round(4).to_dict(),
-        "precision_at_1000":   precision_at_k,
+        "precision_at_k":      precision_at_k,
+        "k":                   top_k,
+        "recall_at_top1pct":   recall_at_top1pct,
         "recall_by_scenario":  recall_by_scenario,
-        "auc_pr_approx":       round(abs(auc_approx), 4),
+        "score_percentiles":   score_percentiles,   # primary signal — higher = model sees it as anomalous
     }
 
 

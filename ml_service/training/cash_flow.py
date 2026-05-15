@@ -198,6 +198,42 @@ def load_archetype_profiles(
         return json.load(f)
 
 
+# ── Artifact save / load (mirrors credit model pattern) ──────────────────────
+
+ARTIFACT_PATH = Path(__file__).parent.parent / "models" / "cash_flow_artifact_v1.pkl"
+
+
+def save_artifact(
+    profiles: dict,
+    n_users: int,
+    artifact_path: Path = ARTIFACT_PATH,
+) -> Path:
+    """
+    Bundle archetype profiles + metadata into a single pkl artifact.
+    This is the 'trained model' for the cash-flow system — the per-user
+    Prophet models are always fit on demand; profiles are the offline output.
+    """
+    import joblib
+    from datetime import datetime
+
+    artifact = {
+        "archetype_profiles": profiles,
+        "model_version": "cash_flow_v1",
+        "trained_at": datetime.utcnow().isoformat(),
+        "n_archetypes": len(profiles),
+        "n_users_in_training": n_users,
+    }
+    artifact_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(artifact, artifact_path)
+    return artifact_path
+
+
+def load_artifact(artifact_path: Path = ARTIFACT_PATH) -> dict:
+    """Load the cash-flow artifact. Returns the full artifact dict."""
+    import joblib
+    return joblib.load(artifact_path)
+
+
 def archetype_forecast(
     persona: str,
     horizon_days: int,

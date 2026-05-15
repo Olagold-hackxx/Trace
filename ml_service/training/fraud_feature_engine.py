@@ -43,6 +43,9 @@ class FraudFeatures:
         "txn_count_6h",              # txns in the past 6 hours
         "amount_match_24h",          # 1 if exact same amount seen in last 24h
         "reciprocity_24h",           # outflows / (inflows+1) with sender in 24h
+        # Composite: captures score_pump multi-feature pattern (burst × novel senders)
+        # Isolation Forest can't model interactions — this pre-encodes the conjunction.
+        "burst_novel_score",         # txn_count_1h × sender_novelty × (1 - amount_log_ratio_median/10)
     ]
 
     # Returned when user history is too short to compute meaningful statistics
@@ -60,6 +63,7 @@ class FraudFeatures:
         "txn_count_6h":            0.0,
         "amount_match_24h":        0.0,
         "reciprocity_24h":         0.0,
+        "burst_novel_score":       0.0,
     }
 
 
@@ -165,6 +169,14 @@ def compute_features_online(
     inflows    = (sender_24h["type"] == "inflow").sum()
     outflows   = (sender_24h["type"] == "outflow").sum()
     feats["reciprocity_24h"] = float(outflows / (inflows + 1))
+
+    # ── burst_novel_score (composite) ─────────────────────────────────────────
+    # High when: many txns in last hour + sender is novel + amount is small/normal.
+    # Encodes the score_pump conjunction that IF can't express as interactions.
+    log_ratio_penalty = max(0.0, feats["amount_log_ratio_median"]) / 10.0
+    feats["burst_novel_score"] = float(
+        feats["txn_count_1h"] * feats["sender_novelty"] * max(0.0, 1.0 - log_ratio_penalty)
+    )
 
     return feats
 
@@ -334,6 +346,12 @@ def compute_features_batch(transactions_df: pd.DataFrame) -> pd.DataFrame:
         GROUP BY t1._row_id
     """).df().set_index("_row_id")["reciprocity_24h"]
     out["reciprocity_24h"] = df["_row_id"].map(rp).fillna(0.0).values
+
+    # ── burst_novel_score (composite) ─────────────────────────────────────────
+    log_ratio_penalty = out["amount_log_ratio_median"].clip(lower=0) / 10.0
+    out["burst_novel_score"] = (
+        out["txn_count_1h"] * out["sender_novelty"] * (1.0 - log_ratio_penalty).clip(lower=0)
+    ).values
 
     # ── Passthrough columns ────────────────────────────────────────────────────
     for col in ["user_id", "occurred_at", "fraud_type", "is_fraud",

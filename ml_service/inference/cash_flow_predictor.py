@@ -19,6 +19,8 @@ from training.cash_flow import (
     detect_dip,
     fit_user_forecast,
     load_archetype_profiles,
+    load_artifact,
+    ARTIFACT_PATH,
 )
 
 logger = logging.getLogger(__name__)
@@ -36,24 +38,45 @@ class CashFlowPredictor:
     @classmethod
     def load(
         cls,
+        artifact_path: Path | None = None,
         profiles_path: Path | None = None,
         holidays_start: str = "2024-01-01",
         holidays_end: str = "2027-12-31",
     ) -> "CashFlowPredictor":
-        """Load from disk. Called once in the FastAPI lifespan."""
-        if profiles_path is None:
-            profiles_path = Path(__file__).parent.parent / "data" / "archetype_profiles.json"
+        """
+        Load from disk. Called once in the FastAPI lifespan.
 
-        if profiles_path.exists():
-            profiles = load_archetype_profiles(profiles_path)
-            logger.info("Loaded %d archetype profiles", len(profiles))
-        else:
-            profiles = {}
-            logger.warning(
-                "archetype_profiles.json not found at %s — cold-start archetype "
-                "fallback unavailable",
-                profiles_path,
+        Preference order:
+          1. artifact_path  — pkl artifact (models/cash_flow_artifact_v1.pkl)
+          2. profiles_path  — raw JSON fallback (data/archetype_profiles.json)
+          3. empty profiles — cold-start unavailable, lazy Prophet only
+        """
+        if artifact_path is None:
+            artifact_path = ARTIFACT_PATH
+
+        profiles: dict = {}
+
+        if artifact_path.exists():
+            artifact = load_artifact(artifact_path)
+            profiles = artifact["archetype_profiles"]
+            logger.info(
+                "Loaded cash-flow artifact v=%s trained_at=%s archetypes=%d",
+                artifact.get("model_version"),
+                artifact.get("trained_at", "?")[:10],
+                len(profiles),
             )
+        else:
+            # Fallback: raw JSON written by build_archetype_profiles
+            if profiles_path is None:
+                profiles_path = Path(__file__).parent.parent / "data" / "archetype_profiles.json"
+            if profiles_path.exists():
+                profiles = load_archetype_profiles(profiles_path)
+                logger.info("Loaded %d archetype profiles from JSON", len(profiles))
+            else:
+                logger.warning(
+                    "No cash-flow artifact or archetype_profiles.json found — "
+                    "cold-start fallback unavailable. Run notebook Step 4b to create one."
+                )
 
         holidays = build_eom_holidays(holidays_start, holidays_end)
         return cls(archetype_profiles=profiles, holidays=holidays)
