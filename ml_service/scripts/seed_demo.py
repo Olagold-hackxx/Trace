@@ -386,7 +386,7 @@ CASCADE;
 
 def demo_email(full_name: str) -> str:
     parts = full_name.lower().split()
-    return f"{parts[0]}.{parts[-1]}@trace.demo"
+    return f"{parts[0]}.{parts[-1]}@trace.com"
 
 
 def seed_users(cur, demo_day: date) -> dict:
