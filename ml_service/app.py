@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import shap
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from db import get_db, fetch_transactions, fetch_user_meta
@@ -19,16 +20,19 @@ from schemas.credit import (
     ExplainRequest, ExplainResponse, FactorExplanation,
     FraudRequest, FraudResponse,
 )
+from schemas.fairness import FairnessReportModel
 from schemas.forecast import DailyForecast, DipWarning, ForecastResponse
 from schemas.match import MatchRequest, MatchResponse, WorkerResult
 from training.feature_engine import compute_features
 # JobMatchEngine and synthetic data imports are deferred to _ensure_match_engine()
 # to avoid loading torch/sentence-transformers at startup (adds 30-60s to boot time)
 
-ARTIFACT_PATH   = Path(__file__).parent / 'models' / 'deeper_model_artifact_v1.pkl'
-EMBEDDINGS_PATH = Path(__file__).parent / 'models' / 'worker_embeddings.npy'
-FIXTURES_DIR    = Path(__file__).parent / 'fixtures'   # committed, not gitignored
-MATCH_MODEL     = 'paraphrase-multilingual-mpnet-base-v2'
+ARTIFACT_PATH    = Path(__file__).parent / 'models' / 'deeper_model_artifact_v1.pkl'
+EMBEDDINGS_PATH  = Path(__file__).parent / 'models' / 'worker_embeddings.npy'
+FIXTURES_DIR     = Path(__file__).parent / 'fixtures'   # committed, not gitignored
+AUDIT_REPORT     = Path(__file__).parent / 'results' / 'audit' / 'fairness_report.json'
+AUDIT_PLOTS_DIR  = Path(__file__).parent / 'results' / 'audit' / 'plots'
+MATCH_MODEL      = 'paraphrase-multilingual-mpnet-base-v2'
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -67,6 +71,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Trace ML Service", version="1.0", lifespan=lifespan)
+
+# Serve audit PNGs at /admin/fairness/plots/<filename>
+if AUDIT_PLOTS_DIR.exists():
+    app.mount(
+        "/admin/fairness/plots",
+        StaticFiles(directory=str(AUDIT_PLOTS_DIR)),
+        name="audit_plots",
+    )
 
 
 def _now_utc() -> datetime:
@@ -349,3 +361,30 @@ def predict_match(req: MatchRequest):
         model_version=MATCH_MODEL,
         computed_at=_now_utc().isoformat(),
     )
+
+
+# ── Fairness audit ────────────────────────────────────────────────────────────
+
+@app.get('/admin/fairness', response_model=FairnessReportModel)
+def get_fairness_report():
+    """
+    Serve the pre-computed fairness audit report.
+
+    The report is generated offline by running:
+        python -m training.fairness_audit
+    or notebook 07_fairness_audit.ipynb.
+
+    No on-demand recompute — the route serves the cached JSON artifact.
+    Plots are available at /admin/fairness/plots/<filename>.
+    """
+    if not AUDIT_REPORT.exists():
+        raise HTTPException(
+            503,
+            "Fairness report not found. "
+            "Run `python -m training.fairness_audit` or notebook 07 first.",
+        )
+    try:
+        return FairnessReportModel.model_validate_json(AUDIT_REPORT.read_text())
+    except Exception as e:
+        logger.exception("Failed to load fairness report")
+        raise HTTPException(500, f"Fairness report parse error: {e}")

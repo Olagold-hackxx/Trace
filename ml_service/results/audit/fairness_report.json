@@ -1,0 +1,2038 @@
+{
+  "generated_at": "2026-05-15T06:42:03.390171+00:00",
+  "model_version": "v1.0",
+  "approval_pd_cutoff": 0.05,
+  "overall": {
+    "roc_auc": 0.7550670876947619,
+    "brier": 0.07633557631017528,
+    "approval_rate": 0.5333333333333333,
+    "default_rate": 0.08933333333333333,
+    "n_test": 1500
+  },
+  "by_attribute": [
+    {
+      "attribute": "gender",
+      "groups": [
+        {
+          "group": "female",
+          "n": 746,
+          "base_rate": 0.0777479892761394,
+          "selection_rate": {
+            "point": 0.5388739946380697,
+            "ci_low": 0.5160857908847185,
+            "ci_high": 0.564343163538874
+          },
+          "tpr": {
+            "point": 0.1206896551724138,
+            "ci_low": 0.06896551724137931,
+            "ci_high": 0.1774193548387097
+          },
+          "fpr": {
+            "point": 0.5741279069767442,
+            "ci_low": 0.5509265206366154,
+            "ci_high": 0.597385608577469
+          },
+          "brier": {
+            "point": 0.06765960451921312,
+            "ci_low": 0.059389038315069115,
+            "ci_high": 0.07704094335764498
+          }
+        },
+        {
+          "group": "male",
+          "n": 754,
+          "base_rate": 0.10079575596816977,
+          "selection_rate": {
+            "point": 0.5278514588859416,
+            "ci_low": 0.5053050397877984,
+            "ci_high": 0.5477453580901857
+          },
+          "tpr": {
+            "point": 0.14473684210526316,
+            "ci_low": 0.09295169946332735,
+            "ci_high": 0.2
+          },
+          "fpr": {
+            "point": 0.5707964601769911,
+            "ci_low": 0.5458449029922908,
+            "ci_high": 0.5959595959595959
+          },
+          "brier": {
+            "point": 0.08491949535003968,
+            "ci_low": 0.07569621964994845,
+            "ci_high": 0.09473925582720329
+          }
+        }
+      ],
+      "demographic_parity_difference": {
+        "point": 0.011022535752128082,
+        "ci_low": 0.003623214171425304,
+        "ci_high": 0.04309598139680422
+      },
+      "equalized_odds_difference": {
+        "point": 0.024047186932849365,
+        "ci_low": 0.016781721989537018,
+        "ci_high": 0.09699384714081591
+      },
+      "max_calibration_gap": {
+        "point": 0.01725989083082656,
+        "ci_low": 0.0011478339540787683,
+        "ci_high": 0.017156435351924466
+      },
+      "flags": []
+    },
+    {
+      "attribute": "market_location",
+      "groups": [
+        {
+          "group": "Ajah",
+          "n": 110,
+          "base_rate": 0.11818181818181818,
+          "selection_rate": {
+            "point": 0.5272727272727272,
+            "ci_low": 0.4636363636363636,
+            "ci_high": 0.5818181818181818
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "fpr": {
+            "point": 0.5979381443298969,
+            "ci_low": 0.5398461538461539,
+            "ci_high": 0.6632653061224489
+          },
+          "brier": {
+            "point": 0.0874254264592275,
+            "ci_low": 0.06309187373063355,
+            "ci_high": 0.11564492901201616
+          }
+        },
+        {
+          "group": "Alaba",
+          "n": 101,
+          "base_rate": 0.04950495049504951,
+          "selection_rate": {
+            "point": 0.594059405940594,
+            "ci_low": 0.5247524752475248,
+            "ci_high": 0.6534653465346535
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "fpr": {
+            "point": 0.6145833333333334,
+            "ci_low": 0.5520833333333334,
+            "ci_high": 0.6774193548387096
+          },
+          "brier": {
+            "point": 0.05287043593611111,
+            "ci_low": 0.03383838514886517,
+            "ci_high": 0.07448105801642446
+          }
+        },
+        {
+          "group": "Balogun",
+          "n": 84,
+          "base_rate": 0.08333333333333333,
+          "selection_rate": {
+            "point": 0.47619047619047616,
+            "ci_low": 0.40476190476190477,
+            "ci_high": 0.5476190476190477
+          },
+          "tpr": {
+            "point": 0.14285714285714285,
+            "ci_low": 0.0,
+            "ci_high": 0.3333333333333333
+          },
+          "fpr": {
+            "point": 0.5064935064935064,
+            "ci_low": 0.425,
+            "ci_high": 0.5733333333333334
+          },
+          "brier": {
+            "point": 0.07635000376150841,
+            "ci_low": 0.04856713869952408,
+            "ci_high": 0.10713769868886014
+          }
+        },
+        {
+          "group": "Idumota",
+          "n": 123,
+          "base_rate": 0.056910569105691054,
+          "selection_rate": {
+            "point": 0.5040650406504065,
+            "ci_low": 0.44715447154471544,
+            "ci_high": 0.5609756097560976
+          },
+          "tpr": {
+            "point": 0.14285714285714285,
+            "ci_low": 0.0,
+            "ci_high": 0.3333333333333333
+          },
+          "fpr": {
+            "point": 0.5258620689655172,
+            "ci_low": 0.46951135051943055,
+            "ci_high": 0.5877192982456141
+          },
+          "brier": {
+            "point": 0.05679385087403095,
+            "ci_low": 0.03936853293429041,
+            "ci_high": 0.07553092072469385
+          }
+        },
+        {
+          "group": "Ikeja",
+          "n": 113,
+          "base_rate": 0.12389380530973451,
+          "selection_rate": {
+            "point": 0.5398230088495575,
+            "ci_low": 0.4778761061946903,
+            "ci_high": 0.6017699115044248
+          },
+          "tpr": {
+            "point": 0.14285714285714285,
+            "ci_low": 0.0,
+            "ci_high": 0.2727272727272727
+          },
+          "fpr": {
+            "point": 0.5959595959595959,
+            "ci_low": 0.5326307416981506,
+            "ci_high": 0.6595964027198947
+          },
+          "brier": {
+            "point": 0.09254899571186971,
+            "ci_low": 0.06649114909729952,
+            "ci_high": 0.11965687400510201
+          }
+        },
+        {
+          "group": "Ladipo",
+          "n": 98,
+          "base_rate": 0.09183673469387756,
+          "selection_rate": {
+            "point": 0.5,
+            "ci_low": 0.4387755102040816,
+            "ci_high": 0.5612244897959183
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "fpr": {
+            "point": 0.550561797752809,
+            "ci_low": 0.481607280184568,
+            "ci_high": 0.6235420619860848
+          },
+          "brier": {
+            "point": 0.076409785729064,
+            "ci_low": 0.05121623403958834,
+            "ci_high": 0.1020743451170766
+          }
+        },
+        {
+          "group": "Lagos Island",
+          "n": 86,
+          "base_rate": 0.08139534883720931,
+          "selection_rate": {
+            "point": 0.5232558139534884,
+            "ci_low": 0.45348837209302323,
+            "ci_high": 0.5930232558139535
+          },
+          "tpr": {
+            "point": 0.2857142857142857,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "fpr": {
+            "point": 0.5443037974683544,
+            "ci_low": 0.46835443037974683,
+            "ci_high": 0.6153846153846154
+          },
+          "brier": {
+            "point": 0.07519763211965767,
+            "ci_low": 0.04698994785000036,
+            "ci_high": 0.10424650444241677
+          }
+        },
+        {
+          "group": "Lawrence",
+          "n": 108,
+          "base_rate": 0.09259259259259259,
+          "selection_rate": {
+            "point": 0.42592592592592593,
+            "ci_low": 0.3611111111111111,
+            "ci_high": 0.49074074074074076
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.38461538461538464
+          },
+          "fpr": {
+            "point": 0.4489795918367347,
+            "ci_low": 0.38144329896907214,
+            "ci_high": 0.5148514851485149
+          },
+          "brier": {
+            "point": 0.08219107655626744,
+            "ci_low": 0.05930614962881208,
+            "ci_high": 0.10645197171555587
+          }
+        },
+        {
+          "group": "Lekki",
+          "n": 112,
+          "base_rate": 0.0625,
+          "selection_rate": {
+            "point": 0.5357142857142857,
+            "ci_low": 0.4732142857142857,
+            "ci_high": 0.5982142857142857
+          },
+          "tpr": {
+            "point": 0.2857142857142857,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "fpr": {
+            "point": 0.5523809523809524,
+            "ci_low": 0.4857142857142857,
+            "ci_high": 0.6116504854368932
+          },
+          "brier": {
+            "point": 0.06317230214305572,
+            "ci_low": 0.0401635404929143,
+            "ci_high": 0.08774197836663665
+          }
+        },
+        {
+          "group": "Mushin",
+          "n": 132,
+          "base_rate": 0.07575757575757576,
+          "selection_rate": {
+            "point": 0.5378787878787878,
+            "ci_low": 0.48484848484848486,
+            "ci_high": 0.5984848484848485
+          },
+          "tpr": {
+            "point": 0.1,
+            "ci_low": 0.0,
+            "ci_high": 0.2222222222222222
+          },
+          "fpr": {
+            "point": 0.5737704918032787,
+            "ci_low": 0.5128205128205128,
+            "ci_high": 0.626984126984127
+          },
+          "brier": {
+            "point": 0.06611512622104526,
+            "ci_low": 0.045803149867833785,
+            "ci_high": 0.08684722566399186
+          }
+        },
+        {
+          "group": "Oshodi",
+          "n": 98,
+          "base_rate": 0.061224489795918366,
+          "selection_rate": {
+            "point": 0.5408163265306123,
+            "ci_low": 0.47959183673469385,
+            "ci_high": 0.6122448979591837
+          },
+          "tpr": {
+            "point": 0.16666666666666666,
+            "ci_low": 0.0,
+            "ci_high": 0.375
+          },
+          "fpr": {
+            "point": 0.5652173913043478,
+            "ci_low": 0.5,
+            "ci_high": 0.631578947368421
+          },
+          "brier": {
+            "point": 0.060379839070851225,
+            "ci_low": 0.03984278050997089,
+            "ci_high": 0.08414975119564844
+          }
+        },
+        {
+          "group": "Other ",
+          "n": 107,
+          "base_rate": 0.09345794392523364,
+          "selection_rate": {
+            "point": 0.5887850467289719,
+            "ci_low": 0.5327102803738317,
+            "ci_high": 0.6542056074766355
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.375
+          },
+          "fpr": {
+            "point": 0.6288659793814433,
+            "ci_low": 0.5670103092783505,
+            "ci_high": 0.69
+          },
+          "brier": {
+            "point": 0.07782779511732298,
+            "ci_low": 0.05150508507895762,
+            "ci_high": 0.1028889333407745
+          }
+        },
+        {
+          "group": "Surulere",
+          "n": 118,
+          "base_rate": 0.11016949152542373,
+          "selection_rate": {
+            "point": 0.5847457627118644,
+            "ci_low": 0.5254237288135594,
+            "ci_high": 0.6440677966101694
+          },
+          "tpr": {
+            "point": 0.15384615384615385,
+            "ci_low": 0.0,
+            "ci_high": 0.29411764705882354
+          },
+          "fpr": {
+            "point": 0.638095238095238,
+            "ci_low": 0.5769230769230769,
+            "ci_high": 0.6961134453781512
+          },
+          "brier": {
+            "point": 0.09144934303948694,
+            "ci_low": 0.06599155695338833,
+            "ci_high": 0.12023127550263582
+          }
+        },
+        {
+          "group": "Yaba",
+          "n": 110,
+          "base_rate": 0.14545454545454545,
+          "selection_rate": {
+            "point": 0.5727272727272728,
+            "ci_low": 0.509090909090909,
+            "ci_high": 0.6363636363636364
+          },
+          "tpr": {
+            "point": 0.0625,
+            "ci_low": 0.0,
+            "ci_high": 0.15384615384615385
+          },
+          "fpr": {
+            "point": 0.6595744680851063,
+            "ci_low": 0.5978135932033983,
+            "ci_high": 0.7229428351704691
+          },
+          "brier": {
+            "point": 0.10926787380104082,
+            "ci_low": 0.07837944663222897,
+            "ci_high": 0.13991949536887072
+          }
+        }
+      ],
+      "demographic_parity_difference": {
+        "point": 0.1681334800146681,
+        "ci_low": 0.11933063282182062,
+        "ci_high": 0.21225518114222433
+      },
+      "equalized_odds_difference": {
+        "point": 0.2857142857142857,
+        "ci_low": 0.25,
+        "ci_high": 0.5
+      },
+      "max_calibration_gap": {
+        "point": 0.056397437864929706,
+        "ci_low": 0.04862447021931385,
+        "ci_high": 0.08532576763809238
+      },
+      "flags": [
+        "demographic_parity_difference=0.168 exceeds threshold 0.1",
+        "equalized_odds_difference=0.286 exceeds threshold 0.1",
+        "max_calibration_gap=0.056 exceeds threshold 0.05"
+      ]
+    },
+    {
+      "attribute": "age_bracket",
+      "groups": [
+        {
+          "group": "1",
+          "n": 376,
+          "base_rate": 0.09042553191489362,
+          "selection_rate": {
+            "point": 0.5319148936170213,
+            "ci_low": 0.4997340425531914,
+            "ci_high": 0.5664893617021277
+          },
+          "tpr": {
+            "point": 0.08823529411764706,
+            "ci_low": 0.02857142857142857,
+            "ci_high": 0.15151515151515152
+          },
+          "fpr": {
+            "point": 0.5760233918128655,
+            "ci_low": 0.5427379994636632,
+            "ci_high": 0.6122630117135612
+          },
+          "brier": {
+            "point": 0.07406271250258668,
+            "ci_low": 0.0618947226907325,
+            "ci_high": 0.0863631842635789
+          }
+        },
+        {
+          "group": "2",
+          "n": 378,
+          "base_rate": 0.10317460317460317,
+          "selection_rate": {
+            "point": 0.5952380952380952,
+            "ci_low": 0.5634920634920635,
+            "ci_high": 0.6296296296296297
+          },
+          "tpr": {
+            "point": 0.23076923076923078,
+            "ci_low": 0.1425714285714285,
+            "ci_high": 0.3181818181818182
+          },
+          "fpr": {
+            "point": 0.6371681415929203,
+            "ci_low": 0.6047197640117994,
+            "ci_high": 0.6705573658034643
+          },
+          "brier": {
+            "point": 0.0888766079072029,
+            "ci_low": 0.07287747336773114,
+            "ci_high": 0.10351546244598941
+          }
+        },
+        {
+          "group": "3",
+          "n": 360,
+          "base_rate": 0.06666666666666667,
+          "selection_rate": {
+            "point": 0.5416666666666666,
+            "ci_low": 0.5083333333333333,
+            "ci_high": 0.5777777777777777
+          },
+          "tpr": {
+            "point": 0.16666666666666666,
+            "ci_low": 0.07407407407407407,
+            "ci_high": 0.2608695652173913
+          },
+          "fpr": {
+            "point": 0.5684523809523809,
+            "ci_low": 0.5365500176740898,
+            "ci_high": 0.6052709667343433
+          },
+          "brier": {
+            "point": 0.06065510295803042,
+            "ci_low": 0.04891424781329462,
+            "ci_high": 0.07364136090701359
+          }
+        },
+        {
+          "group": "4",
+          "n": 386,
+          "base_rate": 0.09585492227979274,
+          "selection_rate": {
+            "point": 0.46632124352331605,
+            "ci_low": 0.4326424870466321,
+            "ci_high": 0.49740932642487046
+          },
+          "tpr": {
+            "point": 0.05405405405405406,
+            "ci_low": 0.0,
+            "ci_high": 0.1
+          },
+          "fpr": {
+            "point": 0.5100286532951289,
+            "ci_low": 0.4730878186968839,
+            "ci_high": 0.5391532513626569
+          },
+          "brier": {
+            "point": 0.0808927194571934,
+            "ci_low": 0.0683044944134135,
+            "ci_high": 0.0936496525918441
+          }
+        }
+      ],
+      "demographic_parity_difference": {
+        "point": 0.12891685171477918,
+        "ci_low": 0.024026609014482447,
+        "ci_high": 0.08432511538894513
+      },
+      "equalized_odds_difference": {
+        "point": 0.17671517671517672,
+        "ci_low": 0.0666532258064516,
+        "ci_high": 0.19373397435897438
+      },
+      "max_calibration_gap": {
+        "point": 0.028221504949172485,
+        "ci_low": 0.010667673908946936,
+        "ci_high": 0.033332062072890294
+      },
+      "flags": [
+        "demographic_parity_difference=0.129 exceeds threshold 0.1",
+        "equalized_odds_difference=0.177 exceeds threshold 0.1"
+      ]
+    }
+  ],
+  "intersectional": [
+    {
+      "attr_a": "gender",
+      "attr_b": "market_location",
+      "note": "Cells with n < 30 are reported but excluded from disparity flagging (low_n=true). equalized_odds_difference uses worst-case pair across all group combinations, not an average.",
+      "groups": [
+        {
+          "group_a": "female",
+          "group_b": "Ajah",
+          "n": 44,
+          "approval_rate": {
+            "point": 0.5909090909090909,
+            "ci_low": 0.5,
+            "ci_high": 0.6818181818181818
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Alaba",
+          "n": 49,
+          "approval_rate": {
+            "point": 0.6530612244897959,
+            "ci_low": 0.5714285714285714,
+            "ci_high": 0.7346938775510204
+          },
+          "tpr": {
+            "point": NaN,
+            "ci_low": NaN,
+            "ci_high": NaN
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Balogun",
+          "n": 33,
+          "approval_rate": {
+            "point": 0.5757575757575758,
+            "ci_low": 0.45454545454545453,
+            "ci_high": 0.6666666666666666
+          },
+          "tpr": {
+            "point": 0.25,
+            "ci_low": 0.0,
+            "ci_high": 0.5714285714285714
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Idumota",
+          "n": 63,
+          "approval_rate": {
+            "point": 0.49206349206349204,
+            "ci_low": 0.4126984126984127,
+            "ci_high": 0.5714285714285714
+          },
+          "tpr": {
+            "point": 0.3333333333333333,
+            "ci_low": 0.0,
+            "ci_high": 0.6666666666666666
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Ikeja",
+          "n": 62,
+          "approval_rate": {
+            "point": 0.6129032258064516,
+            "ci_low": 0.532258064516129,
+            "ci_high": 0.6935483870967742
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Ladipo",
+          "n": 48,
+          "approval_rate": {
+            "point": 0.6458333333333334,
+            "ci_low": 0.5625,
+            "ci_high": 0.7291666666666666
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Lagos Island",
+          "n": 48,
+          "approval_rate": {
+            "point": 0.4583333333333333,
+            "ci_low": 0.375,
+            "ci_high": 0.5625
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Lawrence",
+          "n": 54,
+          "approval_rate": {
+            "point": 0.46296296296296297,
+            "ci_low": 0.37037037037037035,
+            "ci_high": 0.5555555555555556
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Lekki",
+          "n": 58,
+          "approval_rate": {
+            "point": 0.6206896551724138,
+            "ci_low": 0.5517241379310345,
+            "ci_high": 0.6896551724137931
+          },
+          "tpr": {
+            "point": 0.25,
+            "ci_low": 0.0,
+            "ci_high": 0.5714285714285714
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Mushin",
+          "n": 70,
+          "approval_rate": {
+            "point": 0.4714285714285714,
+            "ci_low": 0.4,
+            "ci_high": 0.5428571428571428
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Oshodi",
+          "n": 50,
+          "approval_rate": {
+            "point": 0.4,
+            "ci_low": 0.32,
+            "ci_high": 0.48
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Other ",
+          "n": 45,
+          "approval_rate": {
+            "point": 0.5333333333333333,
+            "ci_low": 0.4444444444444444,
+            "ci_high": 0.6222222222222222
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Surulere",
+          "n": 62,
+          "approval_rate": {
+            "point": 0.4838709677419355,
+            "ci_low": 0.4032258064516129,
+            "ci_high": 0.5645161290322581
+          },
+          "tpr": {
+            "point": 0.16666666666666666,
+            "ci_low": 0.0,
+            "ci_high": 0.4
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "female",
+          "group_b": "Yaba",
+          "n": 60,
+          "approval_rate": {
+            "point": 0.5833333333333334,
+            "ci_low": 0.5,
+            "ci_high": 0.6666666666666666
+          },
+          "tpr": {
+            "point": 0.1111111111111111,
+            "ci_low": 0.0,
+            "ci_high": 0.25
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Ajah",
+          "n": 66,
+          "approval_rate": {
+            "point": 0.48484848484848486,
+            "ci_low": 0.4090909090909091,
+            "ci_high": 0.5606060606060606
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Alaba",
+          "n": 52,
+          "approval_rate": {
+            "point": 0.5384615384615384,
+            "ci_low": 0.4423076923076923,
+            "ci_high": 0.6346153846153846
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Balogun",
+          "n": 51,
+          "approval_rate": {
+            "point": 0.4117647058823529,
+            "ci_low": 0.3333333333333333,
+            "ci_high": 0.5098039215686274
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Idumota",
+          "n": 60,
+          "approval_rate": {
+            "point": 0.5166666666666667,
+            "ci_low": 0.43333333333333335,
+            "ci_high": 0.6
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Ikeja",
+          "n": 51,
+          "approval_rate": {
+            "point": 0.45098039215686275,
+            "ci_low": 0.37254901960784315,
+            "ci_high": 0.5294117647058824
+          },
+          "tpr": {
+            "point": 0.1111111111111111,
+            "ci_low": 0.0,
+            "ci_high": 0.25
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Ladipo",
+          "n": 50,
+          "approval_rate": {
+            "point": 0.36,
+            "ci_low": 0.28,
+            "ci_high": 0.44
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Lagos Island",
+          "n": 38,
+          "approval_rate": {
+            "point": 0.6052631578947368,
+            "ci_low": 0.5,
+            "ci_high": 0.7105263157894737
+          },
+          "tpr": {
+            "point": 0.5,
+            "ci_low": 0.0,
+            "ci_high": 1.0
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Lawrence",
+          "n": 54,
+          "approval_rate": {
+            "point": 0.3888888888888889,
+            "ci_low": 0.3148148148148148,
+            "ci_high": 0.48148148148148145
+          },
+          "tpr": {
+            "point": 0.2,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Lekki",
+          "n": 54,
+          "approval_rate": {
+            "point": 0.4444444444444444,
+            "ci_low": 0.35185185185185186,
+            "ci_high": 0.5370370370370371
+          },
+          "tpr": {
+            "point": 0.3333333333333333,
+            "ci_low": 0.0,
+            "ci_high": 0.6666666666666666
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Mushin",
+          "n": 62,
+          "approval_rate": {
+            "point": 0.6129032258064516,
+            "ci_low": 0.532258064516129,
+            "ci_high": 0.6935483870967742
+          },
+          "tpr": {
+            "point": 0.25,
+            "ci_low": 0.0,
+            "ci_high": 0.6
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Oshodi",
+          "n": 48,
+          "approval_rate": {
+            "point": 0.6875,
+            "ci_low": 0.6041666666666666,
+            "ci_high": 0.7708333333333334
+          },
+          "tpr": {
+            "point": 0.25,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Other ",
+          "n": 62,
+          "approval_rate": {
+            "point": 0.6290322580645161,
+            "ci_low": 0.5483870967741935,
+            "ci_high": 0.7096774193548387
+          },
+          "tpr": {
+            "point": 0.2857142857142857,
+            "ci_low": 0.0,
+            "ci_high": 0.5
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Surulere",
+          "n": 56,
+          "approval_rate": {
+            "point": 0.6964285714285714,
+            "ci_low": 0.625,
+            "ci_high": 0.7678571428571429
+          },
+          "tpr": {
+            "point": 0.14285714285714285,
+            "ci_low": 0.0,
+            "ci_high": 0.3333333333333333
+          },
+          "low_n": false
+        },
+        {
+          "group_a": "male",
+          "group_b": "Yaba",
+          "n": 50,
+          "approval_rate": {
+            "point": 0.56,
+            "ci_low": 0.46,
+            "ci_high": 0.66
+          },
+          "tpr": {
+            "point": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.0
+          },
+          "low_n": false
+        }
+      ]
+    }
+  ],
+  "proxy_analysis": [
+    {
+      "feature": "days_since_onboarding",
+      "protected_attr": "market_location",
+      "association": 3.601333,
+      "method": "eta_squared",
+      "strength": "strong",
+      "flagged": true
+    },
+    {
+      "feature": "days_since_onboarding",
+      "protected_attr": "gender",
+      "association": 2.492,
+      "method": "eta_squared",
+      "strength": "strong",
+      "flagged": true
+    },
+    {
+      "feature": "days_since_onboarding",
+      "protected_attr": "age_bracket",
+      "association": 1.248,
+      "method": "eta_squared",
+      "strength": "strong",
+      "flagged": true
+    },
+    {
+      "feature": "market_location",
+      "protected_attr": "gender",
+      "association": 0.100781,
+      "method": "cramers_v",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "gender",
+      "protected_attr": "market_location",
+      "association": 0.100781,
+      "method": "cramers_v",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "archetype",
+      "protected_attr": "market_location",
+      "association": 0.095503,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "age_bracket",
+      "protected_attr": "market_location",
+      "association": 0.07805,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "market_location",
+      "protected_attr": "age_bracket",
+      "association": 0.07805,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "archetype",
+      "protected_attr": "age_bracket",
+      "association": 0.060795,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "archetype",
+      "protected_attr": "gender",
+      "association": 0.060498,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "age_bracket",
+      "protected_attr": "gender",
+      "association": 0.037072,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "gender",
+      "protected_attr": "age_bracket",
+      "association": 0.037072,
+      "method": "cramers_v",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "days_since_last_txn",
+      "protected_attr": "market_location",
+      "association": 0.016102,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "amount_kurtosis_30d",
+      "protected_attr": "market_location",
+      "association": 0.015067,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "amount_skewness_30d",
+      "protected_attr": "market_location",
+      "association": 0.014815,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "top10_share_30d",
+      "protected_attr": "market_location",
+      "association": 0.011362,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "top5_share_30d",
+      "protected_attr": "market_location",
+      "association": 0.010913,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "std_intertxn_seconds_30d",
+      "protected_attr": "market_location",
+      "association": 0.010762,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "shock_days_count_90d",
+      "protected_attr": "market_location",
+      "association": 0.010441,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "top1_share_30d",
+      "protected_attr": "market_location",
+      "association": 0.010036,
+      "method": "eta_squared",
+      "strength": "moderate",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_7d",
+      "protected_attr": "market_location",
+      "association": 0.009971,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "avg_gap_days_30d",
+      "protected_attr": "market_location",
+      "association": 0.00989,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "mean_intertxn_seconds_30d",
+      "protected_attr": "market_location",
+      "association": 0.00989,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "unique_senders_30d",
+      "protected_attr": "market_location",
+      "association": 0.009865,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_90d",
+      "protected_attr": "market_location",
+      "association": 0.009859,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "cv_weekly_revenue_90d",
+      "protected_attr": "market_location",
+      "association": 0.00948,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_30d",
+      "protected_attr": "market_location",
+      "association": 0.009335,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "active_days_30d",
+      "protected_attr": "market_location",
+      "association": 0.009141,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "activity_density_30d",
+      "protected_attr": "market_location",
+      "association": 0.009141,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "hhi_senders_30d",
+      "protected_attr": "market_location",
+      "association": 0.008866,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "hour_entropy_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.008778,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_7d",
+      "protected_attr": "market_location",
+      "association": 0.008632,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_90d",
+      "protected_attr": "market_location",
+      "association": 0.008632,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_30d",
+      "protected_attr": "market_location",
+      "association": 0.008548,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txns_per_active_day_30d",
+      "protected_attr": "market_location",
+      "association": 0.008532,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "avg_gap_days_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.008268,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "mean_intertxn_seconds_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.008268,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "round_amount_ratio_30d",
+      "protected_attr": "market_location",
+      "association": 0.008188,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "median_txn_amount_30d",
+      "protected_attr": "market_location",
+      "association": 0.008033,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "std_intertxn_seconds_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.007939,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "mean_txn_amount_30d",
+      "protected_attr": "market_location",
+      "association": 0.007751,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "revenue_growth_wow",
+      "protected_attr": "market_location",
+      "association": 0.007685,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "top1_share_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.007514,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "business_hours_share_30d",
+      "protected_attr": "market_location",
+      "association": 0.007384,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "new_customer_ratio_30d",
+      "protected_attr": "market_location",
+      "association": 0.007369,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "hour_entropy_30d",
+      "protected_attr": "market_location",
+      "association": 0.007272,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "top10_share_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.0067,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "std_txn_amount_30d",
+      "protected_attr": "market_location",
+      "association": 0.006674,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "top5_share_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.006517,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "hhi_senders_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.006427,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "max_txn_amount_30d",
+      "protected_attr": "market_location",
+      "association": 0.006307,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "cv_daily_revenue_30d",
+      "protected_attr": "market_location",
+      "association": 0.006265,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "longest_dry_spell_30d",
+      "protected_attr": "market_location",
+      "association": 0.006234,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_90d",
+      "protected_attr": "age_bracket",
+      "association": 0.00515,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "weekday_weekend_ratio_30d",
+      "protected_attr": "market_location",
+      "association": 0.005141,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "revenue_growth_mom",
+      "protected_attr": "market_location",
+      "association": 0.004926,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "momentum_ratio",
+      "protected_attr": "market_location",
+      "association": 0.004797,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.004766,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txns_per_active_day_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.004729,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_7d",
+      "protected_attr": "age_bracket",
+      "association": 0.004423,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "unique_senders_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.004391,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "max_txn_amount_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.004155,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "median_txn_amount_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.004006,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "std_txn_amount_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.003919,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "cv_weekly_revenue_90d",
+      "protected_attr": "age_bracket",
+      "association": 0.003873,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "active_days_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.003841,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "activity_density_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.003841,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "mean_txn_amount_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.003619,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "cv_daily_revenue_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.002955,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "longest_dry_spell_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.002834,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "amount_skewness_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.002818,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "business_hours_share_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.002716,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "amount_kurtosis_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.002359,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "weekday_weekend_ratio_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.002009,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "round_amount_ratio_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.001925,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "days_since_last_txn",
+      "protected_attr": "age_bracket",
+      "association": 0.00177,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "shock_days_count_90d",
+      "protected_attr": "age_bracket",
+      "association": 0.001696,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "momentum_ratio",
+      "protected_attr": "gender",
+      "association": 0.001619,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "cv_weekly_revenue_90d",
+      "protected_attr": "gender",
+      "association": 0.001142,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_90d",
+      "protected_attr": "gender",
+      "association": 0.001026,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "revenue_growth_wow",
+      "protected_attr": "gender",
+      "association": 0.001016,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_7d",
+      "protected_attr": "gender",
+      "association": 0.00085,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_90d",
+      "protected_attr": "age_bracket",
+      "association": 0.000696,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "business_hours_share_30d",
+      "protected_attr": "gender",
+      "association": 0.000692,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "round_amount_ratio_30d",
+      "protected_attr": "gender",
+      "association": 0.000674,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_30d",
+      "protected_attr": "gender",
+      "association": 0.000546,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "revenue_growth_mom",
+      "protected_attr": "gender",
+      "association": 0.000489,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "median_txn_amount_30d",
+      "protected_attr": "gender",
+      "association": 0.000484,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.000474,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "mean_txn_amount_30d",
+      "protected_attr": "gender",
+      "association": 0.000467,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "revenue_growth_wow",
+      "protected_attr": "age_bracket",
+      "association": 0.000442,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_inflow_7d",
+      "protected_attr": "age_bracket",
+      "association": 0.000415,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "new_customer_ratio_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.000327,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "cv_daily_revenue_30d",
+      "protected_attr": "gender",
+      "association": 0.000322,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "revenue_growth_mom",
+      "protected_attr": "age_bracket",
+      "association": 0.000317,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "momentum_ratio",
+      "protected_attr": "age_bracket",
+      "association": 0.000241,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "avg_gap_days_30d",
+      "protected_attr": "gender",
+      "association": 0.00024,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "mean_intertxn_seconds_30d",
+      "protected_attr": "gender",
+      "association": 0.00024,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "new_customer_ratio_30d",
+      "protected_attr": "gender",
+      "association": 0.000223,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "std_intertxn_seconds_30d",
+      "protected_attr": "gender",
+      "association": 0.000223,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "std_txn_amount_30d",
+      "protected_attr": "gender",
+      "association": 0.000218,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "top5_share_30d",
+      "protected_attr": "gender",
+      "association": 0.000164,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "top10_share_30d",
+      "protected_attr": "gender",
+      "association": 0.000125,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "hhi_senders_30d",
+      "protected_attr": "gender",
+      "association": 0.000116,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "amount_kurtosis_30d",
+      "protected_attr": "gender",
+      "association": 0.00011,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "longest_dry_spell_30d",
+      "protected_attr": "gender",
+      "association": 0.000108,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "weekday_weekend_ratio_30d",
+      "protected_attr": "gender",
+      "association": 0.000105,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "days_since_last_txn",
+      "protected_attr": "gender",
+      "association": 5.9e-05,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "active_days_30d",
+      "protected_attr": "gender",
+      "association": 2.2e-05,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "activity_density_30d",
+      "protected_attr": "gender",
+      "association": 2.2e-05,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "top1_share_30d",
+      "protected_attr": "gender",
+      "association": 2.2e-05,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "hour_entropy_30d",
+      "protected_attr": "gender",
+      "association": 1.7e-05,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "shock_days_count_90d",
+      "protected_attr": "gender",
+      "association": 1.6e-05,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "max_txn_amount_30d",
+      "protected_attr": "gender",
+      "association": 6e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "amount_skewness_30d",
+      "protected_attr": "gender",
+      "association": 6e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "unique_senders_30d",
+      "protected_attr": "gender",
+      "association": 3e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_7d",
+      "protected_attr": "gender",
+      "association": 2e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_30d",
+      "protected_attr": "gender",
+      "association": 1e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txn_count_90d",
+      "protected_attr": "gender",
+      "association": 1e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "txns_per_active_day_30d",
+      "protected_attr": "gender",
+      "association": 1e-06,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_outflow_30d",
+      "protected_attr": "gender",
+      "association": 0.0,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_outflow_30d",
+      "protected_attr": "market_location",
+      "association": 0.0,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    },
+    {
+      "feature": "total_outflow_30d",
+      "protected_attr": "age_bracket",
+      "association": 0.0,
+      "method": "eta_squared",
+      "strength": "weak",
+      "flagged": false
+    }
+  ],
+  "calibration_plots": {
+    "gender": "/Users/mac/Projects/Portfolio/Trace/ml_service/data/audit/plots/calibration_gender.png",
+    "market_location": "/Users/mac/Projects/Portfolio/Trace/ml_service/data/audit/plots/calibration_market_location.png"
+  },
+  "flags_summary": [
+    "demographic_parity_difference=0.168 exceeds threshold 0.1",
+    "equalized_odds_difference=0.286 exceeds threshold 0.1",
+    "max_calibration_gap=0.056 exceeds threshold 0.05",
+    "demographic_parity_difference=0.129 exceeds threshold 0.1",
+    "equalized_odds_difference=0.177 exceeds threshold 0.1"
+  ]
+}
