@@ -1,8 +1,8 @@
 "use client";
 
 export const BACKEND_API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "https://dub.heralayer.com/api/v1";
-export const BACKEND_BASE_URL = BACKEND_API_BASE_URL.replace(/\/api\/v1$/, "");
+  process.env.NEXT_PUBLIC_API_BASE_URL;
+export const BACKEND_BASE_URL = BACKEND_API_BASE_URL;
 
 export const DEMO_TRADER_SIGNUP_DEFAULTS = {
   bvn: "22172180083",
