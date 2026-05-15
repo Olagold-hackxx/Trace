@@ -169,7 +169,7 @@ export default function MerchantCreditFilePage({ params }: { params: Promise<{ m
                 <LineChart data={scoreHistory}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
                   <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[0, 900]} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 850]} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
                   <Tooltip contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }} />
                   <Line type="monotone" dataKey="score" stroke="#ff6b00" strokeWidth={2.5} dot={{ fill: "#ff6b00", r: 4 }} />
                 </LineChart>

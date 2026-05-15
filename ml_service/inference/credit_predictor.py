@@ -54,9 +54,9 @@ class CreditPredictor:
         fraud_penalty = 0
         if self.fraud_predictor and transactions:
             txns_df = pd.DataFrame(transactions)
-            txns_df['occurred_at'] = pd.to_datetime(txns_df['occurred_at'])
+            txns_df['occurred_at'] = pd.to_datetime(txns_df['occurred_at'], utc=True)
             as_of = datetime.now(timezone.utc)
-            fraud_penalty = self.fraud_predictor.compute_user_fraud_penalty(txns_df, as_of)
+            fraud_penalty = self.fraud_predictor.compute_credit_penalty(txns_df, as_of)
         
         adjusted_score = max(300, score - fraud_penalty)
         
@@ -74,7 +74,7 @@ class CreditPredictor:
         """Compute 0-100 sub-scores via SHAP family aggregation."""
         if self.shap_explainer is None:
             # Fallback: return neutral 50s. Real sub-scores need SHAP.
-            return {k: 50 for k in SUBSCORE_FAMILIES}
+            return dict.fromkeys(SUBSCORE_FAMILIES, 50)
         
         shap_values = self.shap_explainer.shap_values(df)
         if isinstance(shap_values, list):

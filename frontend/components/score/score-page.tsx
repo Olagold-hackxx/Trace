@@ -37,7 +37,7 @@ export function ScorePage() {
   const [lenderVisible, setLenderVisible] = useState(true);
   const [insightOpen, setInsightOpen] = useState(false);
   const score = backendScore?.score ?? 0;
-  const pct = (score / 900) * 100;
+  const pct = (score / 850) * 100;
   const circumference = 2 * Math.PI * 80;
   const activeHistory = backendHistory.map((item) => ({
     month: new Date(item.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" }),
@@ -100,7 +100,7 @@ export function ScorePage() {
                 <p className="text-sm font-semibold mt-1" style={{ color: "#ff6b00" }}>
                   {score >= 750 ? "Excellent" : score >= 650 ? "Good" : "Building"}
                 </p>
-                <p className="text-xs text-[#94a3b8]">out of 900</p>
+                <p className="text-xs text-[#94a3b8]">out of 850</p>
               </div>
             </div>
             <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
@@ -114,7 +114,7 @@ export function ScorePage() {
               Score Bands
             </p>
             {[
-              { label: "Excellent", range: "750–900", color: "#16a34a", bg: "#dcfce7" },
+              { label: "Excellent", range: "750–850", color: "#16a34a", bg: "#dcfce7" },
               { label: "Good", range: "600–749", color: "#ff6b00", bg: "#3b1d09", active: true },
               { label: "Fair", range: "450–599", color: "#d97706", bg: "#fef3c7" },
               { label: "Poor", range: "300–449", color: "#dc2626", bg: "#fee2e2" },
@@ -272,7 +272,7 @@ export function ScorePage() {
           <div className="space-y-2">
             {[
               { q: "What is TraceScore?", a: "TraceScore is your verified financial identity — a real-time credit score built from your transaction history, loan repayments, and business activity on the Trace platform." },
-              { q: "How is it calculated?", a: "We analyze your payment consistency, revenue trends, loan repayment history, and marketplace activity to generate a score between 0 and 900." },
+              { q: "How is it calculated?", a: "We analyze your payment consistency, revenue trends, loan repayment history, and marketplace activity to generate a score between 300 and 850." },
               { q: "How do I improve my score?", a: "Make payments on time, maintain steady revenue, repay loans on schedule, and keep your business active on the platform." },
               { q: "Who can see my score?", a: "Only lenders you've granted visibility to can see your TraceScore. You control your data with the Lender Visibility toggle." },
             ].map((faq, i) => (

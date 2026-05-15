@@ -180,7 +180,7 @@ export const lenderOffers: LenderOffer[] = [
 export const scoreFaqs = [
   {
     q: "How is my TraceScore calculated?",
-    a: "TraceScore is a composite of 5 weighted factors: Payment History (35%), Revenue Consistency (25%), Business Longevity (20%), Employment Record (10%), and Lender Trust (10%). Each factor is scored from 0–100 and weighted to produce your final score out of 900.",
+    a: "TraceScore is a composite of 5 weighted factors: Payment History (35%), Revenue Consistency (25%), Business Longevity (20%), Employment Record (10%), and Lender Trust (10%). Each factor is scored from 0–100 and weighted to produce your final score out of 850.",
   },
   {
     q: "How often does my score update?",

@@ -50,9 +50,7 @@ def fetch_transactions(db: Session, user_id: str, as_of: datetime) -> pd.DataFra
         {"user_id": user_id, "as_of": as_of},
     )
     rows = result.fetchall()
-    if not rows:
-        return pd.DataFrame(columns=["occurred_at", "amount_kobo", "sender_name", "type"])
-    df = pd.DataFrame(rows, columns=["occurred_at", "amount_kobo", "sender_name", "type"])
+    df = pd.DataFrame(rows or [], columns=["occurred_at", "amount_kobo", "sender_name", "type"])
     df["occurred_at"] = pd.to_datetime(df["occurred_at"], utc=True)
     return df
 

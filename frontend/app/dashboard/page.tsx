@@ -29,8 +29,9 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  ReferenceLine,
 } from "recharts";
-import { buildBackendUrl, formatDateLabel } from "@/lib/backend";
+import { BackendDailyForecast, BackendForecastResponse, BackendFraudAlert, BackendTransaction, buildBackendUrl, fetchBackend, formatDateLabel } from "@/lib/backend";
 import { Spinner } from "@/components/ui/spinner";
 
 function formatNaira(v: number) { return `₦${v.toLocaleString()}`; }
@@ -51,7 +52,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function DashboardPage() {
-  const { user, virtualAccount, score, summary, transactions, defaultPaymentLink, offers, loading } = useTraderData();
+  const { user, virtualAccount, score, scoreHistory, summary, transactions, defaultPaymentLink, offers, loading } = useTraderData();
   const [copied, setCopied] = useState(false);
   const streamStarted = useRef(false);
   const [metrics, setMetrics] = useState({
@@ -64,11 +65,23 @@ export default function DashboardPage() {
   });
   const [recentTransactions, setRecentTransactions] = useState<Array<{ id: string; date: string; desc: string; type: string; amount: number; status: string }>>([]);
   const [liveFeed, setLiveFeed] = useState<Array<{ id: string; label: string; title: string; description: string; status: string }>>([]);
+  const [fraudAlerts, setFraudAlerts] = useState<BackendFraudAlert[]>([]);
+  const [showForecast, setShowForecast] = useState(false);
+  const [forecastDays, setForecastDays] = useState<BackendDailyForecast[]>([]);
+  const [forecastLoading, setForecastLoading] = useState(false);
   const paymentLink = defaultPaymentLink?.url ?? "https://trace-nu-dusky.vercel.app/pay";
   const displayName = user?.fullName?.split(" ")[0] ?? "there";
   const businessName = user?.businessName ?? user?.fullName ?? "";
 
   useEffect(() => {
+    // Score trend: compare latest snapshot to the oldest one we have
+    let scoreTrend = 0;
+    if (scoreHistory.length >= 2) {
+      const latest = scoreHistory[0].score;
+      const oldest = scoreHistory[scoreHistory.length - 1].score;
+      scoreTrend = oldest > 0 ? Math.round(((latest - oldest) / oldest) * 1000) / 10 : 0;
+    }
+
     setMetrics((current) => ({
       ...current,
       revenue: summary ? Math.round(summary.totalInflowKobo / 100) : current.revenue,
@@ -77,10 +90,11 @@ export default function DashboardPage() {
         .filter((transaction) => transaction.status === "pending")
         .reduce((sum, transaction) => sum + Math.round(Number(transaction.amountKobo) / 100), 0),
       score: score?.score ?? current.score,
+      scoreTrend,
       preQualifiedAmount:
         offers.length > 0 ? Math.round(Number(offers[0].amountKobo) / 100) : current.preQualifiedAmount,
     }));
-  }, [offers, score?.score, summary, transactions]);
+  }, [offers, score?.score, scoreHistory, summary, transactions]);
 
   useEffect(() => {
     if (transactions.length === 0) return;
@@ -104,6 +118,13 @@ export default function DashboardPage() {
       }))
     );
   }, [transactions]);
+
+  // Fetch existing open fraud alerts on mount
+  useEffect(() => {
+    fetchBackend<BackendFraudAlert[]>("/fraud-alerts")
+      .then((data) => setFraudAlerts(Array.isArray(data) ? data.filter((a) => a.isAnomalous && a.status === "open") : []))
+      .catch(() => { /* non-critical */ });
+  }, [user?.id]);
 
   const copy = () => {
     navigator.clipboard.writeText(paymentLink);
@@ -175,10 +196,39 @@ export default function DashboardPage() {
         }
 
         if (parsed.type === "fraud.alert") {
+          const penalty  = Number(parsed.payload.fraudPenalty ?? 0);
+          const severity = String(parsed.payload.severity ?? "flagged");
+          const signals  = Array.isArray(parsed.payload.topSignals)
+            ? (parsed.payload.topSignals as string[]).map((s: string) => s.replace(/_/g, " ")).join(", ")
+            : "";
+          const penaltyPts = Math.round(penalty * 100);
+
           toast({
-            title: "Fraud alert",
-            description: String(parsed.payload.message ?? "Anomalous activity detected."),
+            title: `⚠ Fraud alert — ${severity}`,
+            description: [
+              signals ? `Signals: ${signals}.` : null,
+              penaltyPts > 0
+                ? `A temporary –${penaltyPts}-point penalty has been applied to your TraceScore pending review.`
+                : "A soft penalty has been applied to your TraceScore pending review.",
+            ].filter(Boolean).join(" "),
           });
+
+          // Push into the persistent banner state
+          setFraudAlerts((prev: BackendFraudAlert[]) => [
+            {
+              id: String(parsed.payload.transactionId ?? Date.now()),
+              transactionId: String(parsed.payload.transactionId ?? ""),
+              userId: user?.id ?? "",
+              anomalyScore: Number(parsed.payload.anomalyScore ?? 0),
+              isAnomalous: true,
+              topSignals: Array.isArray(parsed.payload.topSignals) ? (parsed.payload.topSignals as string[]) : [],
+              fraudPenalty: penalty,
+              severity: severity as BackendFraudAlert["severity"],
+              status: "open",
+              createdAt: parsed.createdAt,
+            },
+            ...prev,
+          ]);
         }
 
         setLiveFeed((current) => [
@@ -218,19 +268,114 @@ export default function DashboardPage() {
     };
   }, [user?.id]);
 
-  // Build revenue chart from real transactions
-  const revenueData = (() => {
+  // Pending payment count for sub-label
+  const pendingCount = transactions.filter((t: BackendTransaction) => t.status === "pending").length;
+  const pendingSub = pendingCount > 0 ? `${pendingCount} transaction${pendingCount === 1 ? "" : "s"} pending` : "All payments settled";
+
+  // Revenue trend: compare this month vs last month using available transactions
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear  = now.getFullYear();
+  const lastMonthNum  = thisMonth === 0 ? 11 : thisMonth - 1;
+  const lastMonthYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+
+  let revenueThisMonth = 0;
+  let revenueLastMonth = 0;
+  for (const t of transactions) {
+    if (t.type === "debit" || t.type === "loan_repayment") continue;
+    const d = new Date(t.occurredAt ?? t.createdAt ?? "");
+    if (d.getMonth() === thisMonth && d.getFullYear() === thisYear) {
+      revenueThisMonth += Math.round(Number(t.amountKobo) / 100);
+    } else if (d.getMonth() === lastMonthNum && d.getFullYear() === lastMonthYear) {
+      revenueLastMonth += Math.round(Number(t.amountKobo) / 100);
+    }
+  }
+  const revenueTrend = revenueLastMonth > 0
+    ? Math.round(((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 1000) / 10
+    : undefined;
+
+  // Build historical cash flow by month
+  const historicalData = (() => {
     if (transactions.length === 0) return [];
-    const byMonth: Record<string, { revenue: number; expenses: number }> = {};
-    transactions.forEach((t) => {
+    const byMonth: Record<string, { cashIn: number; cashOut: number }> = {};
+    for (const t of transactions) {
       const month = new Date(t.occurredAt ?? t.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" });
-      if (!byMonth[month]) byMonth[month] = { revenue: 0, expenses: 0 };
+      if (!byMonth[month]) byMonth[month] = { cashIn: 0, cashOut: 0 };
       const amt = Math.round(Number(t.amountKobo) / 100);
-      if (t.type === "debit" || t.type === "loan_repayment") byMonth[month].expenses += amt;
-      else if (t.status === "success") byMonth[month].revenue += amt;
-    });
-    return Object.entries(byMonth).map(([month, vals]) => ({ month, ...vals }));
+      if (t.type === "debit" || t.type === "loan_repayment") byMonth[month].cashOut += amt;
+      else if (t.status === "success") byMonth[month].cashIn += amt;
+    }
+    return Object.entries(byMonth).map(([month, vals]) => ({
+      month,
+      cashIn: vals.cashIn,
+      cashOut: vals.cashOut,
+      forecast: null as number | null,
+      forecastLow: null as number | null,
+      forecastHigh: null as number | null,
+    }));
   })();
+
+  // Forecast fetch — lazy, triggered by toggle button
+  const handleForecastToggle = async () => {
+    const next = !showForecast;
+    setShowForecast(next);
+    if (next && forecastDays.length === 0) {
+      setForecastLoading(true);
+      try {
+        const res = await fetchBackend<BackendForecastResponse>("/score/forecast?horizon_days=60");
+        setForecastDays(res.daily ?? []);
+      } catch {
+        setForecastDays([]);
+      } finally {
+        setForecastLoading(false);
+      }
+    }
+  };
+
+  // Merge historical + forecast into a single chart series
+  const chartData = (() => {
+    if (!showForecast || forecastDays.length === 0) return historicalData;
+
+    const existingMonths = new Set(historicalData.map((d) => d.month));
+    const byMonth: Record<string, { cashIn: number; cashOut: number; count: number }> = {};
+    for (const f of forecastDays) {
+      const month = new Date(f.date).toLocaleDateString("en-NG", { month: "short" });
+      if (!byMonth[month]) byMonth[month] = { cashIn: 0, cashOut: 0, count: 0 };
+      byMonth[month].cashIn  += Math.round(f.predicted_inflow_kobo / 100);
+      byMonth[month].cashOut += Math.round(f.lower_bound_kobo / 100); // use lower as floor reference
+      byMonth[month].count++;
+    }
+
+    const futurePoints = Object.entries(byMonth)
+      .filter(([m]) => !existingMonths.has(m))
+      .map(([month, v]) => ({
+        month,
+        cashIn: null as number | null,
+        cashOut: null as number | null,
+        forecast: v.cashIn,
+        forecastLow: Math.round(v.cashOut),
+        forecastHigh: Math.round(v.cashIn * 1.22),
+      }));
+
+    return [...historicalData, ...futurePoints];
+  })();
+
+  const todayLabel = new Date().toLocaleDateString("en-NG", { month: "short" });
+
+  // Fraud banner pre-computations — avoiding reduce callbacks so tsc doesn't need node_modules to infer types
+  const openAlerts = fraudAlerts.filter((fa: BackendFraudAlert) => fa.isAnomalous && fa.status === "open");
+  let worstAlert: BackendFraudAlert | null = null;
+  let totalPenalty = 0;
+  for (const fa of openAlerts) {
+    totalPenalty += fa.fraudPenalty ?? 0;
+    if (!worstAlert || (fa.fraudPenalty ?? 0) > (worstAlert.fraudPenalty ?? 0)) worstAlert = fa;
+  }
+  const adjustedScore = totalPenalty > 0 ? Math.max(300, Math.round(metrics.score * (1 - totalPenalty))) : metrics.score;
+  const penaltyPts = metrics.score - adjustedScore;
+  const scoreLabel = penaltyPts > 0 ? `${adjustedScore} / 850 (–${penaltyPts} pts)` : `${metrics.score} / 850`;
+  const scoreColor = penaltyPts > 0 ? "#f59e0b" : "#16a34a";
+  const alertSignals = worstAlert ? worstAlert.topSignals.slice(0, 3).map((s: string) => s.replace(/_/g, " ")).join(" · ") : "";
+  const alertSeverityColor = worstAlert?.severity === "high" ? "#ef4444" : worstAlert?.severity === "medium" ? "#f59e0b" : "#64748b";
 
   if (loading) {
     return (
@@ -266,12 +411,30 @@ export default function DashboardPage() {
           </Link>
         </div>
 
+        {/* Fraud alert banner — shown when there is at least one open anomaly */}
+        {worstAlert && (
+          <div className="rounded-2xl px-4 py-3.5 mb-5 flex items-start gap-3" style={{ backgroundColor: "rgba(239,68,68,0.06)", border: `1px solid ${alertSeverityColor}40` }}>
+            <span style={{ fontSize: 20, marginTop: 1 }}>⚠️</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold" style={{ color: alertSeverityColor }}>
+                Anomaly detected on your account
+                {penaltyPts > 0 && <span className="ml-2 font-normal text-slate-400">— temporary –{penaltyPts}-point TraceScore penalty applied</span>}
+              </p>
+              {alertSignals && <p className="text-xs text-slate-500 mt-0.5 truncate">Signals: {alertSignals}</p>}
+              <p className="text-xs text-slate-600 mt-1">
+                This is a soft penalty that will be lifted once the transaction is reviewed and cleared.
+                {openAlerts.length > 1 && ` (${openAlerts.length} open alerts)`}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Metric cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MetricCard label="Total Revenue (May)" value={formatNaira(metrics.revenue)} icon={Wallet} trend={18.3} color="#ff6b00" />
-          <MetricCard label="Pending Payments" value={formatNaira(metrics.pendingPayments)} icon={Receipt} color="#d97706" sub="2 transactions pending" />
-          <MetricCard label="TraceScore" value={`${metrics.score} / 900`} icon={TrendingUp} trend={metrics.scoreTrend} trendLabel="this month" color="#16a34a" />
-          <MetricCard label="Available Balance" value={formatNaira(metrics.balance)} icon={AccountBalance} trend={-3.1} color="#ff6b00" />
+          <MetricCard label="Total Revenue" value={formatNaira(metrics.revenue)} icon={Wallet} trend={revenueTrend} trendLabel="vs last month" color="#ff6b00" />
+          <MetricCard label="Pending Payments" value={formatNaira(metrics.pendingPayments)} icon={Receipt} color="#d97706" sub={pendingSub} />
+          <MetricCard label="TraceScore" value={scoreLabel} icon={TrendingUp} trend={metrics.scoreTrend !== 0 ? metrics.scoreTrend : undefined} trendLabel="vs first recorded" color={scoreColor} />
+          <MetricCard label="Available Balance" value={formatNaira(metrics.balance)} icon={AccountBalance} color="#ff6b00" />
         </div>
 
         {/* Payment link bar */}
@@ -312,32 +475,58 @@ export default function DashboardPage() {
             {/* Revenue chart */}
             <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Revenue Overview</h2>
-                <div className="flex gap-4 text-xs text-[#94a3b8]">
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Revenue</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#334155" }} />Expenses</span>
+                <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Cash Flow</h2>
+                <div className="flex items-center gap-3">
+                  {/* Legend */}
+                  <div className="flex gap-3 text-xs text-[#94a3b8]">
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Cash In</span>
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#334155" }} />Cash Out</span>
+                    {showForecast && <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#3b82f6" }} />Forecast</span>}
+                  </div>
+                  {/* Toggle button */}
+                  <button
+                    onClick={handleForecastToggle}
+                    disabled={forecastLoading}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                    style={{
+                      backgroundColor: showForecast ? "#1d3461" : "rgba(255,255,255,0.05)",
+                      color: showForecast ? "#3b82f6" : "#94a3b8",
+                      border: `1px solid ${showForecast ? "#3b82f650" : "#1e1e1e"}`,
+                    }}
+                  >
+                    {forecastLoading ? "Loading…" : showForecast ? "Hide forecast" : "Show forecast"}
+                  </button>
                 </div>
               </div>
-              {revenueData.length === 0 ? (
+              {historicalData.length === 0 ? (
                 <div className="flex items-center justify-center h-[220px] text-sm text-[#64748b]">No transaction data yet</div>
               ) : (
               <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={revenueData}>
+                <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                   <defs>
-                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ff6b00" stopOpacity={0.15} />
+                    <linearGradient id="cashInGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%"  stopColor="#ff6b00" stopOpacity={0.18} />
                       <stop offset="95%" stopColor="#ff6b00" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.18} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
                   <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis tickFormatter={(v) => `₦${(v / 1000).toFixed(0)}K`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
+                  <YAxis tickFormatter={(v: number) => `₦${(v / 1000).toFixed(0)}K`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }}
-                    formatter={(v: number) => `₦${v.toLocaleString()}`}
+                    formatter={(v: number, name: string) => [`₦${v.toLocaleString()}`, name === "cashIn" ? "Cash In" : name === "cashOut" ? "Cash Out" : "Forecast"]}
                   />
-                  <Area type="monotone" dataKey="revenue" stroke="#ff6b00" strokeWidth={2.5} fill="url(#revGrad)" />
-                  <Area type="monotone" dataKey="expenses" stroke="#334155" strokeWidth={2} fill="none" strokeDasharray="4 2" />
+                  {/* "Today" divider when forecast is visible */}
+                  {showForecast && <ReferenceLine x={todayLabel} stroke="#64748b" strokeDasharray="4 2" label={{ value: "Today", fill: "#64748b", fontSize: 10, position: "top" }} />}
+                  {/* Historical */}
+                  <Area type="monotone" dataKey="cashIn" stroke="#ff6b00" strokeWidth={2.5} fill="url(#cashInGrad)" connectNulls={false} dot={false} />
+                  <Area type="monotone" dataKey="cashOut" stroke="#334155" strokeWidth={2} fill="none" strokeDasharray="4 2" connectNulls={false} dot={false} />
+                  {/* Forecast extension */}
+                  {showForecast && <Area type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 3" fill="url(#forecastGrad)" connectNulls dot={false} />}
                 </AreaChart>
               </ResponsiveContainer>
               )}

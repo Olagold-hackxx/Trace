@@ -1,22 +1,29 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Transaction } from "../entities/transaction.entity";
+import { FraudAlert } from "../entities/fraud-alert.entity";
 import { RealtimeService } from "../realtime/realtime.service";
 import { SquadService } from "../squad/squad.service";
 import { LenderService } from "../lender/lender.service";
 import { LenderWallet } from "../entities/lender-wallet.entity";
+import { MlClientService } from "../ml/ml-client.service";
 
 @Injectable()
 export class WebhooksService {
+  private readonly logger = new Logger(WebhooksService.name);
+
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
     @InjectRepository(LenderWallet)
     private readonly lenderWalletsRepository: Repository<LenderWallet>,
+    @InjectRepository(FraudAlert)
+    private readonly fraudAlertsRepository: Repository<FraudAlert>,
     private readonly realtimeService: RealtimeService,
     private readonly squadService: SquadService,
-    private readonly lenderService: LenderService
+    private readonly lenderService: LenderService,
+    private readonly mlClient: MlClientService
   ) {}
 
   async handleSquadWebhook(input: {
@@ -36,7 +43,7 @@ export class WebhooksService {
 
     const existing = await this.transactionsRepository.findOne({ where: { reference: parsed.reference } });
     if (!existing) {
-      await this.transactionsRepository.save({
+      const saved = await this.transactionsRepository.save({
         userId: realUserId,
         reference: parsed.reference,
         type: isLenderDeposit ? "lender_deposit" : parsed.type,
@@ -60,6 +67,13 @@ export class WebhooksService {
       if (isLenderDeposit && parsed.transactionIndicator !== "D") {
         await this.lenderService.creditWallet(realUserId, parsed.amountKobo);
       }
+
+      // Fraud check — fire-and-forget for inflows only, never block the response
+      if (!isLenderDeposit && parsed.transactionIndicator !== "D") {
+        this.runFraudCheck(saved.id, realUserId, parsed).catch((err) =>
+          this.logger.error(`Fraud check failed for txn ${saved.id}: ${(err as Error)?.message}`)
+        );
+      }
     }
 
     await this.realtimeService.publishToUser(realUserId, "transaction.created", {
@@ -77,6 +91,46 @@ export class WebhooksService {
       webhookType: parsed.webhookType,
       reference: parsed.reference
     };
+  }
+
+  private async runFraudCheck(
+    transactionId: string,
+    userId: string,
+    parsed: { amountKobo: string; senderName: string; occurredAt?: Date }
+  ) {
+    const result = await this.mlClient.predictFraud({
+      transaction_id: transactionId,
+      user_id: userId,
+      occurred_at: (parsed.occurredAt ?? new Date()).toISOString(),
+      amount_kobo: Number(parsed.amountKobo),
+      sender_name: parsed.senderName ?? "Unknown",
+      type: "inflow",
+    });
+
+    const severity =
+      result.anomaly_score >= 0.75 ? "high" :
+      result.anomaly_score >= 0.50 ? "medium" : "low";
+
+    await this.fraudAlertsRepository.save({
+      transactionId,
+      userId,
+      anomalyScore: result.anomaly_score,
+      isAnomalous: result.is_anomalous,
+      topSignals: result.top_signals,
+      fraudPenalty: result.fraud_penalty,
+      severity,
+      status: "open",
+    });
+
+    if (result.is_anomalous) {
+      await this.realtimeService.publishToUser(userId, "fraud.alert", {
+        transactionId,
+        anomalyScore: result.anomaly_score,
+        severity,
+        topSignals: result.top_signals,
+        message: `Anomalous transaction detected — ${result.top_signals.slice(0, 2).join(", ")}.`,
+      });
+    }
   }
 
   private parseSquadTransactionPayload(payload: Record<string, unknown>) {

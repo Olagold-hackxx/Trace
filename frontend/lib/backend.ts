@@ -189,6 +189,41 @@ export interface BackendAdminOverview {
   applications: number;
 }
 
+export interface BackendFraudAlert {
+  id: string;
+  transactionId?: string;
+  userId: string;
+  traderName?: string;
+  anomalyScore: number;
+  isAnomalous: boolean;
+  topSignals: string[];
+  fraudPenalty: number;
+  severity: "low" | "medium" | "high";
+  status: "open" | "reviewed";
+  reviewedAt?: string;
+  createdAt: string;
+}
+
+export interface BackendDailyForecast {
+  date: string;
+  predicted_inflow_kobo: number;
+  lower_bound_kobo: number;
+  upper_bound_kobo: number;
+}
+
+export interface BackendForecastResponse {
+  user_id: string;
+  model_version: string;
+  daily: BackendDailyForecast[];
+  dip_warning: {
+    dip_start_date: string;
+    dip_end_date: string;
+    severity: string;
+    expected_gap_kobo: number;
+    suggested_loan_kobo: number;
+  } | null;
+}
+
 export interface TraderSessionSnapshot {
   user: BackendUser;
   virtualAccount?: BackendVirtualAccount | null;
