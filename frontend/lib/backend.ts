@@ -199,7 +199,8 @@ export async function fetchBackend<T>(path: string, options: FetchOptions = {}):
   });
 
   if (!response.ok) {
-    if (response.status === 401 && typeof window !== "undefined") {
+    const isAuthRoute = path.includes("/auth/login") || path.includes("/auth/signup");
+    if (response.status === 401 && !isAuthRoute && typeof window !== "undefined") {
       window.localStorage.removeItem(TRADER_SESSION_STORAGE_KEY);
       window.location.href = "/auth/login";
       throw new Error("Session expired. Redirecting to login.");
