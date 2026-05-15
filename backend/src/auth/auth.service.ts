@@ -1,5 +1,5 @@
 import { randomBytes } from "crypto";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcryptjs";
 import { UsersService } from "../users/users.service";
 import { VirtualAccountsService } from "../virtual-accounts/virtual-accounts.service";
@@ -18,13 +18,28 @@ export class AuthService {
   ) {}
 
   async signup(dto: SignupDto) {
+    const normalizedEmail = dto.email.trim().toLowerCase();
+
+    const [existingPhoneUser, existingEmailUser] = await Promise.all([
+      this.usersService.findByPhone(dto.phone),
+      this.usersService.findByEmail(normalizedEmail)
+    ]);
+
+    if (existingPhoneUser) {
+      throw new ConflictException("An account with this phone number already exists.");
+    }
+
+    if (existingEmailUser) {
+      throw new ConflictException("An account with this email address already exists.");
+    }
+
     const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
 
     const user = await this.usersService.create({
       phone: dto.phone,
       passwordHash,
       fullName: dto.fullName,
-      email: dto.email,
+      email: normalizedEmail,
       businessName: dto.businessName,
       businessType: dto.businessType,
       marketName: dto.marketName,
@@ -47,7 +62,8 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const user = await this.usersService.findForAuth(dto.email);
+    const normalizedEmail = dto.email.trim().toLowerCase();
+    const user = await this.usersService.findByEmail(normalizedEmail, true);
 
     if (!user || !user.passwordHash) {
       throw new UnauthorizedException("Invalid credentials.");

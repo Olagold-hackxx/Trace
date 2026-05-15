@@ -42,11 +42,27 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async findByPhone(phone: string): Promise<User | null> {
+  async findByPhone(phone: string, includePasswordHash = false): Promise<User | null> {
+    if (includePasswordHash) {
+      return this.usersRepository
+        .createQueryBuilder("user")
+        .addSelect("user.passwordHash")
+        .where("user.phone = :phone", { phone })
+        .getOne();
+    }
+
     return this.usersRepository.findOne({ where: { phone } });
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string, includePasswordHash = false): Promise<User | null> {
+    if (includePasswordHash) {
+      return this.usersRepository
+        .createQueryBuilder("user")
+        .addSelect("user.passwordHash")
+        .where("user.email = :email", { email })
+        .getOne();
+    }
+
     return this.usersRepository.findOne({ where: { email } });
   }
 

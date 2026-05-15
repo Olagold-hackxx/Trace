@@ -107,8 +107,8 @@ export default function PaymentsPage() {
         body: JSON.stringify({
           amountKobo: String(Number(requestAmount) * 100),
           description: requestDesc || "Trace payment request",
-          email: user?.email ?? "",
-        }),
+          email: user?.email ?? "customer@trace.app",
+        },
       });
 
       if (!res.ok) {

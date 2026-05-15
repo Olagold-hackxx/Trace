@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/common/brand-logo";
+import { BackendUser, BackendVirtualAccount, fetchBackend, persistTraderSession } from "@/lib/backend";
 
 type Role = "trader" | "lender";
 
@@ -35,10 +36,28 @@ const roles: {
 export default function RolePage() {
   const router = useRouter();
   const [selected, setSelected] = useState<Role | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!selected) return;
-    router.push(selected === "lender" ? "/lender" : "/dashboard");
+    setLoading(true);
+    setError("");
+    try {
+      await fetchBackend("/users/me", {
+        method: "PATCH",
+        bodyJson: { role: selected },
+      });
+      const [user, virtualAccount] = await Promise.all([
+        fetchBackend<BackendUser>("/users/me"),
+        fetchBackend<BackendVirtualAccount>("/virtual-accounts/me").catch(() => null),
+      ]);
+      persistTraderSession({ user, virtualAccount: virtualAccount ?? undefined });
+      router.push(selected === "lender" ? "/lender" : "/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -204,24 +223,29 @@ export default function RolePage() {
 
       {/* CTA */}
       <div style={{ width: "100%", maxWidth: 680 }}>
+        {error && (
+          <p style={{ fontSize: 13, color: "#f87171", textAlign: "center", marginBottom: 12 }}>{error}</p>
+        )}
         <button
           onClick={handleContinue}
-          disabled={!selected}
+          disabled={!selected || loading}
           style={{
             width: "100%",
             padding: "14px 20px",
             borderRadius: 14,
             border: "none",
-            background: selected ? "#ff6b00" : "#1e1e1e",
-            color: selected ? "#fff" : "#475569",
+            background: selected && !loading ? "#ff6b00" : "#1e1e1e",
+            color: selected && !loading ? "#fff" : "#475569",
             fontSize: 15,
             fontWeight: 700,
-            cursor: selected ? "pointer" : "not-allowed",
+            cursor: selected && !loading ? "pointer" : "not-allowed",
             fontFamily: "'Hanken Grotesk', sans-serif",
             transition: "all 0.2s",
           }}
         >
-          {selected
+          {loading
+            ? "Setting up your account..."
+            : selected
             ? `Continue as ${selected === "trader" ? "Trader / Merchant" : "Lender"} →`
             : "Select a role to continue"}
         </button>

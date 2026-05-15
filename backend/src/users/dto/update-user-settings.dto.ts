@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsIn, IsOptional, IsString } from "class-validator";
 
 export class UpdateUserSettingsDto {
   @IsOptional()
@@ -20,4 +20,9 @@ export class UpdateUserSettingsDto {
   @IsOptional()
   @IsString()
   marketName?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(["trader", "lender", "admin"])
+  role?: "trader" | "lender" | "admin";
 }
