@@ -37,6 +37,53 @@ export class PaymentsController {
     return this.paymentsService.updateLink(id, dto);
   }
 
+  // ── QR: permanent flexible link for a slug ───────────────────────────────────
+  @Version("1")
+  @Get("qr/:slug")
+  async getQrForSlug(@Param("slug") slug: string, @Res() res: Response) {
+    const png = await this.paymentsService.getQrForSlug(slug);
+    res.setHeader("Content-Type", "image/png");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send(png);
+  }
+
+  // ── QR: one-time fixed-amount — returns QR image directly ───────────────────
+  @Version("1")
+  @Post("qr/one-time")
+  async getOneTimeQr(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() body: { amountKobo: string; description?: string; email?: string }
+  ) {
+    const result = await this.paymentsService.getOneTimeQr(
+      req.cookies?.kudiscore_session,
+      body.amountKobo,
+      body.description,
+      body.email
+    );
+    res.setHeader("Content-Type", "image/png");
+    res.setHeader("X-Checkout-Url", result.checkoutUrl);
+    res.setHeader("X-Reference", result.reference);
+    res.send(result.qrPng);
+  }
+
+  // ── Public: get link info (no auth — for /pay/[slug] page) ──────────────────
+  @Version("1")
+  @Get("public/:slug")
+  getLinkBySlug(@Param("slug") slug: string) {
+    return this.paymentsService.getLinkBySlug(slug);
+  }
+
+  // ── Public: initiate payment from /pay/[slug] page ───────────────────────────
+  @Version("1")
+  @Post("public/:slug/pay")
+  initiatePublicPayment(
+    @Param("slug") slug: string,
+    @Body() body: { amountKobo: string; email: string; description?: string }
+  ) {
+    return this.paymentsService.initiatePublicPayment(slug, body.amountKobo, body.email, body.description);
+  }
+
   @Version("1")
   @Post("initiate")
   initiatePayment(@Req() req: Request, @Body() dto: InitiatePaymentDto) {

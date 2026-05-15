@@ -28,6 +28,7 @@ export class AuthController {
   @Version("1")
   @Post("login")
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
+    
     const result = await this.authService.login(dto);
     response.cookie("kudiscore_session", result.token, {
       httpOnly: true,
