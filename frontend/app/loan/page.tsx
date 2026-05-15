@@ -19,13 +19,28 @@ import {
   Info,
 } from "@mui/icons-material";
 
-// ─── types ────────────────────────────────────────────────────────────────────
+// ─── raw shape from /api/v1/score/explain ─────────────────────────────────
+interface MlFactorExplanation {
+  feature: string;
+  value: string;
+  phrasing: string;
+  score_delta: number;
+}
+interface MlExplainResponse {
+  user_id: string;
+  score: number;
+  pd: number;
+  helping: MlFactorExplanation[];
+  hurting: MlFactorExplanation[];
+  model_version: string;
+}
+
+// ─── ui shape the drawer consumes ─────────────────────────────────────────
 interface ScoreFactor {
   label: string;
   impact: "positive" | "negative" | "neutral";
   detail: string;
 }
-
 interface ScoreExplain {
   score: number;
   band: string;
@@ -34,11 +49,56 @@ interface ScoreExplain {
   recommendation: string;
 }
 
-// ─── helpers ──────────────────────────────────────────────────────────────────
+// ─── adapter ──────────────────────────────────────────────────────────────
+function toScoreBand(score: number): string {
+  if (score >= 700) return "Strong";
+  if (score >= 550) return "Fair";
+  if (score >= 400) return "Weak";
+  return "Poor";
+}
+function toSummary(score: number, pd: number): string {
+  const pct = (pd * 100).toFixed(1);
+  if (score >= 700)
+    return `Your profile looks healthy to lenders. Estimated default probability is ${pct}%.`;
+  if (score >= 550)
+    return `Your profile is acceptable but has room to improve. Estimated default probability is ${pct}%.`;
+  return `Your profile raises some concerns for lenders. Estimated default probability is ${pct}%. Focus on the hurting factors below.`;
+}
+function toRecommendation(score: number, hurting: MlFactorExplanation[]): string {
+  if (!hurting.length)
+    return "Your profile is in good standing. Keep maintaining consistent cash flow and repayments.";
+  const top = hurting.slice(0, 2).map((h) => h.phrasing).join(" ");
+  return `To improve your score, focus on: ${top}`;
+}
+function adaptExplain(raw: MlExplainResponse): ScoreExplain {
+  const helping: ScoreFactor[] = raw.helping.map((h) => ({
+    label: h.feature.replace(/_/g, " "),
+    impact: "positive" as const,
+    detail: h.phrasing,
+  }));
+  const hurting: ScoreFactor[] = raw.hurting.map((h) => ({
+    label: h.feature.replace(/_/g, " "),
+    impact: "negative" as const,
+    detail: h.phrasing,
+  }));
+  return {
+    score: raw.score,
+    band: toScoreBand(raw.score),
+    summary: toSummary(raw.score, raw.pd),
+    factors: [...helping, ...hurting],
+    recommendation: toRecommendation(raw.score, raw.hurting),
+  };
+}
+
+// ─── fetch ────────────────────────────────────────────────────────────────
+const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 async function fetchScoreExplain(): Promise<ScoreExplain> {
-  const res = await fetch("/api/score/explain");
-  if (!res.ok) throw new Error("Failed to fetch score");
-  return res.json();
+  const res = await fetch(`${API}/api/v1/score/explain`, {
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error(`Score unavailable (${res.status})`);
+  const raw: MlExplainResponse = await res.json();
+  return adaptExplain(raw);
 }
 
 // ─── drawer ───────────────────────────────────────────────────────────────────
@@ -47,7 +107,6 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // fetch on mount
   useState(() => {
     fetchScoreExplain()
       .then(setData)
@@ -137,9 +196,7 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
             >
               <Warning style={{ fontSize: 20, color: "#ef4444", flexShrink: 0, marginTop: 1 }} />
               <div>
-                <p className="text-sm font-semibold text-[#f0f0f0]">
-                  Could not load score
-                </p>
+                <p className="text-sm font-semibold text-[#f0f0f0]">Could not load score</p>
                 <p className="text-xs text-[#94a3b8] mt-1">{error}</p>
               </div>
             </div>
@@ -152,15 +209,9 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                 className="rounded-2xl p-6 flex items-center gap-6"
                 style={{ backgroundColor: bandBg, border: `1px solid ${scoreColor}22` }}
               >
-                {/* ring */}
                 <div className="relative shrink-0 w-24 h-24">
                   <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
-                    <circle
-                      cx="40" cy="40" r="34"
-                      fill="none"
-                      stroke="#1e1e1e"
-                      strokeWidth="8"
-                    />
+                    <circle cx="40" cy="40" r="34" fill="none" stroke="#1e1e1e" strokeWidth="8" />
                     <circle
                       cx="40" cy="40" r="34"
                       fill="none"
@@ -179,9 +230,7 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                     >
                       {data.score}
                     </span>
-                    <span className="text-[9px] text-[#64748b] uppercase tracking-widest">
-                      / 850
-                    </span>
+                    <span className="text-[9px] text-[#64748b] uppercase tracking-widest">/ 850</span>
                   </div>
                 </div>
 
@@ -198,17 +247,13 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                   >
                     Credit score
                   </p>
-                  <p className="text-xs text-[#94a3b8] mt-2 leading-relaxed">
-                    {data.summary}
-                  </p>
+                  <p className="text-xs text-[#94a3b8] mt-2 leading-relaxed">{data.summary}</p>
                 </div>
               </div>
 
               {/* factors */}
               <div>
-                <p
-                  className="text-xs font-semibold uppercase tracking-[0.2em] text-[#64748b] mb-3"
-                >
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#64748b] mb-3">
                   Score factors
                 </p>
                 <div className="space-y-3">
@@ -239,12 +284,8 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                       >
                         <div className="mt-0.5 shrink-0">{icon}</div>
                         <div>
-                          <p className="text-sm font-semibold text-[#f0f0f0]">
-                            {f.label}
-                          </p>
-                          <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">
-                            {f.detail}
-                          </p>
+                          <p className="text-sm font-semibold text-[#f0f0f0] capitalize">{f.label}</p>
+                          <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">{f.detail}</p>
                         </div>
                       </div>
                     );
@@ -263,19 +304,14 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                     Lender recommendation
                   </p>
                 </div>
-                <p className="text-sm text-[#cbd5e1] leading-relaxed">
-                  {data.recommendation}
-                </p>
+                <p className="text-sm text-[#cbd5e1] leading-relaxed">{data.recommendation}</p>
               </div>
             </>
           )}
         </div>
 
         {/* footer */}
-        <div
-          className="px-6 py-4 shrink-0"
-          style={{ borderTop: "1px solid #1a1a1a" }}
-        >
+        <div className="px-6 py-4 shrink-0" style={{ borderTop: "1px solid #1a1a1a" }}>
           <p className="text-xs text-[#475569] text-center">
             Score is indicative and based on your activity on this platform.
           </p>
@@ -283,17 +319,9 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
       </div>
 
       <style>{`
-        @keyframes slideIn {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes spin    { to { transform: rotate(360deg); } }
       `}</style>
     </>
   );
@@ -347,20 +375,15 @@ export default function Page() {
                 Manage your offers and active facility
               </h1>
               <p className="text-sm text-[#94a3b8] mt-2 max-w-2xl">
-                This page is the main place for loans. Review pre-qualified
-                offers, open your active repayment page, and track what is
-                currently available to you.
+                This page is the main place for loans. Review pre-qualified offers, open your
+                active repayment page, and track what is currently available to you.
               </p>
 
-              {/* ── lender view trigger ── */}
+              {/* lender view trigger */}
               <button
                 onClick={() => setShowLenderView(true)}
                 className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-                style={{
-                  backgroundColor: "#1a1a1a",
-                  border: "1px solid #2a2a2a",
-                  color: "#f0f0f0",
-                }}
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a", color: "#f0f0f0" }}
               >
                 <RemoveRedEye style={{ fontSize: 16, color: "#ff6b00" }} />
                 See what lenders see
@@ -385,26 +408,16 @@ export default function Page() {
                 >
                   <Timeline style={{ fontSize: 22, color: "#ff6b00" }} />
                 </div>
-                <p
-                  className="text-lg font-bold text-[#f0f0f0]"
-                  style={{ fontFamily: "Epilogue, sans-serif" }}
-                >
+                <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   Active Loan
                 </p>
                 <p className="text-sm text-[#94a3b8] mt-2">
-                  Open your repayment progress, next due date, and remaining
-                  balance.
+                  Open your repayment progress, next due date, and remaining balance.
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm">
-                  <span className="text-[#cbd5e1]">
-                    {visibleLoan?.amount ?? "No active loan"}
-                  </span>
-                  <span
-                    className="inline-flex items-center gap-1 font-semibold"
-                    style={{ color: "#ff6b00" }}
-                  >
-                    Open
-                    <ChevronRight style={{ fontSize: 16 }} />
+                  <span className="text-[#cbd5e1]">{visibleLoan?.amount ?? "No active loan"}</span>
+                  <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "#ff6b00" }}>
+                    Open <ChevronRight style={{ fontSize: 16 }} />
                   </span>
                 </div>
               </Link>
@@ -420,24 +433,16 @@ export default function Page() {
                 >
                   <EditNote style={{ fontSize: 22, color: "#ff6b00" }} />
                 </div>
-                <p
-                  className="text-lg font-bold text-[#f0f0f0]"
-                  style={{ fontFamily: "Epilogue, sans-serif" }}
-                >
+                <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   Apply for Loan
                 </p>
                 <p className="text-sm text-[#94a3b8] mt-2">
-                  Submit a direct request with amount, purpose, repayment
-                  source, and business proposal.
+                  Submit a direct request with amount, purpose, repayment source, and business proposal.
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm">
                   <span className="text-[#cbd5e1]">Direct request</span>
-                  <span
-                    className="inline-flex items-center gap-1 font-semibold"
-                    style={{ color: "#ff6b00" }}
-                  >
-                    Apply
-                    <ChevronRight style={{ fontSize: 16 }} />
+                  <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "#ff6b00" }}>
+                    Apply <ChevronRight style={{ fontSize: 16 }} />
                   </span>
                 </div>
               </Link>
@@ -453,28 +458,18 @@ export default function Page() {
                 >
                   <AccountBalanceWallet style={{ fontSize: 22, color: "#ff6b00" }} />
                 </div>
-                <p
-                  className="text-lg font-bold text-[#f0f0f0]"
-                  style={{ fontFamily: "Epilogue, sans-serif" }}
-                >
+                <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   Loan Offers
                 </p>
                 <p className="text-sm text-[#94a3b8] mt-2">
-                  Review your lender offers and accept the facility that fits
-                  your business best.
+                  Review your lender offers and accept the facility that fits your business best.
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm">
                   <span className="text-[#cbd5e1]">
-                    {visibleOffers.length > 0
-                      ? `${visibleOffers.length} offers ready`
-                      : "No offers yet"}
+                    {visibleOffers.length > 0 ? `${visibleOffers.length} offers ready` : "No offers yet"}
                   </span>
-                  <span
-                    className="inline-flex items-center gap-1 font-semibold"
-                    style={{ color: "#ff6b00" }}
-                  >
-                    Review
-                    <ChevronRight style={{ fontSize: 16 }} />
+                  <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "#ff6b00" }}>
+                    Review <ChevronRight style={{ fontSize: 16 }} />
                   </span>
                 </div>
               </Link>
@@ -502,9 +497,7 @@ export default function Page() {
                   <Row label="Next due date" value={visibleLoan.nextDueDate} />
                 </div>
               ) : (
-                <p className="text-sm text-[#94a3b8]">
-                  No active loan facility found.
-                </p>
+                <p className="text-sm text-[#94a3b8]">No active loan facility found.</p>
               )}
             </div>
 
@@ -523,9 +516,7 @@ export default function Page() {
                   className="rounded-xl p-4"
                   style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}
                 >
-                  <p className="text-sm font-semibold text-[#f0f0f0]">
-                    {visibleOffers[0].name}
-                  </p>
+                  <p className="text-sm font-semibold text-[#f0f0f0]">{visibleOffers[0].name}</p>
                   <p
                     className="text-2xl font-bold text-[#f0f0f0] mt-2"
                     style={{ fontFamily: "Epilogue, sans-serif" }}
@@ -533,18 +524,8 @@ export default function Page() {
                     {visibleOffers[0].amount}
                   </p>
                   <div className="space-y-1 mt-3 text-sm text-[#94a3b8]">
-                    <p>
-                      Rate:{" "}
-                      <span className="font-semibold text-[#f0f0f0]">
-                        {visibleOffers[0].rate}
-                      </span>
-                    </p>
-                    <p>
-                      Tenor:{" "}
-                      <span className="font-semibold text-[#f0f0f0]">
-                        {visibleOffers[0].tenor}
-                      </span>
-                    </p>
+                    <p>Rate: <span className="font-semibold text-[#f0f0f0]">{visibleOffers[0].rate}</span></p>
+                    <p>Tenor: <span className="font-semibold text-[#f0f0f0]">{visibleOffers[0].tenor}</span></p>
                   </div>
                   <Link
                     href={`/loan/offer?offer=${visibleOffers[0].id}`}
@@ -569,15 +550,11 @@ export default function Page() {
                 <EditNote style={{ fontSize: 22, color: "#ff6b00" }} />
               </div>
               <div>
-                <p
-                  className="text-base font-bold text-[#f0f0f0]"
-                  style={{ fontFamily: "Epilogue, sans-serif" }}
-                >
+                <p className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   Need a custom request?
                 </p>
                 <p className="text-sm text-[#94a3b8] mt-1">
-                  Open the direct loan application form and submit your
-                  proposal.
+                  Open the direct loan application form and submit your proposal.
                 </p>
               </div>
             </Link>
@@ -594,10 +571,7 @@ export default function Page() {
                 <Payments style={{ fontSize: 22, color: "#ff6b00" }} />
               </div>
               <div>
-                <p
-                  className="text-base font-bold text-[#f0f0f0]"
-                  style={{ fontFamily: "Epilogue, sans-serif" }}
-                >
+                <p className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   Make a repayment
                 </p>
                 <p className="text-sm text-[#94a3b8] mt-1">
@@ -609,10 +583,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* drawer portal */}
-      {showLenderView && (
-        <LenderViewDrawer onClose={() => setShowLenderView(false)} />
-      )}
+      {showLenderView && <LenderViewDrawer onClose={() => setShowLenderView(false)} />}
     </AppShell>
   );
 }
