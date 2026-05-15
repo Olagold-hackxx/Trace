@@ -5,7 +5,15 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/common/brand-logo";
-import { Visibility, VisibilityOff, Person, Phone, Lock, Email, AssignmentInd } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  Person,
+  Phone,
+  Lock,
+  Email,
+  AssignmentInd,
+} from "@mui/icons-material";
 import {
   BackendUser,
   BackendVirtualAccount,
@@ -34,33 +42,44 @@ function Field({
   children,
 }: {
   label: string;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   error?: string;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#94a3b8", marginBottom: 6 }}>
+      <label
+        style={{
+          display: "block",
+          fontSize: 13,
+          fontWeight: 600,
+          color: "#94a3b8",
+          marginBottom: 6,
+        }}
+      >
         {label}
       </label>
       <div style={{ position: "relative" }}>
-        <Icon
-          style={{
-            position: "absolute",
-            left: 14,
-            top: "50%",
-            transform: "translateY(-50%)",
-            fontSize: 18,
-            color: "#64748b",
-          }}
-        />
+        {Icon && (
+          <Icon
+            style={{
+              position: "absolute",
+              left: 14,
+              top: "50%",
+              transform: "translateY(-50%)",
+              fontSize: 18,
+              color: "#64748b",
+            }}
+          />
+        )}
         {children}
       </div>
-      {error ? <p style={{ fontSize: 12, color: "#dc2626", marginTop: 5 }}>{error}</p> : null}
+      {error ? (
+        <p style={{ fontSize: 12, color: "#dc2626", marginTop: 5 }}>{error}</p>
+      ) : null}
     </div>
   );
 }
-
 export default function RegisterPage() {
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
@@ -74,25 +93,30 @@ export default function RegisterPage() {
     password: "",
   });
 
-  const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [key]: e.target.value }));
-    if (errors[key]) {
-      setErrors((prev) => ({ ...prev, [key]: "" }));
-    }
-  };
+  const set =
+    (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [key]: e.target.value }));
+      if (errors[key]) {
+        setErrors((prev) => ({ ...prev, [key]: "" }));
+      }
+    };
 
   const validate = () => {
     const nextErrors: Record<string, string> = {};
 
     if (!form.fullName.trim()) nextErrors.fullName = "Full name is required";
     if (!form.email.trim()) nextErrors.email = "Email address is required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) nextErrors.email = "Enter a valid email address";
+    else if (!/\S+@\S+\.\S+/.test(form.email))
+      nextErrors.email = "Enter a valid email address";
     if (!form.phone.trim()) nextErrors.phone = "Phone number is required";
-    else if (form.phone.replace(/\D/g, "").length < 10) nextErrors.phone = "Enter a valid Nigerian phone number";
+    else if (form.phone.replace(/\D/g, "").length < 10)
+      nextErrors.phone = "Enter a valid Nigerian phone number";
     if (!form.bvn.trim()) nextErrors.bvn = "BVN is required";
-    else if (!/^\d{11}$/.test(form.bvn)) nextErrors.bvn = "BVN must be 11 digits";
+    else if (!/^\d{11}$/.test(form.bvn))
+      nextErrors.bvn = "BVN must be 11 digits";
     if (!form.password) nextErrors.password = "Password is required";
-    else if (form.password.length < 8) nextErrors.password = "Password must be at least 8 characters";
+    else if (form.password.length < 8)
+      nextErrors.password = "Password must be at least 8 characters";
 
     return nextErrors;
   };
@@ -126,11 +150,17 @@ export default function RegisterPage() {
       });
 
       storeAuthToken(result.token);
-      persistTraderSession({ user: result.user, virtualAccount: result.virtualAccount });
+      persistTraderSession({
+        user: result.user,
+        virtualAccount: result.virtualAccount,
+      });
       router.push("/auth/role");
     } catch (error) {
       setErrors({
-        form: error instanceof Error ? error.message : "Could not create your account. Try again.",
+        form:
+          error instanceof Error
+            ? error.message
+            : "Could not create your account. Try again.",
       });
     } finally {
       setLoading(false);
@@ -147,8 +177,23 @@ export default function RegisterPage() {
   });
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", fontFamily: "'Hanken Grotesk', sans-serif", backgroundColor: "#0d0d0d" }}>
-      <div className="hidden lg:block" style={{ width: "42%", position: "relative", overflow: "hidden", minHeight: "100vh" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        fontFamily: "'Hanken Grotesk', sans-serif",
+        backgroundColor: "#0d0d0d",
+      }}
+    >
+      <div
+        className="hidden lg:block"
+        style={{
+          width: "42%",
+          position: "relative",
+          overflow: "hidden",
+          minHeight: "100vh",
+        }}
+      >
         <Image
           src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=900&q=85&auto=format&fit=crop"
           alt="Lagos market traders"
@@ -156,44 +201,106 @@ export default function RegisterPage() {
           style={{ objectFit: "cover" }}
           priority
         />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #0d0d0d 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.25) 100%)" }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, #0d0d0d 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.25) 100%)",
+          }}
+        />
         <div style={{ position: "absolute", top: 40, left: 40, zIndex: 10 }}>
           <BrandLogo href="/" iconSize={38} textSize={22} textColor="#ffffff" />
         </div>
-        <div style={{ position: "absolute", bottom: 48, left: 40, right: 40, zIndex: 10 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#ff6b00", marginBottom: 12 }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 48,
+            left: 40,
+            right: 40,
+            zIndex: 10,
+          }}
+        >
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#ff6b00",
+              marginBottom: 12,
+            }}
+          >
             Built for Nigeria
           </p>
-          <h2 style={{ fontFamily: "'Epilogue', sans-serif", fontSize: 32, fontWeight: 800, color: "#fff", lineHeight: 1.2, marginBottom: 14 }}>
-            Your financial identity, <span style={{ color: "#ff6b00" }}>built every day.</span>
+          <h2
+            style={{
+              fontFamily: "'Epilogue', sans-serif",
+              fontSize: 32,
+              fontWeight: 800,
+              color: "#fff",
+              lineHeight: 1.2,
+              marginBottom: 14,
+            }}
+          >
+            Your financial identity,{" "}
+            <span style={{ color: "#ff6b00" }}>built every day.</span>
           </h2>
           <p style={{ fontSize: 14, color: "#94a3b8", lineHeight: 1.7 }}>
-            Every transaction you record becomes part of your creditworthiness — and opens doors banks never could.
+            Every transaction you record becomes part of your creditworthiness —
+            and opens doors banks never could.
           </p>
         </div>
       </div>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 24px", overflowY: "auto" }}>
-        <div className="flex lg:hidden" style={{ marginBottom: 32, width: "100%", maxWidth: 440 }}>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "48px 24px",
+          overflowY: "auto",
+        }}
+      >
+        <div
+          className="flex lg:hidden"
+          style={{ marginBottom: 32, width: "100%", maxWidth: 440 }}
+        >
           <BrandLogo href="/" iconSize={34} textSize={20} textColor="#ffffff" />
         </div>
 
         <div style={{ maxWidth: 420, width: "100%" }}>
-          <h1 style={{ fontFamily: "'Epilogue', sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 6 }}>
+          <h1
+            style={{
+              fontFamily: "'Epilogue', sans-serif",
+              fontSize: 28,
+              fontWeight: 800,
+              color: "#fff",
+              marginBottom: 6,
+            }}
+          >
             Create your account
           </h1>
           <p style={{ fontSize: 14, color: "#64748b", marginBottom: 32 }}>
             Get started in under 2 minutes. No paperwork.
           </p>
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: 18 }}
+          >
             <Field label="Full Name" icon={Person} error={errors.fullName}>
               <input
                 type="text"
                 placeholder="Amaka Okonkwo"
                 value={form.fullName}
                 onChange={set("fullName")}
-                style={{ ...inputStyle, borderColor: errors.fullName ? "#dc2626" : "#2a2a2a" }}
+                style={{
+                  ...inputStyle,
+                  borderColor: errors.fullName ? "#dc2626" : "#2a2a2a",
+                }}
                 {...focusStyle("fullName")}
               />
             </Field>
@@ -204,7 +311,10 @@ export default function RegisterPage() {
                 placeholder="+2348012345678"
                 value={form.phone}
                 onChange={set("phone")}
-                style={{ ...inputStyle, borderColor: errors.phone ? "#dc2626" : "#2a2a2a" }}
+                style={{
+                  ...inputStyle,
+                  borderColor: errors.phone ? "#dc2626" : "#2a2a2a",
+                }}
                 {...focusStyle("phone")}
               />
             </Field>
@@ -215,19 +325,26 @@ export default function RegisterPage() {
                 placeholder="amaka@amakafoods.ng"
                 value={form.email}
                 onChange={set("email")}
-                style={{ ...inputStyle, borderColor: errors.email ? "#dc2626" : "#2a2a2a" }}
+                style={{
+                  ...inputStyle,
+                  borderColor: errors.email ? "#dc2626" : "#2a2a2a",
+                }}
                 {...focusStyle("email")}
               />
             </Field>
 
-            <Field label="BVN" icon={AssignmentInd} error={errors.bvn}>
+            <Field label="BVN" error={errors.bvn}>
               <input
                 type="text"
                 placeholder="Enter your 11-digit BVN"
                 value={form.bvn}
                 onChange={set("bvn")}
                 maxLength={11}
-                style={{ ...inputStyle, borderColor: errors.bvn ? "#dc2626" : "#2a2a2a" }}
+                style={{
+                  ...inputStyle,
+                  paddingLeft: 16,
+                  borderColor: errors.bvn ? "#dc2626" : "#2a2a2a",
+                }}
                 {...focusStyle("bvn")}
               />
             </Field>
@@ -238,20 +355,46 @@ export default function RegisterPage() {
                 placeholder="Min. 8 characters"
                 value={form.password}
                 onChange={set("password")}
-                style={{ ...inputStyle, paddingRight: 44, borderColor: errors.password ? "#dc2626" : "#2a2a2a" }}
+                style={{
+                  ...inputStyle,
+                  paddingRight: 44,
+                  borderColor: errors.password ? "#dc2626" : "#2a2a2a",
+                }}
                 {...focusStyle("password")}
               />
               <button
                 type="button"
                 onClick={() => setShowPass((prev) => !prev)}
-                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#64748b", padding: 0, display: "flex" }}
+                style={{
+                  position: "absolute",
+                  right: 14,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#64748b",
+                  padding: 0,
+                  display: "flex",
+                }}
               >
-                {showPass ? <VisibilityOff style={{ fontSize: 18 }} /> : <Visibility style={{ fontSize: 18 }} />}
+                {showPass ? (
+                  <VisibilityOff style={{ fontSize: 18 }} />
+                ) : (
+                  <Visibility style={{ fontSize: 18 }} />
+                )}
               </button>
             </Field>
 
             {errors.form ? (
-              <div style={{ padding: "10px 14px", borderRadius: 10, backgroundColor: "#1c0f0f", border: "1px solid #7f1d1d" }}>
+              <div
+                style={{
+                  padding: "10px 14px",
+                  borderRadius: 10,
+                  backgroundColor: "#1c0f0f",
+                  border: "1px solid #7f1d1d",
+                }}
+              >
                 <p style={{ fontSize: 13, color: "#fca5a5" }}>{errors.form}</p>
               </div>
             ) : null}
@@ -276,14 +419,36 @@ export default function RegisterPage() {
               {loading ? "Creating account..." : "Continue →"}
             </button>
 
-            <p style={{ fontSize: 12, color: "#3d4752", textAlign: "center", lineHeight: 1.6 }}>
-              By continuing you agree to Trace&apos;s Terms of Service and Privacy Policy.
+            <p
+              style={{
+                fontSize: 12,
+                color: "#3d4752",
+                textAlign: "center",
+                lineHeight: 1.6,
+              }}
+            >
+              By continuing you agree to Trace&apos;s Terms of Service and
+              Privacy Policy.
             </p>
           </form>
 
-          <p style={{ textAlign: "center", marginTop: 20, fontSize: 14, color: "#64748b" }}>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: 20,
+              fontSize: 14,
+              color: "#64748b",
+            }}
+          >
             Already have an account?{" "}
-            <Link href="/auth/login" style={{ color: "#ff6b00", textDecoration: "none", fontWeight: 600 }}>
+            <Link
+              href="/auth/login"
+              style={{
+                color: "#ff6b00",
+                textDecoration: "none",
+                fontWeight: 600,
+              }}
+            >
               Sign in
             </Link>
           </p>
