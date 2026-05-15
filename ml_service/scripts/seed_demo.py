@@ -105,6 +105,12 @@ GENERIC_SENDERS = [
 def uid(seed: str) -> str:
     return str(uuid.uuid5(NAMESPACE, seed))
 
+def gen_bvn(seed_str: str) -> str:
+    """Generate a deterministic 11-digit BVN from a seed string."""
+    rng = random.Random(seed_str)
+    # First digit must be non-zero
+    return str(rng.randint(1, 9)) + "".join(str(rng.randint(0, 9)) for _ in range(10))
+
 def nowutc() -> datetime:
     return datetime.now(timezone.utc)
 
@@ -390,24 +396,27 @@ def seed_users(cur, demo_day: date) -> dict:
 
     rows = []
     for (name, phone, archetype, market, score, gender, age, biz, *_) in TRADERS:
+        bvn = gen_bvn(f"bvn-{phone}")
         rows.append((
             uid(phone), phone, password_hash, name, biz, None, market,
             "english", "trader", archetype, gender, age,
-            None, None, demo_email(name), False,
+            bvn[-4:], bvn, demo_email(name), False,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
     for (name, phone, _, display) in LENDERS:
+        bvn = gen_bvn(f"bvn-{phone}")
         rows.append((
             uid(phone), phone, password_hash, display, None, None, None,
             "english", "lender", None, None, None,
-            None, None, f"{phone}@demo.trace", True,
+            bvn[-4:], bvn, f"{phone}@demo.trace", True,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
     for (name, phone, archetype, market, score, gender, age) in WORKER_USERS:
+        bvn = gen_bvn(f"bvn-{phone}")
         rows.append((
             uid(phone), phone, password_hash, name, None, None, market,
             "english", "trader", archetype, gender, age,
-            None, None, demo_email(name), False,
+            bvn[-4:], bvn, demo_email(name), False,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
 
@@ -422,7 +431,9 @@ def seed_users(cur, demo_day: date) -> dict:
             password_hash = EXCLUDED.password_hash,
             archetype     = EXCLUDED.archetype,
             market_name   = EXCLUDED.market_name,
-            email         = EXCLUDED.email
+            email         = EXCLUDED.email,
+            bvn           = EXCLUDED.bvn,
+            bvn_last4     = EXCLUDED.bvn_last4
     """, rows)
 
     return {phone: uid(phone) for (_, phone, *_) in TRADERS + LENDERS + WORKER_USERS}
