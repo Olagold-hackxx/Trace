@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FilterList, Search, CheckCircle, Cancel, Visibility } from "@mui/icons-material";
+import { FilterList, Search, CheckCircle, Cancel, Visibility, Wallet } from "@mui/icons-material";
 import { useLenderData } from "@/hooks/use-lender-data";
 import { fetchBackend, formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 
@@ -23,10 +23,11 @@ const statusStyle: Record<string, { color: string; bg: string }> = {
 
 export default function ApprovalsPage() {
   const router = useRouter();
-  const { applications, merchants } = useLenderData();
+  const { applications, merchants, wallet } = useLenderData();
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
   const [decisions, setDecisions] = useState<Record<string, "approve" | "decline">>({});
+  const [decisionError, setDecisionError] = useState<string | null>(null);
 
   const enriched = useMemo(() => applications.map((application) => {
     const merchant = merchants.find((item) => item.id === application.userId);
@@ -52,15 +53,22 @@ export default function ApprovalsPage() {
   const totalRequestedKobo = filtered.reduce((sum, item) => sum + Number(item.amountKobo), 0);
 
   const decide = async (id: string, decision: "approve" | "decline", userId: string) => {
-    await fetchBackend(`/lender/applications/${id}/decision`, {
-      method: "POST",
-      bodyJson: { decision },
-    });
-    setDecisions((current) => ({ ...current, [id]: decision }));
-    if (decision === "approve") {
-      router.push(`/lender/merchants/${userId}`);
+    setDecisionError(null);
+    try {
+      await fetchBackend(`/lender/applications/${id}/decision`, {
+        method: "POST",
+        bodyJson: { decision },
+      });
+      setDecisions((current) => ({ ...current, [id]: decision }));
+      if (decision === "approve") {
+        router.push(`/lender/merchants/${userId}`);
+      }
+    } catch (err) {
+      setDecisionError(err instanceof Error ? err.message : "Failed to process decision.");
     }
   };
+
+  const availableKobo = Number(wallet?.availableKobo ?? 0);
 
   return (
     <AppShell role="lender">
@@ -69,6 +77,33 @@ export default function ApprovalsPage() {
           <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Loan Approval Queue</h1>
           <p className="text-sm text-[#94a3b8] mt-1">Review and decide real backend applications</p>
         </div>
+
+        {/* Wallet Balance Banner */}
+        <div className="rounded-2xl p-4 mb-6 flex items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: availableKobo > 0 ? "#3b1d09" : "#1e1e1e" }}>
+              <Wallet style={{ fontSize: 18, color: availableKobo > 0 ? "#ff6b00" : "#64748b" }} />
+            </div>
+            <div>
+              <p className="text-xs text-[#94a3b8]">Available Capital</p>
+              <p className="font-bold text-[#f0f0f0]">{formatNairaFromKobo(availableKobo)}</p>
+            </div>
+          </div>
+          {availableKobo === 0 && (
+            <Link href="/lender/wallet" className="px-4 py-2 rounded-xl text-xs font-semibold text-white" style={{ backgroundColor: "#ff6b00" }}>
+              Fund Wallet to Approve
+            </Link>
+          )}
+        </div>
+
+        {decisionError && (
+          <div className="rounded-xl p-3 mb-4 text-sm" style={{ backgroundColor: "#1c0f0f", border: "1px solid #7f1d1d", color: "#fca5a5" }}>
+            {decisionError}
+            {decisionError.includes("Insufficient") && (
+              <Link href="/lender/wallet" className="ml-2 underline font-semibold">Top up wallet →</Link>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[

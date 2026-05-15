@@ -4,14 +4,19 @@ import { Repository } from "typeorm";
 import { Transaction } from "../entities/transaction.entity";
 import { RealtimeService } from "../realtime/realtime.service";
 import { SquadService } from "../squad/squad.service";
+import { LenderService } from "../lender/lender.service";
+import { LenderWallet } from "../entities/lender-wallet.entity";
 
 @Injectable()
 export class WebhooksService {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
+    @InjectRepository(LenderWallet)
+    private readonly lenderWalletsRepository: Repository<LenderWallet>,
     private readonly realtimeService: RealtimeService,
-    private readonly squadService: SquadService
+    private readonly squadService: SquadService,
+    private readonly lenderService: LenderService
   ) {}
 
   async handleSquadWebhook(input: {
@@ -28,12 +33,16 @@ export class WebhooksService {
 
     const parsed = this.parseSquadTransactionPayload(input.payload);
 
+    // If customer_identifier starts with "lender-", this is a lender wallet deposit
+    const isLenderDeposit = parsed.userId.startsWith("lender-");
+    const realUserId = isLenderDeposit ? parsed.userId.replace(/^lender-/, "") : parsed.userId;
+
     const existing = await this.transactionsRepository.findOne({ where: { reference: parsed.reference } });
     if (!existing) {
       await this.transactionsRepository.save({
-        userId: parsed.userId,
+        userId: realUserId,
         reference: parsed.reference,
-        type: parsed.type,
+        type: isLenderDeposit ? "lender_deposit" : parsed.type,
         amountKobo: parsed.amountKobo,
         senderName: parsed.senderName,
         senderAccount: parsed.maskedSenderAccountNumber,
@@ -49,9 +58,14 @@ export class WebhooksService {
         occurredAt: parsed.occurredAt,
         rawPayload: input.payload
       });
+
+      // Credit the lender's wallet on deposit
+      if (isLenderDeposit && parsed.transactionIndicator !== "D") {
+        await this.lenderService.creditWallet(realUserId, parsed.amountKobo);
+      }
     }
 
-    await this.realtimeService.publishToUser(parsed.userId, "transaction.created", {
+    await this.realtimeService.publishToUser(realUserId, "transaction.created", {
       reference: parsed.reference,
       amountKobo: parsed.amountKobo,
       senderName: parsed.senderName,

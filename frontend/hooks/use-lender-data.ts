@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   BackendJob,
   BackendLenderPortfolioSummary,
+  BackendLenderWallet,
   BackendLoan,
   BackendLoanApplication,
   BackendScoreSnapshot,
@@ -15,6 +16,7 @@ import {
 interface LenderDataState {
   user: BackendUser | null;
   summary: BackendLenderPortfolioSummary | null;
+  wallet: BackendLenderWallet | null;
   applications: BackendLoanApplication[];
   merchants: BackendUser[];
   jobs: BackendJob[];
@@ -25,25 +27,29 @@ export function useLenderData() {
   const [state, setState] = useState<LenderDataState>({
     user: null,
     summary: null,
+    wallet: null,
     applications: [],
     merchants: [],
     jobs: [],
     loading: true,
   });
 
-  useEffect(() => {
+  const refresh = useCallback(() => {
     void Promise.all([
       fetchBackend<BackendUser>("/users/me"),
       fetchBackend<BackendLenderPortfolioSummary>("/lender/portfolio/summary"),
+      fetchBackend<BackendLenderWallet>("/lender/wallet"),
       fetchBackend<BackendLoanApplication[]>("/lender/applications"),
       fetchBackend<BackendUser[]>("/lender/merchants"),
       fetchBackend<BackendJob[]>("/lender/portfolio/jobs"),
-    ]).then(([user, summary, applications, merchants, jobs]) => {
-      setState({ user, summary, applications, merchants, jobs, loading: false });
+    ]).then(([user, summary, wallet, applications, merchants, jobs]) => {
+      setState({ user, summary, wallet, applications, merchants, jobs, loading: false });
     });
   }, []);
 
-  return state;
+  useEffect(() => { refresh(); }, [refresh]);
+
+  return { ...state, refresh };
 }
 
 export async function fetchMerchantSnapshot(merchantId: string) {

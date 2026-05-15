@@ -132,6 +132,22 @@ export interface BackendLenderPortfolioSummary {
   totalAumKobo: number;
   activeLoans: number;
   totalLoans: number;
+  availableCapitalKobo: number;
+  deployedKobo: number;
+  totalReturnsKobo: number;
+}
+
+export interface BackendLenderWallet {
+  id: string;
+  userId: string;
+  availableKobo: string;
+  deployedKobo: string;
+  totalDepositedKobo: string;
+  totalReturnsKobo: string;
+  virtualAccountNumber?: string;
+  bankName?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface BackendLenderSettings {

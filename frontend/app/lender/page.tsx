@@ -8,7 +8,7 @@ import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 import { Spinner } from "@/components/ui/spinner";
 import {
   AccountBalance, TrendingUp, People, Warning, CheckCircle,
-  ChevronRight,
+  ChevronRight, Wallet,
 } from "@mui/icons-material";
 import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -35,7 +35,7 @@ function Badge({ label, style }: { label: string; style: { color: string; bg: st
 const SECTOR_COLORS = ["#ff6b00", "#2563eb", "#7c3aed", "#d97706", "#16a34a", "#0891b2", "#be185d"];
 
 export default function LenderDashboardPage() {
-  const { user, summary, applications, merchants, loading } = useLenderData();
+  const { user, summary, wallet, applications, merchants, loading } = useLenderData();
   const topMerchants = merchants.slice(0, 5);
 
   // Derive sector distribution from real merchant data
@@ -71,11 +71,34 @@ export default function LenderDashboardPage() {
         </div>
 
         {/* Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <MetricCard label="Total AUM" value={formatNairaFromKobo(summary?.totalAumKobo)} icon={AccountBalance} color="#ff6b00" />
           <MetricCard label="Active Loans" value={String(summary?.activeLoans ?? 0)} icon={TrendingUp} sub={`${applications.length} applications in pipeline`} color="#ff6b00" />
           <MetricCard label="Merchants" value={String(merchants.length)} icon={People} color="#ff6b00" />
           <MetricCard label="Pipeline" value={String(applications.length)} icon={Warning} sub="Live backend approvals" color="#dc2626" />
+        </div>
+
+        {/* Wallet Summary Banner */}
+        <div className="rounded-2xl p-5 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#3b1d09" }}>
+              <Wallet style={{ fontSize: 22, color: "#ff6b00" }} />
+            </div>
+            <div>
+              <p className="text-xs text-[#94a3b8] mb-0.5">Available Capital</p>
+              <p className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
+                {formatNairaFromKobo(wallet?.availableKobo ?? 0)}
+              </p>
+            </div>
+            <div className="hidden sm:block w-px h-10 mx-2" style={{ backgroundColor: "#1e1e1e" }} />
+            <div className="hidden sm:block">
+              <p className="text-xs text-[#94a3b8] mb-0.5">Deployed</p>
+              <p className="font-bold text-[#f0f0f0]">{formatNairaFromKobo(wallet?.deployedKobo ?? 0)}</p>
+            </div>
+          </div>
+          <Link href="/lender/wallet" className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 whitespace-nowrap" style={{ backgroundColor: "#ff6b00" }}>
+            {wallet?.virtualAccountNumber ? "Manage Wallet" : "Set Up Wallet →"}
+          </Link>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6 mb-6">

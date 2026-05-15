@@ -7,10 +7,32 @@ import { LenderService } from "./lender.service";
 export class LenderController {
   constructor(private readonly lenderService: LenderService) {}
 
+  // ─── Wallet ────────────────────────────────────────────────────────────────
+
+  @Version("1")
+  @Get("wallet")
+  getWallet(@Req() req: Request) {
+    return this.lenderService.getWallet(req.cookies?.kudiscore_session);
+  }
+
+  @Version("1")
+  @Post("wallet/provision")
+  provisionWalletAccount(@Req() req: Request) {
+    return this.lenderService.provisionWalletAccount(req.cookies?.kudiscore_session);
+  }
+
+  @Version("1")
+  @Post("wallet/withdraw")
+  requestWithdrawal(@Req() req: Request, @Body() body: { amountKobo: string }) {
+    return this.lenderService.requestWithdrawal(req.cookies?.kudiscore_session, body.amountKobo);
+  }
+
+  // ─── Portfolio ──────────────────────────────────────────────────────────────
+
   @Version("1")
   @Get("portfolio/summary")
-  getPortfolioSummary() {
-    return this.lenderService.getPortfolioSummary();
+  getPortfolioSummary(@Req() req: Request) {
+    return this.lenderService.getPortfolioSummary(req.cookies?.kudiscore_session);
   }
 
   @Version("1")

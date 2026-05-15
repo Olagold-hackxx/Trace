@@ -8,6 +8,7 @@ import { envValidationSchema } from "./env.validation";
 import { HealthModule } from "./health/health.module";
 import { JobApplication } from "./entities/job-application.entity";
 import { Job } from "./entities/job.entity";
+import { LenderWallet } from "./entities/lender-wallet.entity";
 import { LoanApplication } from "./entities/loan-application.entity";
 import { LoanOffer } from "./entities/loan-offer.entity";
 import { Loan } from "./entities/loan.entity";
@@ -48,7 +49,7 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
           ...getDatabaseOptions(configService),
           synchronize: dbSync === true || dbSync === "true",
           autoLoadEntities: false,
-          entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session]
+          entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session, LenderWallet]
         };
       }
     }),

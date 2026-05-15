@@ -33,6 +33,7 @@ const userNav = [
 
 const lenderNav = [
   { label: "Dashboard", href: "/lender", icon: Dashboard },
+  { label: "Wallet", href: "/lender/wallet", icon: Wallet },
   { label: "Loan Pipeline", href: "/lender/approvals", icon: AccountBalanceWallet },
   { label: "Merchants", href: "/lender/traders", icon: Groups },
   { label: "Jobs & Hiring", href: "/lender/jobs", icon: Work },
@@ -57,7 +58,7 @@ export function Sidebar({ role = "user" }: SidebarProps) {
   const nav = role === "lender" ? lenderNav : userNav;
   const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
   const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
-  const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/score", "/tracescore", "/lender/analytics"]);
+  const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/score", "/tracescore", "/lender/analytics", "/lender/wallet"]);
   const traderScore = traderIdentity.score?.score ?? 742;
   const scorePct = Math.min(100, Math.round((traderScore / 900) * 100));
 
