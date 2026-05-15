@@ -8,7 +8,7 @@ async function bootstrap() {
     rawBody: true
   });
 
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "https://trace-nu-dusky.vercel.app")
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "https://trace-nu-dusky.vercel.app,http://localhost:3001")
     .split(",")
     .map((o) => o.trim());
 
