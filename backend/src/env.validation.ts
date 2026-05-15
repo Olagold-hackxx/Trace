@@ -27,7 +27,8 @@ export const envValidationSchema = Joi.object({
   APP_BASE_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com"),
   FRONTEND_URL: Joi.string().uri().empty("").default("https://trace-nu-dusky.vercel.app"),
   SQUAD_REDIRECT_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com/api/v1/payments/callback"),
-  PUBLIC_WEBHOOK_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com/api/v1/webhooks/squad")
+  PUBLIC_WEBHOOK_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com/api/v1/webhooks/squad"),
+  ML_SERVICE_URL: Joi.string().uri().empty("").default("http://localhost:8000")
 })
   .or("DATABASE_URL", "DB_HOST")
   .with("DB_HOST", ["DB_NAME", "DB_USER"])

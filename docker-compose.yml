@@ -9,6 +9,7 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/kudiscore
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+      ML_SERVICE_URL: http://ml_service:8000
     ports:
       - "3001:3001"
     depends_on:
@@ -16,6 +17,20 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      ml_service:
+        condition: service_started
+
+  ml_service:
+    build:
+      context: ./ml_service
+    container_name: kudiscore-ml-service
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/kudiscore
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:16-alpine

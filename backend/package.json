@@ -12,7 +12,11 @@
     "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug 0.0.0.0:9229 --watch",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/typeorm.config.ts",
+    "migration:run": "typeorm migration:run -d dist/typeorm.config.js",
+    "migration:revert": "typeorm migration:revert -d dist/typeorm.config.js",
+    "migration:show": "typeorm migration:show -d dist/typeorm.config.js"
   },
   "dependencies": {
     "@nestjs/axios": "^3.1.3",

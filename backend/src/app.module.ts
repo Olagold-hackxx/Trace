@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { getDatabaseOptions } from "./database/database-options";
+import { SnakeNamingStrategy } from "./common/snake-naming-strategy";
 import { AdminModule } from "./admin/admin.module";
 import { AuthModule } from "./auth/auth.module";
 import { envValidationSchema } from "./env.validation";
@@ -47,6 +48,7 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
         return {
           type: "postgres",
           ...getDatabaseOptions(configService),
+          namingStrategy: new SnakeNamingStrategy(),
           synchronize: dbSync === true || dbSync === "true",
           autoLoadEntities: false,
           entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session, LenderWallet]

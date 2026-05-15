@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Version } from "@nestjs/common";
+import { Controller, Get, Query, Req, Version } from "@nestjs/common";
 import { Request } from "express";
 import { ScoreService } from "./score.service";
 
@@ -16,6 +16,15 @@ export class ScoreController {
   @Get("explain")
   getExplanation(@Req() req: Request) {
     return this.scoreService.getExplanation(req.cookies?.kudiscore_session);
+  }
+
+  @Version("1")
+  @Get("forecast")
+  getForecast(@Req() req: Request, @Query("horizon_days") horizonDays?: string) {
+    return this.scoreService.getForecast(
+      req.cookies?.kudiscore_session,
+      horizonDays ? Number.parseInt(horizonDays, 10) : 30,
+    );
   }
 
   @Version("1")

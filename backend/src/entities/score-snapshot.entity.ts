@@ -11,6 +11,9 @@ export class ScoreSnapshot {
   @Column()
   score!: number;
 
+  @Column({ type: "decimal", precision: 10, scale: 6, nullable: true })
+  pd?: number;
+
   @Column({ type: "jsonb", default: {} })
   subScores!: Record<string, unknown>;
 

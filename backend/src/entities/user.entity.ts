@@ -29,6 +29,15 @@ export class User {
   role!: UserRole;
 
   @Column({ nullable: true })
+  archetype?: string;
+
+  @Column({ nullable: true })
+  gender?: string;
+
+  @Column({ nullable: true })
+  ageBracket?: string;
+
+  @Column({ nullable: true })
   bvnLast4?: string;
 
   @Column({ nullable: true })

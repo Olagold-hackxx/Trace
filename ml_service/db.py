@@ -1,13 +1,13 @@
 import os
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/trace",
+    "postgresql://postgres:postgres@localhost:5432/kudiscore",
 )
 
 # SQLAlchemy 2.x dropped the legacy 'postgres://' scheme.
@@ -28,10 +28,20 @@ def get_db():
 
 
 def fetch_transactions(db: Session, user_id: str, as_of: datetime) -> pd.DataFrame:
-    """Pull transaction history for one user, strictly before as_of."""
+    """Pull transaction history for one user, strictly before as_of.
+
+    Normalises the backend's credit/debit type labels to inflow/outflow so
+    the feature engine sees a consistent vocabulary regardless of which
+    service wrote the row.
+    """
     result = db.execute(
         text("""
-            SELECT occurred_at, amount_kobo, sender_name, type
+            SELECT occurred_at, amount_kobo, sender_name,
+                   CASE type
+                       WHEN 'credit' THEN 'inflow'
+                       WHEN 'debit'  THEN 'outflow'
+                       ELSE type
+                   END AS type
             FROM transactions
             WHERE user_id = :user_id
               AND occurred_at < :as_of
@@ -51,9 +61,9 @@ def fetch_user_meta(db: Session, user_id: str) -> dict:
     """Pull identity/cohort metadata for one user."""
     result = db.execute(
         text("""
-            SELECT archetype, market_location, gender, age_bracket, onboarded_at
+            SELECT archetype, market_name, gender, age_bracket, created_at
             FROM users
-            WHERE user_id = :user_id
+            WHERE id = :user_id
         """),
         {"user_id": user_id},
     )
@@ -62,10 +72,10 @@ def fetch_user_meta(db: Session, user_id: str) -> dict:
         return {}
     return {
         "archetype": row.archetype,
-        "market_location": row.market_location,
+        "market_location": row.market_name,
         "gender": row.gender,
         "age_bracket": row.age_bracket,
-        "onboarding_date": row.onboarded_at,
+        "onboarding_date": row.created_at,
     }
 
 
@@ -77,14 +87,14 @@ def fetch_user_daily_history(
     """Return a zero-filled daily inflow series for the last `days` calendar days.
     Columns: ds (Timestamp), y (float, naira).
     """
-    cutoff = datetime.utcnow() - timedelta(days=days)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     result = db.execute(
         text("""
             SELECT DATE(occurred_at) AS ds,
                    SUM(amount_kobo)  AS total_kobo
             FROM transactions
             WHERE user_id    = :user_id
-              AND type       = 'inflow'
+              AND type       IN ('inflow', 'credit')
               AND occurred_at >= :cutoff
             GROUP BY DATE(occurred_at)
             ORDER BY ds ASC
@@ -109,7 +119,7 @@ def write_forecast_cache(
     model_version: str,
 ) -> None:
     """Upsert forecast rows. forecast_df: ds, yhat, yhat_lower, yhat_upper in NAIRA."""
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     rows = [
         {
             "user_id": user_id,
@@ -149,7 +159,7 @@ def read_forecast_cache(
     fresh_within_hours: int = 24,
 ) -> list[dict]:
     """Return cached forecast rows fit within the TTL window, ordered by date."""
-    cutoff = datetime.utcnow() - timedelta(hours=fresh_within_hours)
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=fresh_within_hours)
     result = db.execute(
         text("""
             SELECT forecast_date, predicted_inflow, lower_bound_80,
