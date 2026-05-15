@@ -8,8 +8,18 @@ async function bootstrap() {
     rawBody: true
   });
 
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "https://trace-nu-dusky.vercel.app")
+    .split(",")
+    .map((o) => o.trim());
+
   app.enableCors({
-    origin: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} not allowed`));
+      }
+    },
     credentials: true
   });
   app.use(cookieParser());

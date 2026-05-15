@@ -13,7 +13,7 @@ interface LinkInfo {
   active: boolean;
 }
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "https://dub.heralayer.com/api/v1";
+const API = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
 
 async function fetchLinkInfo(slug: string): Promise<LinkInfo> {
   const res = await fetch(`${API}/payments/public/${slug}`);

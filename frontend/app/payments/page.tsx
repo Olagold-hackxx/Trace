@@ -33,7 +33,7 @@ function StatusBadge({ status }: { status: string }) {
 
 // Builds the QR image URL for a slug — served directly from backend as PNG
 function qrUrl(slug: string) {
-  const base = BACKEND_API_BASE_URL?.replace(/\/$/, "") ?? "https://dub.heralayer.com/api/v1";
+  const base = (BACKEND_API_BASE_URL ?? "").replace(/\/$/, "");
   return `${base}/payments/qr/${slug}`;
 }
 
@@ -99,7 +99,7 @@ export default function PaymentsPage() {
 
     try {
       // Call one-time QR endpoint — returns PNG image directly
-      const base = BACKEND_API_BASE_URL?.replace(/\/$/, "") ?? "https://dub.heralayer.com/api/v1";
+      const base = (BACKEND_API_BASE_URL ?? "").replace(/\/$/, "");
       const res = await fetch(`${base}/payments/qr/one-time`, {
         method: "POST",
         credentials: "include",

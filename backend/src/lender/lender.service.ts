@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { SessionService } from "../session/session.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -36,12 +36,12 @@ export class LenderService {
   // ─── Wallet ────────────────────────────────────────────────────────────────
 
   async getWallet(sessionToken?: string) {
-    const user = await this.getSessionUser(sessionToken);
+    const user = await this.getSessionUser(sessionToken, true);
     return this.getOrCreateWallet(user);
   }
 
   async provisionWalletAccount(sessionToken?: string) {
-    const user = await this.getSessionUser(sessionToken);
+    const user = await this.getSessionUser(sessionToken, true);
     const wallet = await this.getOrCreateWallet(user);
 
     if (wallet.virtualAccountNumber) {
@@ -80,7 +80,7 @@ export class LenderService {
   }
 
   async requestWithdrawal(sessionToken: string | undefined, amountKobo: string) {
-    const user = await this.getSessionUser(sessionToken);
+    const user = await this.getSessionUser(sessionToken, true);
     const wallet = await this.getOrCreateWallet(user);
     const amount = Number(amountKobo);
 
@@ -109,17 +109,16 @@ export class LenderService {
   // ─── Portfolio ──────────────────────────────────────────────────────────────
 
   async getPortfolioSummary(sessionToken?: string) {
-    const userId = await this.sessionService.getUserId(sessionToken);
-    const loans = await this.loansRepository.find();
-    const wallet = userId ? await this.walletsRepository.findOne({ where: { userId } }) : null;
-    const totalAumKobo = loans.reduce((sum, loan) => sum + Number(loan.principalKobo), 0);
+    const user = await this.getSessionUser(sessionToken, true);
+    const wallet = await this.walletsRepository.findOne({ where: { userId: user.id } });
+    const deployedKobo = Number(wallet?.deployedKobo ?? 0);
 
     return {
-      totalAumKobo,
-      activeLoans: loans.filter((loan) => loan.status === "active").length,
-      totalLoans: loans.length,
+      totalAumKobo: deployedKobo,
+      activeLoans: deployedKobo > 0 ? 1 : 0,
+      totalLoans: deployedKobo > 0 ? 1 : 0,
       availableCapitalKobo: Number(wallet?.availableKobo ?? 0),
-      deployedKobo: Number(wallet?.deployedKobo ?? 0),
+      deployedKobo,
       totalReturnsKobo: Number(wallet?.totalReturnsKobo ?? 0)
     };
   }
@@ -227,12 +226,16 @@ export class LenderService {
     };
   }
 
-  updateSettings(payload: Record<string, unknown>) {
-    return { success: true, payload };
+  async updateSettings(sessionToken: string | undefined, payload: Record<string, unknown>) {
+    const user = await this.getSessionUser(sessionToken, true);
+    if (typeof payload.institutionName === "string") user.businessName = payload.institutionName;
+    await this.usersRepository.save(user);
+    return { success: true };
   }
 
-  createSettlementAccount(payload: Record<string, unknown>) {
-    return { success: true, account: payload };
+  createSettlementAccount(_payload: Record<string, unknown>) {
+    // Settlement accounts not yet implemented — placeholder for future Squad payout account linking
+    return { success: true };
   }
 
   getApiKeys() {
@@ -248,11 +251,14 @@ export class LenderService {
 
   // ─── Helpers ────────────────────────────────────────────────────────────────
 
-  private async getSessionUser(sessionToken?: string) {
+  private async getSessionUser(sessionToken?: string, requireLender = false) {
     const userId = await this.sessionService.getUserId(sessionToken);
-    if (!userId) throw new NotFoundException("No active session.");
+    if (!userId) throw new UnauthorizedException("No active session.");
     const user = await this.usersRepository.findOne({ where: { id: userId } });
-    if (!user) throw new NotFoundException("User not found.");
+    if (!user) throw new UnauthorizedException("User not found.");
+    if (requireLender && user.role !== "lender" && user.role !== "admin") {
+      throw new UnauthorizedException("Lender access only.");
+    }
     return user;
   }
 

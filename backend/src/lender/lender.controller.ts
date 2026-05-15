@@ -103,8 +103,8 @@ export class LenderController {
 
   @Version("1")
   @Patch("settings")
-  updateSettings(@Body() payload: Record<string, unknown>) {
-    return this.lenderService.updateSettings(payload);
+  updateSettings(@Req() req: Request, @Body() payload: Record<string, unknown>) {
+    return this.lenderService.updateSettings(req.cookies?.kudiscore_session, payload);
   }
 
   @Version("1")

@@ -33,8 +33,8 @@ export class PaymentsController {
 
   @Version("1")
   @Patch("links/:id")
-  updateLink(@Param("id") id: string, @Body() dto: Partial<CreatePaymentLinkDto>) {
-    return this.paymentsService.updateLink(id, dto);
+  updateLink(@Param("id") id: string, @Body() dto: Partial<CreatePaymentLinkDto>, @Req() req: Request) {
+    return this.paymentsService.updateLink(id, dto, req.cookies?.kudiscore_session);
   }
 
   // ── QR: permanent flexible link for a slug ───────────────────────────────────

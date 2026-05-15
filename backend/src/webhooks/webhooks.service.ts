@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Transaction } from "../entities/transaction.entity";
@@ -25,10 +25,7 @@ export class WebhooksService {
     rawBody?: Buffer;
   }) {
     if (input.rawBody && !this.squadService.verifyWebhookSignature(input.rawBody, input.signature)) {
-      return {
-        received: false,
-        reason: "invalid_signature"
-      };
+      throw new UnauthorizedException("Invalid webhook signature.");
     }
 
     const parsed = this.parseSquadTransactionPayload(input.payload);

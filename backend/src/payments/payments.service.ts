@@ -53,7 +53,10 @@ export class PaymentsService {
 
   async getDefaultLink(sessionToken?: string) {
     const links = await this.getLinks(sessionToken);
-    return links[0] ?? this.createLink(sessionToken, { name: "Amaka Foods - General", amountKobo: "0" });
+    if (links[0]) return links[0];
+    const user = await this.usersService.getCurrentUser(sessionToken);
+    const linkName = user.businessName ? `${user.businessName} - General` : `${user.fullName} - General`;
+    return this.createLink(sessionToken, { name: linkName, amountKobo: "0" });
   }
 
   async createLink(sessionToken: string | undefined, dto: CreatePaymentLinkDto) {
@@ -70,8 +73,9 @@ export class PaymentsService {
     return this.withUrl(link);
   }
 
-  async updateLink(id: string, dto: Partial<CreatePaymentLinkDto>) {
-    const link = await this.paymentLinksRepository.findOne({ where: { id } });
+  async updateLink(id: string, dto: Partial<CreatePaymentLinkDto>, sessionToken?: string) {
+    const user = await this.usersService.getCurrentUser(sessionToken);
+    const link = await this.paymentLinksRepository.findOne({ where: { id, userId: user.id } });
     if (!link) {
       throw new NotFoundException("Payment link not found");
     }

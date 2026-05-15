@@ -8,9 +8,10 @@ import { User } from "../entities/user.entity";
 import { AdminController } from "./admin.controller";
 import { AdminService } from "./admin.service";
 import { RealtimeModule } from "../realtime/realtime.module";
+import { SessionModule } from "../session/session.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Transaction, ScoreSnapshot, Loan, LoanApplication]), RealtimeModule],
+  imports: [TypeOrmModule.forFeature([User, Transaction, ScoreSnapshot, Loan, LoanApplication]), RealtimeModule, SessionModule],
   controllers: [AdminController],
   providers: [AdminService]
 })
