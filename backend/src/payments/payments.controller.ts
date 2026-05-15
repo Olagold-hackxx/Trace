@@ -5,6 +5,7 @@ import { Request } from "express";
 import { CreatePaymentLinkDto } from "./dto/create-payment-link.dto";
 import { InitiatePaymentDto } from "./dto/initiate-payment.dto";
 import { PaymentsService } from "./payments.service";
+import { resolveToken } from "../session/resolve-token";
 
 @Controller("payments")
 export class PaymentsController {
@@ -16,19 +17,19 @@ export class PaymentsController {
   @Version("1")
   @Get("links")
   getLinks(@Req() req: Request) {
-    return this.paymentsService.getLinks(req.cookies?.kudiscore_session);
+    return this.paymentsService.getLinks(resolveToken(req));
   }
 
   @Version("1")
   @Get("links/default")
   getDefaultLink(@Req() req: Request) {
-    return this.paymentsService.getDefaultLink(req.cookies?.kudiscore_session);
+    return this.paymentsService.getDefaultLink(resolveToken(req));
   }
 
   @Version("1")
   @Post("links")
   createLink(@Req() req: Request, @Body() dto: CreatePaymentLinkDto) {
-    return this.paymentsService.createLink(req.cookies?.kudiscore_session, dto);
+    return this.paymentsService.createLink(resolveToken(req), dto);
   }
 
   @Version("1")
@@ -87,7 +88,7 @@ export class PaymentsController {
   @Version("1")
   @Post("initiate")
   initiatePayment(@Req() req: Request, @Body() dto: InitiatePaymentDto) {
-    return this.paymentsService.initiatePayment(req.cookies?.kudiscore_session, dto);
+    return this.paymentsService.initiatePayment(resolveToken(req), dto);
   }
 
   @Version("1")

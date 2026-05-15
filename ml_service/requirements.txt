@@ -28,3 +28,6 @@ plotly
 scikit-learn
 joblib
 bcrypt
+
+#Inference
+requests

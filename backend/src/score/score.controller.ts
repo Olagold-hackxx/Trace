@@ -1,6 +1,7 @@
 import { Controller, Get, Query, Req, Version } from "@nestjs/common";
 import { Request } from "express";
 import { ScoreService } from "./score.service";
+import { resolveToken } from "../session/resolve-token";
 
 @Controller("score")
 export class ScoreController {
@@ -9,20 +10,20 @@ export class ScoreController {
   @Version("1")
   @Get()
   getScore(@Req() req: Request) {
-    return this.scoreService.getCurrentScore(req.cookies?.kudiscore_session);
+    return this.scoreService.getCurrentScore(resolveToken(req));
   }
 
   @Version("1")
   @Get("explain")
   getExplanation(@Req() req: Request) {
-    return this.scoreService.getExplanation(req.cookies?.kudiscore_session);
+    return this.scoreService.getExplanation(resolveToken(req));
   }
 
   @Version("1")
   @Get("forecast")
   getForecast(@Req() req: Request, @Query("horizon_days") horizonDays?: string) {
     return this.scoreService.getForecast(
-      req.cookies?.kudiscore_session,
+      resolveToken(req),
       horizonDays ? Number.parseInt(horizonDays, 10) : 30,
     );
   }
@@ -30,6 +31,6 @@ export class ScoreController {
   @Version("1")
   @Get("history")
   getHistory(@Req() req: Request) {
-    return this.scoreService.getHistory(req.cookies?.kudiscore_session);
+    return this.scoreService.getHistory(resolveToken(req));
   }
 }

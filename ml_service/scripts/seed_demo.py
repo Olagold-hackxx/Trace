@@ -171,6 +171,7 @@ CREATE TABLE IF NOT EXISTS users (
     bvn             TEXT,
     email           TEXT,
     lender_visible  BOOLEAN     NOT NULL DEFAULT false,
+    password_hash   TEXT,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -359,6 +360,9 @@ CREATE TABLE IF NOT EXISTS fraud_alerts (
     reviewed_at    TIMESTAMPTZ,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Idempotent column additions for tables created before this field existed
+ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT;
 """
 
 TRUNCATE_SQL = """

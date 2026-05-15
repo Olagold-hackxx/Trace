@@ -4,6 +4,7 @@ import { LoginDto } from "./dto/login.dto";
 import { SignupDto } from "./dto/signup.dto";
 import { AuthService } from "./auth.service";
 import { SessionService } from "../session/session.service";
+import { resolveToken } from "../session/resolve-token";
 
 @Controller("auth")
 export class AuthController {
@@ -42,7 +43,7 @@ export class AuthController {
   @Version("1")
   @Post("logout")
   async logout(@Req() req: Request, @Res({ passthrough: true }) response: Response) {
-    const token = req.cookies?.kudiscore_session;
+    const token = resolveToken(req);
     if (token) {
       await this.sessionService.clearSession(token);
     }

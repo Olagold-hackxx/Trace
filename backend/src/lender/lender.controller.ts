@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Req, Version } from "@nestjs
 import { Request } from "express";
 import { LoanDecisionDto } from "./dto/loan-decision.dto";
 import { LenderService } from "./lender.service";
+import { resolveToken } from "../session/resolve-token";
 
 @Controller("lender")
 export class LenderController {
@@ -12,19 +13,19 @@ export class LenderController {
   @Version("1")
   @Get("wallet")
   getWallet(@Req() req: Request) {
-    return this.lenderService.getWallet(req.cookies?.kudiscore_session);
+    return this.lenderService.getWallet(resolveToken(req));
   }
 
   @Version("1")
   @Post("wallet/provision")
   provisionWalletAccount(@Req() req: Request) {
-    return this.lenderService.provisionWalletAccount(req.cookies?.kudiscore_session);
+    return this.lenderService.provisionWalletAccount(resolveToken(req));
   }
 
   @Version("1")
   @Post("wallet/withdraw")
   requestWithdrawal(@Req() req: Request, @Body() body: { amountKobo: string }) {
-    return this.lenderService.requestWithdrawal(req.cookies?.kudiscore_session, body.amountKobo);
+    return this.lenderService.requestWithdrawal(resolveToken(req), body.amountKobo);
   }
 
   // ─── Portfolio ──────────────────────────────────────────────────────────────
@@ -32,7 +33,7 @@ export class LenderController {
   @Version("1")
   @Get("portfolio/summary")
   getPortfolioSummary(@Req() req: Request) {
-    return this.lenderService.getPortfolioSummary(req.cookies?.kudiscore_session);
+    return this.lenderService.getPortfolioSummary(resolveToken(req));
   }
 
   @Version("1")
@@ -50,7 +51,7 @@ export class LenderController {
   @Version("1")
   @Post("applications/:id/decision")
   decideApplication(@Param("id") id: string, @Body() dto: LoanDecisionDto, @Req() req: Request) {
-    return this.lenderService.decideApplication(id, dto, req.cookies?.kudiscore_session);
+    return this.lenderService.decideApplication(id, dto, resolveToken(req));
   }
 
   @Version("1")
@@ -98,7 +99,7 @@ export class LenderController {
   @Version("1")
   @Get("settings")
   getSettings(@Req() req: Request) {
-    return this.lenderService.getSettings(req.cookies?.kudiscore_session);
+    return this.lenderService.getSettings(resolveToken(req));
   }
 
   @Version("1")

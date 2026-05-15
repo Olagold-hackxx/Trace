@@ -94,6 +94,7 @@ export default function RegisterPage() {
           email: form.email,
           password: form.password,
           fullName: form.fullName,
+          password: form.password,
           ...DEMO_TRADER_SIGNUP_DEFAULTS,
         },
       });

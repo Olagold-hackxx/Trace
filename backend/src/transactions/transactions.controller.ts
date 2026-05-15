@@ -3,6 +3,7 @@ import { Request } from "express";
 import { map, Observable, startWith } from "rxjs";
 import { RealtimeService } from "../realtime/realtime.service";
 import { TransactionsService } from "./transactions.service";
+import { resolveToken } from "../session/resolve-token";
 
 @Controller()
 export class TransactionsController {
@@ -14,13 +15,13 @@ export class TransactionsController {
   @Version("1")
   @Get("transactions")
   getTransactions(@Req() req: Request, @Query("limit") limit?: string) {
-    return this.transactionsService.getTransactions(req.cookies?.kudiscore_session, limit ? Number(limit) : 20);
+    return this.transactionsService.getTransactions(resolveToken(req), limit ? Number(limit) : 20);
   }
 
   @Version("1")
   @Get("transactions/summary")
   getSummary(@Req() req: Request) {
-    return this.transactionsService.getSummary(req.cookies?.kudiscore_session);
+    return this.transactionsService.getSummary(resolveToken(req));
   }
 
   @Version("1")

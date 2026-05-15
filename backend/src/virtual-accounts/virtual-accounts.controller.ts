@@ -1,6 +1,7 @@
 import { Controller, Get, Req, Version } from "@nestjs/common";
 import { Request } from "express";
 import { VirtualAccountsService } from "./virtual-accounts.service";
+import { resolveToken } from "../session/resolve-token";
 
 @Controller("virtual-accounts")
 export class VirtualAccountsController {
@@ -9,6 +10,6 @@ export class VirtualAccountsController {
   @Version("1")
   @Get("me")
   getMine(@Req() req: Request) {
-    return this.virtualAccountsService.getCurrentUserAccount(req.cookies?.kudiscore_session);
+    return this.virtualAccountsService.getCurrentUserAccount(resolveToken(req));
   }
 }
