@@ -24,7 +24,7 @@ export class AuthService {
       phone: dto.phone,
       passwordHash,
       fullName: dto.fullName,
-      email: `${dto.phone.replace(/\D/g, "")}@trace.app`,
+      email: dto.email,
       businessName: dto.businessName,
       businessType: dto.businessType,
       marketName: dto.marketName,
@@ -38,7 +38,8 @@ export class AuthService {
       const virtualAccount = await this.virtualAccountsService.provisionForUser(user);
       const token = randomBytes(32).toString("hex");
       await this.sessionService.createSession(token, user.id);
-      return { user, virtualAccount, token };
+      const { passwordHash: _, ...safeUser } = user;
+      return { user: safeUser, virtualAccount, token };
     } catch (error) {
       await this.usersService.deleteById(user.id);
       throw error;
@@ -46,12 +47,7 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const identifier = dto.email ?? dto.phone;
-    if (!identifier) {
-      throw new UnauthorizedException("Provide a phone number or email.");
-    }
-
-    const user = await this.usersService.findForAuth(identifier);
+    const user = await this.usersService.findForAuth(dto.email);
 
     if (!user || !user.passwordHash) {
       throw new UnauthorizedException("Invalid credentials.");

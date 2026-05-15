@@ -55,7 +55,7 @@ export class UsersService {
     return this.usersRepository
       .createQueryBuilder("user")
       .addSelect("user.passwordHash")
-      .where("user.phone = :id OR user.email = :id", { id: identifier })
+      .where("user.email = :id", { id: identifier })
       .getOne();
   }
 
