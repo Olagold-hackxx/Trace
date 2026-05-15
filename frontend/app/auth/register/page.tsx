@@ -260,8 +260,8 @@ export default function RegisterPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          padding: "48px 24px",
+          justifyContent: "flex-start",
+          padding: "80px 24px 48px",
           overflowY: "auto",
         }}
       >
