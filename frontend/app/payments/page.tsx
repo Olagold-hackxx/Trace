@@ -123,8 +123,8 @@ export default function PaymentsPage() {
     setRequestQr(null);
 
     try {
-      const FRONTEND_URL = "https://trace-nu-dusky.vercel.app";
-      const res = await fetch(`${FRONTEND_URL}/payments/qr/one-time`, {
+      const base = (BACKEND_API_BASE_URL ?? "").replace(/\/$/, "");
+      const res = await fetch(`${base}/payments/qr/one-time`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -153,7 +153,7 @@ export default function PaymentsPage() {
         throw new Error("Empty QR response — check the API endpoint");
 
       // Use a placeholder link so the result card still shows even if header is missing
-      setRequestLink(checkoutUrl || `${FRONTEND_URL}/pay/one-time`);
+      setRequestLink(checkoutUrl || `${base}/pay/one-time`);
       setRequestQr(URL.createObjectURL(blob));
       void refresh();
     } catch (error) {
