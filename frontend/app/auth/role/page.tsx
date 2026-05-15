@@ -63,7 +63,8 @@ export default function RolePage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100%",
+minHeight: "100dvh",
         backgroundColor: "#0d0d0d",
         display: "flex",
         flexDirection: "column",

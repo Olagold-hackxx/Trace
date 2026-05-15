@@ -82,7 +82,8 @@ export default function LoginPage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100%",
+minHeight: "100dvh",
         display: "flex",
         fontFamily: "'Hanken Grotesk', sans-serif",
         backgroundColor: "#0d0d0d",

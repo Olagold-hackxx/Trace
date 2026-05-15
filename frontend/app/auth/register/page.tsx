@@ -180,7 +180,8 @@ export default function RegisterPage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100%",
+        minHeight: "100dvh",
         display: "flex",
         fontFamily: "'Hanken Grotesk', sans-serif",
         backgroundColor: "#0d0d0d",
@@ -192,7 +193,8 @@ export default function RegisterPage() {
           width: "42%",
           position: "relative",
           overflow: "hidden",
-          minHeight: "100vh",
+          height: "100%",
+          minHeight: "100dvh",
         }}
       >
         <Image
@@ -261,8 +263,7 @@ export default function RegisterPage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          padding: "80px 24px 48px",
-          overflowY: "auto",
+          padding: "80px 24px 48px",  
         }}
       >
         <div
