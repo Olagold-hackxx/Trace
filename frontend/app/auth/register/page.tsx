@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/common/brand-logo";
-import { Visibility, VisibilityOff, Person, Phone, Lock, Email, Badge } from "@mui/icons-material";
+import { Visibility, VisibilityOff, Person, Phone, Lock, Email, AssignmentInd } from "@mui/icons-material";
 import {
   BackendUser,
   BackendVirtualAccount,
@@ -220,7 +220,7 @@ export default function RegisterPage() {
               />
             </Field>
 
-            <Field label="BVN" icon={Badge} error={errors.bvn}>
+            <Field label="BVN" icon={AssignmentInd} error={errors.bvn}>
               <input
                 type="text"
                 placeholder="Enter your 11-digit BVN"

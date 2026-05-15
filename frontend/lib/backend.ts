@@ -4,10 +4,6 @@ export const BACKEND_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL;
 export const BACKEND_BASE_URL = BACKEND_API_BASE_URL;
 
-export const DEMO_TRADER_SIGNUP_DEFAULTS = {
-  bvn: "22172180083",
-};
-
 export const TRADER_SESSION_STORAGE_KEY = "trace.trader.session";
 export const AUTH_TOKEN_KEY = "trace.auth.token";
 
