@@ -65,7 +65,7 @@ export class PaymentsController {
         // best-effort — webhook may have already handled it
       }
     }
-    const frontendBase = this.configService.get<string>("FRONTEND_URL") ?? "http://localhost:3000";
+    const frontendBase = this.configService.get<string>("FRONTEND_URL") ?? "https://trace-nu-dusky.vercel.app";
     return res.redirect(`${frontendBase}/payments?ref=${ref}&status=${status ?? "success"}`);
   }
 }

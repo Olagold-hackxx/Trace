@@ -239,7 +239,7 @@ export class SquadService {
   }
 
   private getAppBaseUrl() {
-    return this.configService.get<string>("APP_BASE_URL") ?? "http://localhost:3001";
+    return this.configService.get<string>("APP_BASE_URL") ?? "https://dub.heralayer.com";
   }
 
   private getRedirectUrl() {

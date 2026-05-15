@@ -24,10 +24,10 @@ export const envValidationSchema = Joi.object({
   SQUAD_PAYOUT_ACCOUNT_NUMBER: Joi.string().allow("").optional(),
   SQUAD_PAYOUT_BANK_CODE: Joi.string().allow("").optional(),
   SQUAD_MERCHANT_ID: Joi.string().allow("").optional(),
-  APP_BASE_URL: Joi.string().uri().empty("").default("http://localhost:3001"),
-  FRONTEND_URL: Joi.string().uri().empty("").default("http://localhost:3000"),
-  SQUAD_REDIRECT_URL: Joi.string().uri().empty("").default("http://localhost:3001/api/v1/payments/callback"),
-  PUBLIC_WEBHOOK_URL: Joi.string().uri().empty("").default("http://localhost:3001/webhooks/squad")
+  APP_BASE_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com"),
+  FRONTEND_URL: Joi.string().uri().empty("").default("https://trace-nu-dusky.vercel.app"),
+  SQUAD_REDIRECT_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com/api/v1/payments/callback"),
+  PUBLIC_WEBHOOK_URL: Joi.string().uri().empty("").default("https://dub.heralayer.com/api/v1/webhooks/squad")
 })
   .or("DATABASE_URL", "DB_HOST")
   .with("DB_HOST", ["DB_NAME", "DB_USER"])

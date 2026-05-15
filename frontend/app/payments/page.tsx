@@ -10,8 +10,6 @@ import {
   Add, ArrowUpward, ArrowDownward, LinkOutlined,
 } from "@mui/icons-material";
 import {
-  buildPaymentLinkUrl,
-  DEMO_PAYMENT_EMAIL,
   fetchBackend,
   formatDateLabel,
   formatNairaFromKobo,
@@ -68,7 +66,7 @@ export default function PaymentsPage() {
   const mappedPaymentLinks = paymentLinks.map((link) => ({
     id: link.id,
     name: link.name,
-    url: buildPaymentLinkUrl(link.slug).replace(/^https?:\/\//, ""),
+    url: link.url.replace(/^https?:\/\//, ""),
     uses: 0,
     total: link.amountKobo ? formatNairaFromKobo(link.amountKobo) : "Flexible",
     created: formatDateLabel(link.createdAt),
@@ -81,7 +79,7 @@ export default function PaymentsPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const mainLink = buildPaymentLinkUrl(defaultPaymentLink?.slug).replace(/^https?:\/\//, "");
+  const mainLink = (defaultPaymentLink?.url ?? "trace-nu-dusky.vercel.app/pay").replace(/^https?:\/\//, "");
 
   const handleGenerateLink = async () => {
     if (!requestAmount.trim()) return;
@@ -95,7 +93,7 @@ export default function PaymentsPage() {
         bodyJson: {
           amountKobo: String(Number(requestAmount) * 100),
           description: requestDesc || "Trace payment request",
-          email: DEMO_PAYMENT_EMAIL,
+          email: user?.email ?? "",
         },
       });
 

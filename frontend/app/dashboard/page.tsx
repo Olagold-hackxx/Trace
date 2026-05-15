@@ -30,7 +30,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { buildBackendUrl, buildPaymentLinkUrl, formatDateLabel } from "@/lib/backend";
+import { buildBackendUrl, formatDateLabel } from "@/lib/backend";
 import { Spinner } from "@/components/ui/spinner";
 
 function formatNaira(v: number) { return `₦${v.toLocaleString()}`; }
@@ -64,7 +64,7 @@ export default function DashboardPage() {
   });
   const [recentTransactions, setRecentTransactions] = useState<Array<{ id: string; date: string; desc: string; type: string; amount: number; status: string }>>([]);
   const [liveFeed, setLiveFeed] = useState<Array<{ id: string; label: string; title: string; description: string; status: string }>>([]);
-  const paymentLink = buildPaymentLinkUrl(defaultPaymentLink?.slug);
+  const paymentLink = defaultPaymentLink?.url ?? "https://trace-nu-dusky.vercel.app/pay";
   const displayName = user?.fullName?.split(" ")[0] ?? "there";
   const businessName = user?.businessName ?? user?.fullName ?? "";
 

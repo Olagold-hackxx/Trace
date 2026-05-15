@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { ConfigService } from "@nestjs/config";
 import { Repository } from "typeorm";
 import { PaymentLink } from "../entities/payment-link.entity";
 import { Transaction } from "../entities/transaction.entity";
@@ -18,15 +19,26 @@ export class PaymentsService {
     private readonly transactionsRepository: Repository<Transaction>,
     private readonly usersService: UsersService,
     private readonly realtimeService: RealtimeService,
-    private readonly squadService: SquadService
+    private readonly squadService: SquadService,
+    private readonly configService: ConfigService
   ) {}
+
+  private buildPaymentLinkUrl(slug: string) {
+    const frontendBase = this.configService.get<string>("FRONTEND_URL") ?? "https://trace-nu-dusky.vercel.app";
+    return `${frontendBase}/pay/${slug}`;
+  }
+
+  private withUrl(link: PaymentLink) {
+    return { ...link, url: this.buildPaymentLinkUrl(link.slug) };
+  }
 
   async getLinks(sessionToken?: string) {
     const user = await this.usersService.getCurrentUser(sessionToken);
-    return this.paymentLinksRepository.find({
+    const links = await this.paymentLinksRepository.find({
       where: { userId: user.id },
       order: { createdAt: "DESC" }
     });
+    return links.map((link) => this.withUrl(link));
   }
 
   async getDefaultLink(sessionToken?: string) {
@@ -37,7 +49,7 @@ export class PaymentsService {
   async createLink(sessionToken: string | undefined, dto: CreatePaymentLinkDto) {
     const user = await this.usersService.getCurrentUser(sessionToken);
     const slug = `${user.businessName?.toLowerCase().replace(/\s+/g, "-") ?? "trace"}-${Date.now()}`;
-    return this.paymentLinksRepository.save({
+    const link = await this.paymentLinksRepository.save({
       userId: user.id,
       name: dto.name,
       slug,
@@ -45,6 +57,7 @@ export class PaymentsService {
       description: dto.description,
       active: dto.active ?? true
     });
+    return this.withUrl(link);
   }
 
   async updateLink(id: string, dto: Partial<CreatePaymentLinkDto>) {

@@ -1,15 +1,13 @@
 "use client";
 
 export const BACKEND_API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "http://localhost:3001/api/v1";
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? "https://dub.heralayer.com/api/v1";
 export const BACKEND_BASE_URL = BACKEND_API_BASE_URL.replace(/\/api\/v1$/, "");
 
 export const DEMO_TRADER_SIGNUP_DEFAULTS = {
   bvn: "22172180083",
 };
 
-export const DEMO_TRADER_LOGIN_PHONE = "+2348012345678";
-export const DEMO_PAYMENT_EMAIL = "customer@trace.app";
 export const TRADER_SESSION_STORAGE_KEY = "trace.trader.session";
 
 export interface BackendUser {
@@ -69,6 +67,7 @@ export interface BackendPaymentLink {
   id: string;
   name: string;
   slug: string;
+  url: string;
   amountKobo?: string;
   description?: string;
   active: boolean;
@@ -226,11 +225,6 @@ export function readTraderSession() {
   } catch {
     return null;
   }
-}
-
-export function buildPaymentLinkUrl(slug?: string) {
-  if (!slug) return "https://trace.ng/pay";
-  return `https://trace.ng/pay/${slug}`;
 }
 
 export function formatNairaFromKobo(value?: number | string | null) {
