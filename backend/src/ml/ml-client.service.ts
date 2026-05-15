@@ -96,7 +96,7 @@ export class MlClientService {
       );
       return data;
     } catch (err) {
-      this.logger.error(`predictScore failed for user ${userId}: ${err?.message}`);
+      this.logger.error(`predictScore failed for user ${userId}: ${(err as Error)?.message}`);
       throw new ServiceUnavailableException("ML service unavailable");
     }
   }
@@ -110,7 +110,7 @@ export class MlClientService {
       );
       return data;
     } catch (err) {
-      this.logger.error(`predictExplain failed for user ${userId}: ${err?.message}`);
+      this.logger.error(`predictExplain failed for user ${userId}: ${(err as Error)?.message}`);
       throw new ServiceUnavailableException("ML service unavailable");
     }
   }
@@ -122,7 +122,7 @@ export class MlClientService {
       );
       return data;
     } catch (err) {
-      this.logger.error(`predictFraud failed for txn ${req.transaction_id}: ${err?.message}`);
+      this.logger.error(`predictFraud failed for txn ${req.transaction_id}: ${(err as Error)?.message}`);
       throw new ServiceUnavailableException("ML service unavailable");
     }
   }
@@ -137,7 +137,7 @@ export class MlClientService {
       );
       return data;
     } catch (err) {
-      this.logger.error(`predictForecast failed for user ${userId}: ${err?.message}`);
+      this.logger.error(`predictForecast failed for user ${userId}: ${(err as Error)?.message}`);
       throw new ServiceUnavailableException("ML service unavailable");
     }
   }

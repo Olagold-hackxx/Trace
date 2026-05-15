@@ -25,7 +25,7 @@ export class ScoreService {
         userId: user.id,
         score: mlResult.score,
         pd: mlResult.pd,
-        subScores: mlResult.sub_scores,
+        subScores: mlResult.sub_scores as unknown as Record<string, unknown>,
         factors: [],
         modelVersion: mlResult.model_version,
       });
