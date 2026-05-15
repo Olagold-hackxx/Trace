@@ -6,6 +6,7 @@ on:
       - production
     paths:
       - "backend/**"
+      - ".github/workflows/deploy-backend-service.yml"
   workflow_dispatch:
 
 jobs:
