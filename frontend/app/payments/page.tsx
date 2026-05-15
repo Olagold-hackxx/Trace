@@ -9,7 +9,6 @@ import {
   Add, ArrowUpward, ArrowDownward, LinkOutlined, QrCode, Download,
 } from "@mui/icons-material";
 import {
-  fetchBackend,
   formatDateLabel,
   formatNairaFromKobo,
   BACKEND_API_BASE_URL,
@@ -41,7 +40,6 @@ export default function PaymentsPage() {
   const [tab, setTab] = useState<"transactions" | "links">("transactions");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Request payment form
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestAmount, setRequestAmount] = useState("");
   const [requestDesc, setRequestDesc] = useState("");
@@ -90,8 +88,6 @@ export default function PaymentsPage() {
     if (!requestAmount.trim()) return;
     setRequestLoading(true);
     setRequestError("");
-    setRequestLink("");
-    setRequestQr(null);
 
     try {
       const base = (BACKEND_API_BASE_URL ?? "").replace(/\/$/, "");
@@ -134,6 +130,15 @@ export default function PaymentsPage() {
     setRequestError("");
   };
 
+  const closeForm = () => {
+    setShowRequestForm(false);
+    setRequestLink("");
+    setRequestQr(null);
+    setRequestAmount("");
+    setRequestDesc("");
+    setRequestError("");
+  };
+
   return (
     <AppShell role="user">
       <div className="p-6 max-w-6xl mx-auto">
@@ -159,50 +164,95 @@ export default function PaymentsPage() {
             <h2 className="text-lg font-bold text-[#f0f0f0] mb-1" style={{ fontFamily: "Epilogue, sans-serif" }}>Request a Payment</h2>
             <p className="text-xs text-[#94a3b8] mb-5">Enter the amount — we'll generate a QR code and checkout link for this exact amount.</p>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Amount (₦)</label>
-                <input
-                  type="number"
-                  placeholder="e.g. 50000"
-                  value={requestAmount}
-                  onChange={(e) => setRequestAmount(e.target.value)}
-                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none"
-                  style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Description (optional)</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Market sale, Catering deposit"
-                  value={requestDesc}
-                  onChange={(e) => setRequestDesc(e.target.value)}
-                  className="w-full px-3 py-3 text-sm rounded-xl border outline-none"
-                  style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
-                />
-              </div>
-            </div>
+            {/* Two-column layout: inputs left, QR right (QR only visible after generation) */}
+            <div className={`grid gap-6 ${requestQr ? "lg:grid-cols-2" : "grid-cols-1"}`}>
 
-            {requestError && <p className="text-xs text-[#f87171] mb-3">{requestError}</p>}
+              {/* Left: inputs + link result + buttons */}
+              <div className="flex flex-col gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Amount (₦)</label>
+                    <input
+                      type="number"
+                      placeholder="e.g. 50000"
+                      value={requestAmount}
+                      onChange={(e) => setRequestAmount(e.target.value)}
+                      className="w-full px-3 py-3 text-sm rounded-xl border outline-none"
+                      style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">Description (optional)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Market sale, Catering deposit"
+                      value={requestDesc}
+                      onChange={(e) => setRequestDesc(e.target.value)}
+                      className="w-full px-3 py-3 text-sm rounded-xl border outline-none"
+                      style={{ borderColor: "#1e1e1e", backgroundColor: "#161616", color: "#f0f0f0" }}
+                    />
+                  </div>
+                </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={handleGenerateLink}
-                disabled={requestLoading || !requestAmount}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-70"
-                style={{ backgroundColor: "#ff6b00" }}
-              >
-                <QrCode style={{ fontSize: 16 }} />
-                {requestLoading ? "Generating..." : requestQr ? "Regenerate" : "Generate QR & Link"}
-              </button>
-              <button
-                onClick={() => { setShowRequestForm(false); }}
-                className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]"
-                style={{ borderColor: "#1e1e1e" }}
-              >
-                Done
-              </button>
+                {requestError && <p className="text-xs text-[#f87171]">{requestError}</p>}
+
+                {/* Checkout link — shows inline after generation */}
+                {requestLink && (
+                  <div className="rounded-xl p-4 flex flex-col gap-2" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                    <p className="text-xs font-semibold text-[#f0f0f0]">Checkout Link</p>
+                    <p className="text-xs text-[#94a3b8] break-all font-mono">{requestLink}</p>
+                    <button
+                      onClick={() => copy(requestLink, "checkout")}
+                      className="mt-1 flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-all hover:bg-[#1e1e1e] w-fit"
+                      style={{ borderColor: "#2a2a2a", color: "#94a3b8" }}
+                    >
+                      <ContentCopy style={{ fontSize: 14 }} />
+                      {copiedId === "checkout" ? "Copied!" : "Copy Link"}
+                    </button>
+                    <p className="text-xs text-[#64748b]">One-time checkout — valid for ₦{Number(requestAmount).toLocaleString()} only.</p>
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleGenerateLink}
+                    disabled={requestLoading || !requestAmount}
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-70"
+                    style={{ backgroundColor: "#ff6b00" }}
+                  >
+                    <QrCode style={{ fontSize: 16 }} />
+                    {requestLoading ? "Generating..." : requestQr ? "Regenerate" : "Generate QR & Link"}
+                  </button>
+                  <button
+                    onClick={closeForm}
+                    className="px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] text-[#f0f0f0]"
+                    style={{ borderColor: "#1e1e1e" }}
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+
+              {/* Right: QR code — only appears after generation */}
+              {requestQr && (
+                <div className="rounded-xl p-5 flex flex-col items-center gap-3" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+                  <div className="flex items-center justify-between w-full">
+                    <p className="text-xs font-semibold text-[#f0f0f0]">Scan to Pay · ₦{Number(requestAmount).toLocaleString()}</p>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}>One-time</span>
+                  </div>
+                  <div className="rounded-xl p-3 flex items-center justify-center w-full" style={{ backgroundColor: "#ffffff" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={requestQr} alt="Payment QR code" className="w-48 h-48 object-contain" />
+                  </div>
+                  <button
+                    onClick={() => handleDownloadQr(requestQr, `trace-pay-${requestAmount}.png`)}
+                    className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border transition-all hover:bg-[#1e1e1e] w-fit"
+                    style={{ borderColor: "#2a2a2a", color: "#94a3b8" }}
+                  >
+                    <Download style={{ fontSize: 14 }} /> Download QR
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -226,68 +276,8 @@ export default function PaymentsPage() {
           />
         </div>
 
-        {/* Payment Link + QR — shows after generation, empty state before */}
-        {requestLink && requestQr ? (
-          <div className="grid lg:grid-cols-[minmax(0,1.7fr)_320px] gap-6 mb-6">
-            {/* Link row */}
-            <div className="rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-              <div className="flex items-center gap-2 flex-none">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#161616" }}>
-                  <LinkOutlined style={{ fontSize: 20, color: "#ff6b00" }} />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-[#f0f0f0]">Payment Link</p>
-                  <p className="text-xs text-[#94a3b8]">{user?.businessName ?? "Trace business"} · ₦{Number(requestAmount).toLocaleString()}</p>
-                </div>
-              </div>
-              <div className="flex-1 flex items-center gap-2 w-full">
-                <div className="flex-1 px-4 py-2.5 rounded-xl font-mono text-sm text-[#f0f0f0] truncate" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-                  {requestLink.replace(/^https?:\/\//, "")}
-                </div>
-                <button
-                  onClick={() => copy(requestLink, "main")}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616] whitespace-nowrap"
-                  style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}
-                >
-                  <ContentCopy style={{ fontSize: 16 }} />
-                  {copiedId === "main" ? "Copied!" : "Copy"}
-                </button>
-              </div>
-            </div>
-
-            {/* QR */}
-            <div className="rounded-2xl p-5" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-              <div className="flex items-center justify-between gap-3 mb-4">
-                <div>
-                  <p className="text-sm font-semibold text-[#f0f0f0]">Scan to Pay</p>
-                  <p className="text-xs text-[#94a3b8] mt-0.5">₦{Number(requestAmount).toLocaleString()}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="px-2.5 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}>One-time</div>
-                  <button
-                    onClick={() => handleDownloadQr(requestQr, `trace-pay-${requestAmount}.png`)}
-                    className="p-1.5 rounded-lg border transition-all hover:bg-[#161616]"
-                    style={{ borderColor: "#1e1e1e", color: "#94a3b8" }}
-                    title="Download QR"
-                  >
-                    <Download style={{ fontSize: 16 }} />
-                  </button>
-                </div>
-              </div>
-              <div className="rounded-2xl p-3 flex items-center justify-center" style={{ backgroundColor: "#ffffff" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={requestQr} alt="Payment QR" className="w-full max-w-[200px] h-auto" />
-              </div>
-              <button
-                onClick={openRequestForm}
-                className="mt-3 w-full py-2 rounded-xl text-xs font-semibold border transition-all hover:bg-[#161616]"
-                style={{ borderColor: "#1e1e1e", color: "#94a3b8" }}
-              >
-                Generate new
-              </button>
-            </div>
-          </div>
-        ) : (
+        {/* Create payment link CTA — only when form is closed */}
+        {!showRequestForm && (
           <div
             className="rounded-2xl p-8 mb-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-[#161616]"
             style={{ backgroundColor: "#111111", border: "2px dashed #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}
@@ -411,7 +401,6 @@ export default function PaymentsPage() {
                       onClick={() => handleDownloadQr(qrUrl(link.slug), `trace-pay-${link.slug}.png`)}
                       className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all hover:bg-[#161616]"
                       style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}
-                      title="Download QR"
                     >
                       <QrCode style={{ fontSize: 14 }} /> QR
                     </button>
