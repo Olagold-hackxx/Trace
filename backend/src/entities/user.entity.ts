@@ -43,7 +43,7 @@ export class User {
   @Column({ nullable: true })
   bvnLast4?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   bvn?: string;
 
   @Column({ nullable: true, unique: true })

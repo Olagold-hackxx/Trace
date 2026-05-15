@@ -78,11 +78,13 @@ LENDERS = [
     ("Carbon Lending",     "+2348022000003", "carbon@demo.trace", "Carbon Lending"),
 ]
 
-# Workers who need DB user accounts (Tunde applies live; Bayo+Chinedu are pre-seeded)
+# Workers who need DB user accounts (Tunde applies live; Bayo+Chinedu are pre-seeded).
+# Workers have 0 transactions → no TraceScore. The matching engine uses gig history
+# from workers.json fixtures, NOT a credit score. Do not seed score_snapshots for workers.
 WORKER_USERS = [
-    ("Tunde Balogun", "+2348033000001", "multi_skill_worker", "Mushin", 640, "M", "25-34"),
-    ("Bayo Adeleke",  "+2348033000002", "delivery_worker",    "Mushin", 520, "M", "18-24"),
-    ("Chinedu Obi",   "+2348033000003", "okada_rider",        "Agege",  590, "M", "25-34"),
+    ("Tunde Balogun", "+2348033000001", "multi_skill_worker", "Mushin", "M", "25-34"),
+    ("Bayo Adeleke",  "+2348033000002", "delivery_worker",    "Mushin", "M", "18-24"),
+    ("Chinedu Obi",   "+2348033000003", "okada_rider",        "Agege",  "M", "25-34"),
 ]
 
 # ── Sender name pools ─────────────────────────────────────────────────────────
@@ -106,10 +108,11 @@ def uid(seed: str) -> str:
     return str(uuid.uuid5(NAMESPACE, seed))
 
 def gen_bvn(seed_str: str) -> str:
-    """Generate a deterministic 11-digit BVN from a seed string."""
+    """Generate a deterministic 11-digit BVN matching the Nigerian format.
+    Real BVNs start with '22' (NIBSS prefix). Remaining 9 digits are seeded
+    so each demo user gets a unique, reproducible value."""
     rng = random.Random(seed_str)
-    # First digit must be non-zero
-    return str(rng.randint(1, 9)) + "".join(str(rng.randint(0, 9)) for _ in range(10))
+    return "22" + "".join(str(rng.randint(0, 9)) for _ in range(9))
 
 def nowutc() -> datetime:
     return datetime.now(timezone.utc)
@@ -411,7 +414,7 @@ def seed_users(cur, demo_day: date) -> dict:
             bvn[-4:], bvn, f"{phone}@demo.trace", True,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
-    for (name, phone, archetype, market, score, gender, age) in WORKER_USERS:
+    for (name, phone, archetype, market, gender, age) in WORKER_USERS:
         bvn = gen_bvn(f"bvn-{phone}")
         rows.append((
             uid(phone), phone, password_hash, name, None, None, market,

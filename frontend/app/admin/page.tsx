@@ -16,8 +16,46 @@ import {
   TrendingUp,
   Wallet,
 } from "@mui/icons-material";
-import { BackendAdminOverview, fetchBackend } from "@/lib/backend";
+import { BackendAdminOverview, BackendFraudAlert, fetchBackend } from "@/lib/backend";
 import { Spinner } from "@/components/ui/spinner";
+
+const SEVERITY_STYLE: Record<string, { bg: string; text: string }> = {
+  high:   { bg: "rgba(220,38,38,0.2)",  text: "#f87171" },
+  medium: { bg: "rgba(217,119,6,0.2)",  text: "#fbbf24" },
+  low:    { bg: "rgba(100,116,139,0.2)", text: "#94a3b8" },
+};
+
+function FraudAlertCard({ alert }: { alert: BackendFraudAlert }) {
+  const sc = SEVERITY_STYLE[alert.severity] ?? SEVERITY_STYLE.low;
+  return (
+    <div className="p-3 rounded-xl" style={{ backgroundColor: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.15)" }}>
+      <div className="flex items-center justify-between mb-1.5">
+        <div>
+          <p className="text-sm font-semibold text-white">{alert.traderName ?? "Unknown trader"}</p>
+          <p className="text-xs text-slate-500">{(alert.anomalyScore * 100).toFixed(0)}% anomaly score</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: sc.bg, color: sc.text }}>
+            {alert.severity}
+          </span>
+          <span className="text-xs text-slate-500">{alert.status}</span>
+        </div>
+      </div>
+      {alert.topSignals.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-1">
+          {alert.topSignals.map((s: string) => (
+            <span key={s} className="text-xs px-1.5 py-0.5 rounded" style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "#94a3b8" }}>
+              {s.replace(/_/g, " ")}
+            </span>
+          ))}
+        </div>
+      )}
+      <p className="text-xs text-slate-600 mt-1.5">
+        {new Date(alert.createdAt).toLocaleDateString("en-NG", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+      </p>
+    </div>
+  );
+}
 
 function StatCard({ label, value, sub, color, icon: Icon }: { label: string; value: string; sub?: string; color: string; icon: React.ElementType }) {
   return (
@@ -38,13 +76,13 @@ function StatCard({ label, value, sub, color, icon: Icon }: { label: string; val
 
 export default function AdminDashboardPage() {
   const [overview, setOverview] = useState<BackendAdminOverview | null>(null);
-  const [fraudAlerts, setFraudAlerts] = useState<Array<{ id: string; severity: string; reason: string; status: string }>>([]);
+  const [fraudAlerts, setFraudAlerts] = useState<BackendFraudAlert[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     void Promise.all([
       fetchBackend<BackendAdminOverview>("/admin/overview"),
-      fetchBackend<Array<{ id: string; severity: string; reason: string; status: string }>>("/admin/fraud-alerts"),
+      fetchBackend<BackendFraudAlert[]>("/admin/fraud-alerts"),
     ]).then(([overviewResult, alertsResult]) => {
       setOverview(overviewResult);
       setFraudAlerts(Array.isArray(alertsResult) ? alertsResult : []);
@@ -116,19 +154,7 @@ export default function AdminDashboardPage() {
           ) : (
             <div className="space-y-4">
               {fraudAlerts.map((alert) => (
-                <div key={alert.id} className="p-3 rounded-xl" style={{ backgroundColor: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.15)" }}>
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-semibold text-white">{alert.id}</p>
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{
-                      backgroundColor: alert.severity === "high" ? "rgba(220,38,38,0.2)" : "rgba(217,119,6,0.2)",
-                      color: alert.severity === "high" ? "#f87171" : "#fbbf24"
-                    }}>
-                      {alert.severity}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400">{alert.reason}</p>
-                  <p className="text-xs text-slate-500 mt-1">Status: {alert.status}</p>
-                </div>
+                <FraudAlertCard key={alert.id} alert={alert} />
               ))}
             </div>
           )}

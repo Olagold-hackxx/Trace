@@ -62,13 +62,24 @@ def train(features_df: pd.DataFrame, config: TrainConfig = TrainConfig()) -> Iso
 
 # ─── Inference ────────────────────────────────────────────────────────────────
 
+def _active_features(model: IsolationForest) -> list[str]:
+    """Return the feature names the model was actually trained on.
+
+    FEATURE_NAMES may grow over time (new features added); the saved model
+    was fit on n_features_in_ of them. We always use the first N names so
+    the order is deterministic and matches the training-time ordering.
+    """
+    return FEATURE_NAMES[: model.n_features_in_]
+
+
 def score_samples(model: IsolationForest, features_df: pd.DataFrame) -> np.ndarray:
     """
     Return anomaly scores in [0, 1] — higher = more anomalous.
     sklearn.score_samples returns negative values (less negative = more normal),
     so we flip the sign and rescale using the training percentiles.
     """
-    X   = features_df[FEATURE_NAMES].fillna(0).values
+    active = _active_features(model)
+    X   = features_df[active].fillna(0).values
     raw = -model.score_samples(X)   # flip: higher = more anomalous
     # Percentile-normalise to [0, 1] so callers get a stable scale
     p5, p95 = np.percentile(raw, [5, 95])
@@ -81,13 +92,14 @@ def predict_one(model: IsolationForest, features: dict[str, float]) -> dict:
     Score one transaction. Accepts a pre-computed feature dict.
     Returns anomaly_score (0-1), flag (bool), and the top-3 driving features.
     """
-    row = pd.DataFrame([features])
+    active = _active_features(model)
+    row   = pd.DataFrame([features])
     score = float(score_samples(model, row)[0])
-    flag  = model.predict(row[FEATURE_NAMES].fillna(0).values)[0] == -1
+    flag  = model.predict(row[active].fillna(0).values)[0] == -1
 
     # Top-3 features driving the anomaly (highest absolute deviation from 0)
     top_features = sorted(
-        [(k, abs(v)) for k, v in features.items() if k in FEATURE_NAMES],
+        [(k, abs(v)) for k, v in features.items() if k in active],
         key=lambda x: x[1], reverse=True,
     )[:3]
 

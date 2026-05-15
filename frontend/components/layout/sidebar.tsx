@@ -59,8 +59,8 @@ export function Sidebar({ role = "user" }: SidebarProps) {
   const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
   const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
   const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/score", "/tracescore", "/lender/analytics", "/lender/wallet"]);
-  const traderScore = traderIdentity.score?.score ?? 742;
-  const scorePct = Math.min(100, Math.round((traderScore / 900) * 100));
+  const traderScore = traderIdentity.score?.score ?? null;
+  const scorePct = traderScore ? Math.min(100, Math.round((traderScore / 850) * 100)) : 0;
 
   return (
     <aside
@@ -112,13 +112,21 @@ export function Sidebar({ role = "user" }: SidebarProps) {
         <div className="mx-4 mb-3 p-4 rounded-xl border" style={{ borderColor: "#1e1e1e", backgroundColor: "#111111" }}>
           <p className="text-xs text-[#94a3b8] mb-1">Your TraceScore</p>
           <div className="flex items-center justify-between mb-2">
-            <p className="text-2xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: accentColor }}>{traderScore}</p>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
-              {traderScore >= 750 ? "Excellent" : traderScore >= 650 ? "Good" : "Building"}
-            </span>
+            <p className="text-2xl font-bold" style={{ fontFamily: "Epilogue, sans-serif", color: traderScore ? accentColor : "#64748b" }}>
+              {traderScore ?? "—"}
+            </p>
+            {traderScore ? (
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
+                {traderScore >= 750 ? "Excellent" : traderScore >= 650 ? "Good" : "Building"}
+              </span>
+            ) : (
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#1e293b", color: "#64748b" }}>
+                No score yet
+              </span>
+            )}
           </div>
           <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: accentSoft }}>
-            <div className="h-full rounded-full" style={{ width: `${scorePct}%`, backgroundColor: accentColor }} />
+            <div className="h-full rounded-full transition-all" style={{ width: `${scorePct}%`, backgroundColor: traderScore ? accentColor : "#334155" }} />
           </div>
         </div>
       )}

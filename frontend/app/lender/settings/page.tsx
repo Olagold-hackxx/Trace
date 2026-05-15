@@ -195,7 +195,7 @@ export default function LenderSettingsPage() {
             </div>
             <div className="grid md:grid-cols-2 gap-5">
               {[
-                { label: "Minimum TraceScore", key: "minScore", suffix: "/ 900" },
+                { label: "Minimum TraceScore", key: "minScore", suffix: "/ 850" },
                 { label: "Maximum Loan Amount (₦)", key: "maxAmount", suffix: "" },
                 { label: "Default Interest Rate (%)", key: "defaultRate", suffix: "% p.a." },
                 { label: "Maximum Tenor (months)", key: "maxTenor", suffix: "months" },

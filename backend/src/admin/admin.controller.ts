@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Req, UnauthorizedException, Version } from
 import { Request } from "express";
 import { AdminService } from "./admin.service";
 import { SessionService } from "../session/session.service";
+import { resolveToken } from "../session/resolve-token";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "../entities/user.entity";
@@ -15,8 +16,7 @@ export class AdminController {
   ) {}
 
   private async requireAdmin(req: Request) {
-    const token = req.cookies?.kudiscore_session;
-    const userId = await this.sessionService.getUserId(token);
+    const userId = await this.sessionService.getUserId(resolveToken(req));
     if (!userId) throw new UnauthorizedException("Not authenticated.");
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user || user.role !== "admin") throw new UnauthorizedException("Admin access only.");

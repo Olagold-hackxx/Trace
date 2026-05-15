@@ -19,6 +19,7 @@ import { Transaction } from "./entities/transaction.entity";
 import { User } from "./entities/user.entity";
 import { VirtualAccount } from "./entities/virtual-account.entity";
 import { Session } from "./entities/session.entity";
+import { FraudAlert } from "./entities/fraud-alert.entity";
 import { JobsModule } from "./jobs/jobs.module";
 import { LenderModule } from "./lender/lender.module";
 import { LoansModule } from "./loans/loans.module";
@@ -32,6 +33,7 @@ import { TransactionsModule } from "./transactions/transactions.module";
 import { UsersModule } from "./users/users.module";
 import { VirtualAccountsModule } from "./virtual-accounts/virtual-accounts.module";
 import { WebhooksModule } from "./webhooks/webhooks.module";
+import { FraudModule } from "./fraud/fraud.module";
 
 @Module({
   imports: [
@@ -51,7 +53,7 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: dbSync === true || dbSync === "true",
           autoLoadEntities: false,
-          entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session, LenderWallet]
+          entities: [User, VirtualAccount, Transaction, PaymentLink, LoanApplication, LoanOffer, Loan, Job, JobApplication, ScoreSnapshot, Session, LenderWallet, FraudAlert]
         };
       }
     }),
@@ -70,6 +72,7 @@ import { WebhooksModule } from "./webhooks/webhooks.module";
     JobsModule,
     LenderModule,
     AdminModule,
+    FraudModule,
     WebhooksModule
   ]
 })
