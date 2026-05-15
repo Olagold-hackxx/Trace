@@ -14,6 +14,7 @@ import {
   BackendVirtualAccount,
   fetchBackend,
   persistTraderSession,
+  storeAuthToken,
 } from "@/lib/backend";
 
 export default function LoginPage() {
@@ -44,7 +45,7 @@ export default function LoginPage() {
     setErrors({});
 
     try {
-      await fetchBackend("/auth/login", {
+      const loginResult = await fetchBackend<{ token: string; user: BackendUser }>("/auth/login", {
         method: "POST",
         bodyJson: {
           email: formData.email,
@@ -52,16 +53,15 @@ export default function LoginPage() {
         },
       });
 
-      const [user, virtualAccount] = await Promise.all([
-        fetchBackend<BackendUser>("/users/me"),
-        fetchBackend<BackendVirtualAccount>("/virtual-accounts/me"),
-      ]);
+      storeAuthToken(loginResult.token);
 
-      persistTraderSession({ user, virtualAccount });
+      const virtualAccount = await fetchBackend<BackendVirtualAccount>("/virtual-accounts/me");
+
+      persistTraderSession({ user: loginResult.user, virtualAccount });
       setLoading(false);
-      if (user.role === "lender") {
+      if (loginResult.user.role === "lender") {
         router.push("/lender");
-      } else if (user.role === "admin") {
+      } else if (loginResult.user.role === "admin") {
         router.push("/admin");
       } else {
         router.push("/dashboard");

@@ -9,6 +9,22 @@ export const DEMO_TRADER_SIGNUP_DEFAULTS = {
 };
 
 export const TRADER_SESSION_STORAGE_KEY = "trace.trader.session";
+export const AUTH_TOKEN_KEY = "trace.auth.token";
+
+export function storeAuthToken(token: string) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+}
+
+export function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return window.localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+export function clearAuthToken() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(AUTH_TOKEN_KEY);
+}
 
 export interface BackendUser {
   id: string;
@@ -188,10 +204,12 @@ type FetchOptions = RequestInit & {
 
 export async function fetchBackend<T>(path: string, options: FetchOptions = {}): Promise<T> {
   const { bodyJson, headers, ...rest } = options;
+  const token = getAuthToken();
   const response = await fetch(`${BACKEND_API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(headers ?? {}),
     },
     body: bodyJson ? JSON.stringify(bodyJson) : rest.body,
@@ -202,6 +220,7 @@ export async function fetchBackend<T>(path: string, options: FetchOptions = {}):
     const isAuthRoute = path.includes("/auth/login") || path.includes("/auth/signup");
     if (response.status === 401 && !isAuthRoute && typeof window !== "undefined") {
       window.localStorage.removeItem(TRADER_SESSION_STORAGE_KEY);
+      clearAuthToken();
       window.location.href = "/auth/login";
       throw new Error("Session expired. Redirecting to login.");
     }

@@ -10,6 +10,7 @@ import {
   DEMO_TRADER_SIGNUP_DEFAULTS,
   fetchBackend,
   persistTraderSession,
+  storeAuthToken,
   BackendUser,
   BackendVirtualAccount,
 } from "@/lib/backend";
@@ -87,18 +88,18 @@ export default function RegisterPage() {
     setErrors({});
 
     try {
-      const result = await fetchBackend<{ user: BackendUser; virtualAccount: BackendVirtualAccount }>("/auth/signup", {
+      const result = await fetchBackend<{ token: string; user: BackendUser; virtualAccount: BackendVirtualAccount }>("/auth/signup", {
         method: "POST",
         bodyJson: {
-          phone: form.phone,
-          email: form.email,
-          password: form.password,
           fullName: form.fullName,
+          email: form.email,
+          phone: form.phone,
           password: form.password,
           ...DEMO_TRADER_SIGNUP_DEFAULTS,
         },
       });
 
+      storeAuthToken(result.token);
       persistTraderSession({ user: result.user, virtualAccount: result.virtualAccount });
       router.push("/dashboard");
     } catch (err) {

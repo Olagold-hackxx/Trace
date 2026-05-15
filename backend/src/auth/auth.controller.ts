@@ -19,7 +19,7 @@ export class AuthController {
     const result = await this.authService.signup(dto);
     response.cookie("kudiscore_session", result.token, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
@@ -29,11 +29,10 @@ export class AuthController {
   @Version("1")
   @Post("login")
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
-    
     const result = await this.authService.login(dto);
     response.cookie("kudiscore_session", result.token, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
