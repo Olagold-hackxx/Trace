@@ -33,6 +33,7 @@ const inputStyle: React.CSSProperties = {
   outline: "none",
   fontFamily: "'Hanken Grotesk', sans-serif",
   boxSizing: "border-box",
+  colorScheme: "dark",
 };
 
 function Field({
@@ -333,7 +334,7 @@ export default function RegisterPage() {
               />
             </Field>
 
-            <Field label="BVN" error={errors.bvn}>
+            <Field label="BVN" icon={AssignmentInd} error={errors.bvn}>
               <input
                 type="text"
                 placeholder="Enter your 11-digit BVN"
@@ -342,7 +343,6 @@ export default function RegisterPage() {
                 maxLength={11}
                 style={{
                   ...inputStyle,
-                  paddingLeft: 16,
                   borderColor: errors.bvn ? "#dc2626" : "#2a2a2a",
                 }}
                 {...focusStyle("bvn")}
