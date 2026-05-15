@@ -27,3 +27,4 @@ prophet
 plotly
 scikit-learn
 joblib
+bcrypt

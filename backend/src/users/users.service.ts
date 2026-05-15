@@ -50,6 +50,15 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  /** Only used by AuthService — explicitly loads the password hash column. */
+  async findForAuth(identifier: string): Promise<User | null> {
+    return this.usersRepository
+      .createQueryBuilder("user")
+      .addSelect("user.passwordHash")
+      .where("user.phone = :id OR user.email = :id", { id: identifier })
+      .getOne();
+  }
+
   async deleteById(id: string): Promise<void> {
     await this.usersRepository.delete({ id });
   }

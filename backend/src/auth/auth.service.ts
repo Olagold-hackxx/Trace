@@ -1,10 +1,13 @@
+import { randomBytes } from "crypto";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { createHash } from "crypto";
+import * as bcrypt from "bcryptjs";
 import { UsersService } from "../users/users.service";
 import { VirtualAccountsService } from "../virtual-accounts/virtual-accounts.service";
 import { SessionService } from "../session/session.service";
 import { LoginDto } from "./dto/login.dto";
 import { SignupDto } from "./dto/signup.dto";
+
+const BCRYPT_ROUNDS = 12;
 
 @Injectable()
 export class AuthService {
@@ -15,8 +18,11 @@ export class AuthService {
   ) {}
 
   async signup(dto: SignupDto) {
+    const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
+
     const user = await this.usersService.create({
       phone: dto.phone,
+      passwordHash,
       fullName: dto.fullName,
       email: `${dto.phone.replace(/\D/g, "")}@trace.app`,
       businessName: dto.businessName,
@@ -30,9 +36,8 @@ export class AuthService {
 
     try {
       const virtualAccount = await this.virtualAccountsService.provisionForUser(user);
-      const token = createHash("sha256").update(`${user.id}:${user.phone}:${Date.now()}`).digest("hex");
+      const token = randomBytes(32).toString("hex");
       await this.sessionService.createSession(token, user.id);
-
       return { user, virtualAccount, token };
     } catch (error) {
       await this.usersService.deleteById(user.id);
@@ -41,21 +46,26 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    let user = null;
-    if (dto.email) {
-      user = await this.usersService.findByEmail(dto.email);
-    } else if (dto.phone) {
-      user = await this.usersService.findByPhone(dto.phone);
+    const identifier = dto.email ?? dto.phone;
+    if (!identifier) {
+      throw new UnauthorizedException("Provide a phone number or email.");
     }
 
-    if (!user) {
-      throw new UnauthorizedException("Invalid email or password.");
+    const user = await this.usersService.findForAuth(identifier);
+
+    if (!user || !user.passwordHash) {
+      throw new UnauthorizedException("Invalid credentials.");
     }
 
-    const identifier = dto.email ?? dto.phone ?? user.phone;
-    const token = createHash("sha256").update(`${user.id}:${identifier}:${dto.password}`).digest("hex");
+    const passwordValid = await bcrypt.compare(dto.password, user.passwordHash);
+    if (!passwordValid) {
+      throw new UnauthorizedException("Invalid credentials.");
+    }
+
+    const token = randomBytes(32).toString("hex");
     await this.sessionService.createSession(token, user.id);
 
-    return { token, user };
+    const { passwordHash: _, ...safeUser } = user;
+    return { token, user: safeUser };
   }
 }

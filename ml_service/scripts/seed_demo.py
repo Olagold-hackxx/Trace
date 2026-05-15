@@ -32,6 +32,11 @@ try:
 except ImportError:
     sys.exit("psycopg2 not installed — run: pip install psycopg2-binary")
 
+try:
+    import bcrypt as _bcrypt
+except ImportError:
+    sys.exit("bcrypt not installed — run: pip install bcrypt")
+
 # ── Config ────────────────────────────────────────────────────────────────────
 
 FIXTURES_DIR = Path(__file__).resolve().parent.parent / "fixtures"
@@ -40,7 +45,8 @@ FIXTURES_DIR = Path(__file__).resolve().parent.parent / "fixtures"
 # Set SEED_DB_URL before running, or pass --db-url on the command line.
 DEFAULT_DB_URL = os.environ.get("SEED_DB_URL", "")
 
-NAMESPACE = uuid.UUID("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+NAMESPACE     = uuid.UUID("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+DEMO_PASSWORD = "Demo1234!"
 
 # Stable fixture IDs used by the ML matching engine
 IYA_JOB_FIXTURE_ID = "job_demo_iya_delivery"
@@ -151,6 +157,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE IF NOT EXISTS users (
     id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     phone           TEXT        UNIQUE NOT NULL,
+    password_hash   TEXT,
     full_name       TEXT        NOT NULL,
     business_name   TEXT,
     business_type   TEXT,
@@ -167,6 +174,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+-- Add password_hash to existing tables that predate this column
+ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT;
 
 CREATE TABLE IF NOT EXISTS transactions (
     id                           UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -365,41 +374,51 @@ CASCADE;
 
 # ── Seeding functions ─────────────────────────────────────────────────────────
 
+def demo_email(full_name: str) -> str:
+    parts = full_name.lower().split()
+    return f"{parts[0]}.{parts[-1]}@trace.demo"
+
+
 def seed_users(cur, demo_day: date) -> dict:
     """Insert all users. Returns phone → id mapping."""
+    print("  Hashing demo passwords (bcrypt cost=12, ~2 s each)…")
+    password_hash = _bcrypt.hashpw(DEMO_PASSWORD.encode(), _bcrypt.gensalt(12)).decode()
+
     rows = []
     for (name, phone, archetype, market, score, gender, age, biz, *_) in TRADERS:
         rows.append((
-            uid(phone), phone, name, biz, None, market,
+            uid(phone), phone, password_hash, name, biz, None, market,
             "english", "trader", archetype, gender, age,
-            None, None, None, False,
+            None, None, demo_email(name), False,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
     for (name, phone, _, display) in LENDERS:
         rows.append((
-            uid(phone), phone, display, None, None, None,
+            uid(phone), phone, password_hash, display, None, None, None,
             "english", "lender", None, None, None,
             None, None, f"{phone}@demo.trace", True,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
     for (name, phone, archetype, market, score, gender, age) in WORKER_USERS:
         rows.append((
-            uid(phone), phone, name, None, None, market,
+            uid(phone), phone, password_hash, name, None, None, market,
             "english", "trader", archetype, gender, age,
-            None, None, None, False,
+            None, None, demo_email(name), False,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
 
     execute_values(cur, """
         INSERT INTO users
-            (id, phone, full_name, business_name, business_type, market_name,
+            (id, phone, password_hash, full_name, business_name, business_type, market_name,
              language, role, archetype, gender, age_bracket,
              bvn_last4, bvn, email, lender_visible, created_at)
         VALUES %s
         ON CONFLICT (phone) DO UPDATE SET
-            full_name = EXCLUDED.full_name,
-            archetype = EXCLUDED.archetype,
-            market_name = EXCLUDED.market_name
+            full_name     = EXCLUDED.full_name,
+            password_hash = EXCLUDED.password_hash,
+            archetype     = EXCLUDED.archetype,
+            market_name   = EXCLUDED.market_name,
+            email         = EXCLUDED.email
     """, rows)
 
     return {phone: uid(phone) for (_, phone, *_) in TRADERS + LENDERS + WORKER_USERS}

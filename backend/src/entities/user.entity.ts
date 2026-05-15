@@ -28,6 +28,9 @@ export class User {
   @Column({ default: "trader" })
   role!: UserRole;
 
+  @Column({ nullable: true, select: false })
+  passwordHash?: string;
+
   @Column({ nullable: true })
   archetype?: string;
 
