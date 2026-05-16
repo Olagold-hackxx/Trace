@@ -67,7 +67,7 @@ export function MarketplaceDetailPage({
 
   return (
     <AppShell role={role}>
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto">
         <div className="mb-6">
           <Link href={backHref} className="inline-flex items-center gap-2 text-sm font-medium text-[#cbd5e1] hover:text-[#f0f0f0] transition-colors">
             <ArrowBack style={{ fontSize: 18 }} />

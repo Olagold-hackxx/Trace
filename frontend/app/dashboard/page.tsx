@@ -377,22 +377,23 @@ export default function DashboardPage() {
 
   return (
     <AppShell role="user">
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
         {/* Greeting */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
+        <div className="flex items-center justify-between mb-6 sm:mb-8 gap-3">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#f0f0f0] truncate" style={{ fontFamily: "Epilogue, sans-serif" }}>
               Good morning, {displayName} 👋
             </h1>
-            <p className="text-[#94a3b8] text-sm mt-1">{businessName}</p>
+            <p className="text-[#94a3b8] text-sm mt-1 truncate">{businessName}</p>
           </div>
           <Link
             href="/payments"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 shrink-0"
             style={{ backgroundColor: "#ff6b00" }}
           >
             <Add style={{ fontSize: 18 }} />
-            Request Payment
+            <span className="hidden sm:inline">Request Payment</span>
+            <span className="sm:hidden">Request</span>
           </Link>
         </div>
 
@@ -434,7 +435,7 @@ export default function DashboardPage() {
               <div className="w-px h-10 hidden sm:block" style={{ backgroundColor: "#1e1e1e" }} />
               <div className="flex-1">
                 <p className="text-xs text-[#64748b] mb-1">Account Number</p>
-                <p className="text-3xl font-black tracking-widest text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{virtualAccount.accountNumber}</p>
+                <p className="text-2xl sm:text-3xl font-black tracking-widest text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{virtualAccount.accountNumber}</p>
               </div>
               <div className="w-px h-10 hidden sm:block" style={{ backgroundColor: "#1e1e1e" }} />
               <div className="flex-1">
@@ -544,37 +545,60 @@ export default function DashboardPage() {
               {recentTransactions.length === 0 ? (
                 <div className="flex items-center justify-center py-12 text-sm text-[#64748b]">No transactions yet</div>
               ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid #1e1e1e" }}>
-                      {["Date", "Description", "Type", "Amount", "Status"].map((h) => (
-                        <th key={h} className="text-left pb-3 font-semibold text-[#94a3b8] pr-4 text-xs">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
+                <>
+                  {/* Desktop table */}
+                  <div className="hidden sm:block overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr style={{ borderBottom: "1px solid #1e1e1e" }}>
+                          {["Date", "Description", "Type", "Amount", "Status"].map((h) => (
+                            <th key={h} className="text-left pb-3 font-semibold text-[#94a3b8] pr-4 text-xs">{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {recentTransactions.map((t) => (
+                          <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
+                            <td className="py-3 pr-4 text-xs text-[#94a3b8] whitespace-nowrap">{t.date}</td>
+                            <td className="py-3 pr-4 font-medium text-[#f0f0f0] max-w-[160px] truncate">{t.desc}</td>
+                            <td className="py-3 pr-4">
+                              <span className="flex items-center gap-1 text-xs">
+                                {t.type === "Credit" ? <ArrowDownward style={{ fontSize: 14, color: "#16a34a" }} /> : <ArrowUpward style={{ fontSize: 14, color: "#dc2626" }} />}
+                                <span style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>{t.type}</span>
+                              </span>
+                            </td>
+                            <td className="py-3 pr-4 font-bold whitespace-nowrap" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                              {t.type === "Credit" ? "+" : "-"}₦{t.amount.toLocaleString()}
+                            </td>
+                            <td className="py-3"><StatusBadge status={t.status} /></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {/* Mobile cards */}
+                  <div className="sm:hidden space-y-2">
                     {recentTransactions.map((t) => (
-                      <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                        <td className="py-3 pr-4 text-xs text-[#94a3b8] whitespace-nowrap">{t.date}</td>
-                        <td className="py-3 pr-4 font-medium text-[#f0f0f0]">{t.desc}</td>
-                        <td className="py-3 pr-4">
-                          <span className="flex items-center gap-1 text-xs">
-                            {t.type === "Credit"
-                              ? <ArrowDownward style={{ fontSize: 14, color: "#16a34a" }} />
-                              : <ArrowUpward style={{ fontSize: 14, color: "#dc2626" }} />}
-                            <span style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>{t.type}</span>
-                          </span>
-                        </td>
-                        <td className="py-3 pr-4 font-bold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
-                          {t.type === "Credit" ? "+" : "-"}₦{t.amount.toLocaleString()}
-                        </td>
-                        <td className="py-3"><StatusBadge status={t.status} /></td>
-                      </tr>
+                      <div key={t.id} className="flex items-center justify-between p-3 rounded-xl" style={{ backgroundColor: "#161616" }}>
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: t.type === "Credit" ? "#dcfce7" : "#fee2e2" }}>
+                            {t.type === "Credit" ? <ArrowDownward style={{ fontSize: 14, color: "#16a34a" }} /> : <ArrowUpward style={{ fontSize: 14, color: "#dc2626" }} />}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-[#f0f0f0] truncate">{t.desc}</p>
+                            <p className="text-xs text-[#94a3b8]">{t.date}</p>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0 ml-3">
+                          <p className="text-sm font-bold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                            {t.type === "Credit" ? "+" : "-"}₦{t.amount.toLocaleString()}
+                          </p>
+                          <StatusBadge status={t.status} />
+                        </div>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                  </div>
+                </>
               )}
             </div>
           </div>

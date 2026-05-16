@@ -248,7 +248,7 @@ export default function Page() {
 
   return (
     <AppShell role="user" title="Loans">
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-6">
           {/* ── left column ── */}
           <div className="space-y-6">
@@ -287,7 +287,7 @@ export default function Page() {
               </button>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Link
                 href="/loan/active"
                 className="rounded-2xl p-5 block transition-all hover:shadow-md"

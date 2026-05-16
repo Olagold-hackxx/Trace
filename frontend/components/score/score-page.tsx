@@ -63,7 +63,7 @@ export function ScorePage() {
 
   return (
     <AppShell role="user">
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
@@ -81,7 +81,7 @@ export function ScorePage() {
         </div>
 
         <div
-          className="rounded-2xl p-8 mb-6 grid lg:grid-cols-3 gap-8 items-center"
+          className="rounded-2xl p-5 sm:p-8 mb-6 grid lg:grid-cols-3 gap-6 sm:gap-8 items-center"
           style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}
         >
           <div className="flex flex-col items-center">
@@ -245,7 +245,7 @@ export function ScorePage() {
               <p className="text-sm text-[#94a3b8] mt-1">Based on your TraceScore of {score} — no extra form needed to see these</p>
             </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {activeOffers.map((offer) => (
               <div key={offer.name} className="rounded-xl p-5 border" style={{ borderColor: "#1e1e1e" }}>
                 <div className="flex items-center justify-between mb-4">

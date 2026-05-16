@@ -16,10 +16,13 @@ import {
   AccountBalanceWallet,
   Groups,
   BarChart,
+  Close,
 } from "@mui/icons-material";
 
 interface SidebarProps {
   role?: "user" | "lender";
+  open?: boolean;
+  onClose?: () => void;
 }
 
 const userNav = [
@@ -41,7 +44,7 @@ const lenderNav = [
   { label: "Analytics", href: "/lender/analytics", icon: BarChart },
 ];
 
-export function Sidebar({ role = "user" }: SidebarProps) {
+export function Sidebar({ role = "user", open = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const traderIdentity = useTraderIdentity(role === "user");
@@ -56,13 +59,13 @@ export function Sidebar({ role = "user" }: SidebarProps) {
     router.push("/auth/login");
   };
   const nav = role === "lender" ? lenderNav : userNav;
-  const accentColor = role === "lender" ? "#ff6b00" : "#ff6b00";
-  const accentSoft = role === "lender" ? "#3b1d09" : "#3b1d09";
+  const accentColor = "#ff6b00";
+  const accentSoft = "#3b1d09";
   const exactMatchRoutes = new Set(["/dashboard", "/lender", "/payments", "/score", "/tracescore", "/lender/analytics", "/lender/wallet"]);
   const traderScore = traderIdentity.score?.score ?? null;
   const scorePct = traderScore ? Math.min(100, Math.round((traderScore / 850) * 100)) : 0;
 
-  return (
+  const sidebarContent = (
     <aside
       className="flex flex-col w-64 shrink-0 h-full border-r"
       style={{ backgroundColor: "#0d0d0d", borderColor: "#1e1e1e" }}
@@ -71,12 +74,15 @@ export function Sidebar({ role = "user" }: SidebarProps) {
       <div className="flex items-center gap-3 px-6 py-5 border-b" style={{ borderColor: "#1e1e1e" }}>
         <BrandLogo href="/" iconSize={36} textSize={22} textColor="#f0f0f0" />
         {role === "lender" && (
-          <span
-            className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}
-          >
+          <span className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full" style={{ backgroundColor: "#3b1d09", color: "#ff6b00" }}>
             Lender
           </span>
+        )}
+        {/* Mobile close button */}
+        {onClose && (
+          <button onClick={onClose} className="ml-auto p-1 rounded-lg hover:bg-[#161616] lg:hidden" style={{ color: "#64748b" }}>
+            <Close style={{ fontSize: 20 }} />
+          </button>
         )}
       </div>
 
@@ -92,11 +98,10 @@ export function Sidebar({ role = "user" }: SidebarProps) {
             <Link
               key={item.href + item.label}
               href={item.href}
+              onClick={onClose}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
-                isActive
-                  ? "text-white shadow-sm"
-                  : "text-[#cbd5e1] hover:bg-[#161616] hover:text-white"
+                isActive ? "text-white shadow-sm" : "text-[#cbd5e1] hover:bg-[#161616] hover:text-white"
               )}
               style={isActive ? { backgroundColor: accentColor } : { backgroundColor: "transparent" }}
             >
@@ -143,5 +148,27 @@ export function Sidebar({ role = "user" }: SidebarProps) {
         </button>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar — always visible */}
+      <div className="hidden lg:flex h-full">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile sidebar — slide in overlay */}
+      {open && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            onClick={onClose}
+          />
+          <div className="fixed left-0 top-0 bottom-0 z-50 lg:hidden" style={{ width: 256 }}>
+            {sidebarContent}
+          </div>
+        </>
+      )}
+    </>
   );
 }

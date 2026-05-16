@@ -144,20 +144,21 @@ export default function JobsPage() {
 
   return (
     <AppShell role="user">
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>My Jobs</h1>
-            <p className="text-sm text-[#94a3b8] mt-1">Manage jobs you posted and track your applications</p>
+        <div className="flex items-center justify-between mb-6 gap-3">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>My Jobs</h1>
+            <p className="text-sm text-[#94a3b8] mt-1 hidden sm:block">Manage jobs you posted and track your applications</p>
           </div>
           <button
             onClick={() => setShowPostForm(!showPostForm)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 shrink-0"
             style={{ backgroundColor: "#ff6b00" }}
           >
             <Add style={{ fontSize: 18 }} />
-            Post a Job
+            <span className="hidden sm:inline">Post a Job</span>
+            <span className="sm:hidden">Post</span>
           </button>
         </div>
 
@@ -240,44 +241,68 @@ export default function JobsPage() {
         {/* Posted Jobs */}
         {tab === "posted" && (
           <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
-                  {["Job Title", "Category", "Status", "Applicants", "Hired", "Pay", "Posted", ""].map((h) => (
-                    <th key={h} className="text-left px-5 py-4 font-semibold text-xs text-[#94a3b8]">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {postedJobs.map((j) => (
-                  <tr key={j.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#3b1d09" }}>
-                          <Work style={{ fontSize: 16, color: "#ff6b00" }} />
-                        </div>
-                        <span className="font-semibold text-[#f0f0f0]">{j.title}</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-[#cbd5e1]">{j.category}</td>
-                    <td className="px-5 py-4"><StatusBadge status={j.status === "active" ? "Active" : j.status} /></td>
-                    <td className="px-5 py-4">
-                      <button onClick={() => openApplicants(j)} className="flex items-center gap-1 text-[#cbd5e1] hover:text-[#ff6b00] transition-colors">
-                        <People style={{ fontSize: 14 }} />{applicantCounts[j.id] ?? 0}
-                      </button>
-                    </td>
-                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">0</td>
-                    <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{formatNairaFromKobo(j.payKobo)}/day</td>
-                    <td className="px-5 py-4 text-[#94a3b8]">{formatDateLabel(j.createdAt)}</td>
-                    <td className="px-5 py-4">
-                      <button onClick={() => openApplicants(j)} className="text-xs font-semibold transition-colors hover:underline" style={{ color: "#ff6b00" }}>
-                        View applicants
-                      </button>
-                    </td>
+            {/* Desktop table */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
+                    {["Job Title", "Category", "Status", "Applicants", "Pay", "Posted", ""].map((h) => (
+                      <th key={h} className="text-left px-5 py-4 font-semibold text-xs text-[#94a3b8]">{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {postedJobs.map((j) => (
+                    <tr key={j.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "#3b1d09" }}>
+                            <Work style={{ fontSize: 16, color: "#ff6b00" }} />
+                          </div>
+                          <span className="font-semibold text-[#f0f0f0]">{j.title}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-[#cbd5e1]">{j.category}</td>
+                      <td className="px-5 py-4"><StatusBadge status={j.status === "active" ? "Active" : j.status} /></td>
+                      <td className="px-5 py-4">
+                        <button onClick={() => openApplicants(j)} className="flex items-center gap-1 text-[#cbd5e1] hover:text-[#ff6b00] transition-colors">
+                          <People style={{ fontSize: 14 }} />{applicantCounts[j.id] ?? 0}
+                        </button>
+                      </td>
+                      <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{formatNairaFromKobo(j.payKobo)}/day</td>
+                      <td className="px-5 py-4 text-[#94a3b8]">{formatDateLabel(j.createdAt)}</td>
+                      <td className="px-5 py-4">
+                        <button onClick={() => openApplicants(j)} className="text-xs font-semibold transition-colors hover:underline" style={{ color: "#ff6b00" }}>
+                          View applicants
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Mobile cards */}
+            <div className="sm:hidden divide-y" style={{ borderColor: "#1e1e1e" }}>
+              {postedJobs.map((j) => (
+                <div key={j.id} className="p-4 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: "#3b1d09" }}>
+                      <Work style={{ fontSize: 16, color: "#ff6b00" }} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-[#f0f0f0] truncate">{j.title}</p>
+                      <p className="text-xs text-[#94a3b8]">{j.category} · {formatNairaFromKobo(j.payKobo)}/day</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5 shrink-0">
+                    <StatusBadge status={j.status === "active" ? "Active" : j.status} />
+                    <button onClick={() => openApplicants(j)} className="flex items-center gap-1 text-xs font-semibold" style={{ color: "#ff6b00" }}>
+                      <People style={{ fontSize: 12 }} />{applicantCounts[j.id] ?? 0} applicants
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

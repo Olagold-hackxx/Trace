@@ -109,22 +109,22 @@ export function MarketplacePage({
 
   return (
     <AppShell role={role}>
-      <div className="p-6 max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Job Marketplace</h1>
-            <p className="text-sm text-[#94a3b8] mt-1">{jobs.length} live jobs across the backend marketplace</p>
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6 gap-3">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Job Marketplace</h1>
+            <p className="text-sm text-[#94a3b8] mt-1 hidden sm:block">{jobs.length} live jobs across the backend marketplace</p>
           </div>
           <Link
             href={postJobHref}
-            className="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+            className="px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0"
             style={{ backgroundColor: "#161616", color: "#ff6b00" }}
           >
             Post a Job
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {featured.map((job) => (
             <div key={job.id} className="rounded-2xl p-5 flex items-center justify-between" style={{ background: "linear-gradient(135deg, #ff6b00, #ff8a33)", color: "#fff" }}>
               <div>
@@ -176,7 +176,7 @@ export function MarketplacePage({
           <span className="text-sm text-[#94a3b8]">Updated {jobs[0] ? formatRelativeDate(jobs[0].createdAt) : "recently"}</span>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((job) => <JobCard key={job.id} job={job} detailBasePath={detailBasePath} />)}
         </div>
       </div>

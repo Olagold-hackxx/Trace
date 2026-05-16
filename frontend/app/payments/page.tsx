@@ -183,27 +183,28 @@ export default function PaymentsPage() {
 
   return (
     <AppShell role="user">
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
+        <div className="flex items-center justify-between mb-6 sm:mb-8 gap-3">
+          <div className="min-w-0">
             <h1
-              className="text-2xl font-bold text-[#f0f0f0]"
+              className="text-xl sm:text-2xl font-bold text-[#f0f0f0]"
               style={{ fontFamily: "Epilogue, sans-serif" }}
             >
               Payments
             </h1>
-            <p className="text-sm text-[#94a3b8] mt-1">
+            <p className="text-sm text-[#94a3b8] mt-1 hidden sm:block">
               Collect, track, and manage all your transactions
             </p>
           </div>
           <button
             onClick={openRequestForm}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 shrink-0"
             style={{ backgroundColor: "#ff6b00" }}
           >
             <Add style={{ fontSize: 18 }} />
-            Request Payment
+            <span className="hidden sm:inline">Request Payment</span>
+            <span className="sm:hidden">Request</span>
           </button>
         </div>
 
@@ -227,7 +228,7 @@ export default function PaymentsPage() {
               Enter the amount — we&apos;ll generate a payment link and QR code.
             </p>
 
-            <div className="grid grid-cols-2 gap-4 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
               <div>
                 <label className="block text-xs font-semibold text-[#cbd5e1] mb-1.5">
                   Amount (₦)
@@ -521,103 +522,72 @@ export default function PaymentsPage() {
           >
             {mappedTransactions.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
-                  style={{ backgroundColor: "#161616" }}
-                >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style={{ backgroundColor: "#161616" }}>
                   <TrendingUp style={{ fontSize: 22, color: "#94a3b8" }} />
                 </div>
-                <p className="text-sm font-semibold text-[#f0f0f0] mb-1">
-                  No transactions yet
-                </p>
-                <p className="text-xs text-[#64748b]">
-                  Your transactions will appear here once you start receiving
-                  payments.
-                </p>
+                <p className="text-sm font-semibold text-[#f0f0f0] mb-1">No transactions yet</p>
+                <p className="text-xs text-[#64748b]">Your transactions will appear here once you start receiving payments.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr
-                      style={{
-                        backgroundColor: "#161616",
-                        borderBottom: "1px solid #1e1e1e",
-                      }}
-                    >
-                      {[
-                        "Date & Time",
-                        "Description",
-                        "Reference",
-                        "Method",
-                        "Type",
-                        "Amount",
-                        "Status",
-                      ].map((h) => (
-                        <th
-                          key={h}
-                          className="text-left px-5 py-3.5 font-semibold text-xs text-[#94a3b8] whitespace-nowrap"
-                        >
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {mappedTransactions.map((t) => (
-                      <tr
-                        key={t.id}
-                        className="hover:bg-[#161616] transition-colors"
-                        style={{ borderBottom: "1px solid #1e1e1e" }}
-                      >
-                        <td className="px-5 py-4 whitespace-nowrap">
-                          <p className="text-xs font-semibold text-[#f0f0f0]">
-                            {t.date}
-                          </p>
-                          <p className="text-xs text-[#94a3b8]">{t.time}</p>
-                        </td>
-                        <td className="px-5 py-4 font-medium text-[#f0f0f0] max-w-48 truncate">
-                          {t.desc}
-                        </td>
-                        <td className="px-5 py-4 font-mono text-xs text-[#94a3b8]">
-                          {t.ref}
-                        </td>
-                        <td className="px-5 py-4 text-xs text-[#cbd5e1]">
-                          {t.method}
-                        </td>
-                        <td className="px-5 py-4">
-                          <span
-                            className="flex items-center gap-1 text-xs font-semibold"
-                            style={{
-                              color:
-                                t.type === "Credit" ? "#16a34a" : "#dc2626",
-                            }}
-                          >
-                            {t.type === "Credit" ? (
-                              <ArrowDownward style={{ fontSize: 14 }} />
-                            ) : (
-                              <ArrowUpward style={{ fontSize: 14 }} />
-                            )}
-                            {t.type}
-                          </span>
-                        </td>
-                        <td
-                          className="px-5 py-4 font-bold whitespace-nowrap"
-                          style={{
-                            color: t.type === "Credit" ? "#16a34a" : "#dc2626",
-                          }}
-                        >
-                          {t.type === "Credit" ? "+" : "-"}₦
-                          {t.amount.toLocaleString()}
-                        </td>
-                        <td className="px-5 py-4">
-                          <StatusBadge status={t.status} />
-                        </td>
+              <>
+                {/* Desktop table */}
+                <div className="hidden sm:block overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr style={{ backgroundColor: "#161616", borderBottom: "1px solid #1e1e1e" }}>
+                        {["Date & Time", "Description", "Reference", "Method", "Type", "Amount", "Status"].map((h) => (
+                          <th key={h} className="text-left px-5 py-3.5 font-semibold text-xs text-[#94a3b8] whitespace-nowrap">{h}</th>
+                        ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {mappedTransactions.map((t) => (
+                        <tr key={t.id} className="hover:bg-[#161616] transition-colors" style={{ borderBottom: "1px solid #1e1e1e" }}>
+                          <td className="px-5 py-4 whitespace-nowrap">
+                            <p className="text-xs font-semibold text-[#f0f0f0]">{t.date}</p>
+                            <p className="text-xs text-[#94a3b8]">{t.time}</p>
+                          </td>
+                          <td className="px-5 py-4 font-medium text-[#f0f0f0] max-w-48 truncate">{t.desc}</td>
+                          <td className="px-5 py-4 font-mono text-xs text-[#94a3b8]">{t.ref}</td>
+                          <td className="px-5 py-4 text-xs text-[#cbd5e1]">{t.method}</td>
+                          <td className="px-5 py-4">
+                            <span className="flex items-center gap-1 text-xs font-semibold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                              {t.type === "Credit" ? <ArrowDownward style={{ fontSize: 14 }} /> : <ArrowUpward style={{ fontSize: 14 }} />}
+                              {t.type}
+                            </span>
+                          </td>
+                          <td className="px-5 py-4 font-bold whitespace-nowrap" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                            {t.type === "Credit" ? "+" : "-"}₦{t.amount.toLocaleString()}
+                          </td>
+                          <td className="px-5 py-4"><StatusBadge status={t.status} /></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Mobile cards */}
+                <div className="sm:hidden divide-y" style={{ borderColor: "#1e1e1e" }}>
+                  {mappedTransactions.map((t) => (
+                    <div key={t.id} className="flex items-center justify-between px-4 py-4 gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: t.type === "Credit" ? "#dcfce7" : "#fee2e2" }}>
+                          {t.type === "Credit" ? <ArrowDownward style={{ fontSize: 16, color: "#16a34a" }} /> : <ArrowUpward style={{ fontSize: 16, color: "#dc2626" }} />}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-[#f0f0f0] truncate">{t.desc}</p>
+                          <p className="text-xs text-[#94a3b8]">{t.date} · {t.time}</p>
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-sm font-bold" style={{ color: t.type === "Credit" ? "#16a34a" : "#dc2626" }}>
+                          {t.type === "Credit" ? "+" : "-"}₦{t.amount.toLocaleString()}
+                        </p>
+                        <StatusBadge status={t.status} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         )}
