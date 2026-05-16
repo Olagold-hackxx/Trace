@@ -31,7 +31,7 @@ interface BackendExplainResponse {
 
 // ─── fetch ────────────────────────────────────────────────────────────────
 async function fetchScoreExplain(): Promise<BackendExplainResponse> {
-  return fetchBackend<BackendExplainResponse>("/api/v1/score/explain");
+  return fetchBackend<BackendExplainResponse>("/score/explain");
 }
 
 // ─── drawer ───────────────────────────────────────────────────────────────────
