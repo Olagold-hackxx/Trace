@@ -69,6 +69,7 @@ export default function DashboardPage() {
   const [showForecast, setShowForecast] = useState(false);
   const [forecastDays, setForecastDays] = useState<BackendDailyForecast[]>([]);
   const [forecastLoading, setForecastLoading] = useState(false);
+  const [dipWarning, setDipWarning] = useState<BackendForecastResponse["dip_warning"] | null>(null);
   const paymentLink = defaultPaymentLink?.url ?? "https://trace-nu-dusky.vercel.app/pay";
   const displayName = user?.fullName?.split(" ")[0] ?? "there";
   const businessName = user?.businessName ?? user?.fullName ?? "";
@@ -294,27 +295,6 @@ export default function DashboardPage() {
     ? Math.round(((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 1000) / 10
     : undefined;
 
-  // Build historical cash flow by month
-  const historicalData = (() => {
-    if (transactions.length === 0) return [];
-    const byMonth: Record<string, { cashIn: number; cashOut: number }> = {};
-    for (const t of transactions) {
-      const month = new Date(t.occurredAt ?? t.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" });
-      if (!byMonth[month]) byMonth[month] = { cashIn: 0, cashOut: 0 };
-      const amt = Math.round(Number(t.amountKobo) / 100);
-      if (t.type === "debit" || t.type === "loan_repayment") byMonth[month].cashOut += amt;
-      else if (t.status === "success") byMonth[month].cashIn += amt;
-    }
-    return Object.entries(byMonth).map(([month, vals]) => ({
-      month,
-      cashIn: vals.cashIn,
-      cashOut: vals.cashOut,
-      forecast: null as number | null,
-      forecastLow: null as number | null,
-      forecastHigh: null as number | null,
-    }));
-  })();
-
   // Forecast fetch — lazy, triggered by toggle button
   const handleForecastToggle = async () => {
     const next = !showForecast;
@@ -322,45 +302,62 @@ export default function DashboardPage() {
     if (next && forecastDays.length === 0) {
       setForecastLoading(true);
       try {
-        const res = await fetchBackend<BackendForecastResponse>("/score/forecast?horizon_days=60");
+        const res = await fetchBackend<BackendForecastResponse>("/score/forecast?horizon_days=30");
         setForecastDays(res.daily ?? []);
+        setDipWarning(res.dip_warning ?? null);
       } catch {
         setForecastDays([]);
+        setDipWarning(null);
       } finally {
         setForecastLoading(false);
       }
     }
   };
 
-  // Merge historical + forecast into a single chart series
+  // Build daily chart data: historical actuals + forecast
   const chartData = (() => {
-    if (!showForecast || forecastDays.length === 0) return historicalData;
-
-    const existingMonths = new Set(historicalData.map((d) => d.month));
-    const byMonth: Record<string, { cashIn: number; cashOut: number; count: number }> = {};
-    for (const f of forecastDays) {
-      const month = new Date(f.date).toLocaleDateString("en-NG", { month: "short" });
-      if (!byMonth[month]) byMonth[month] = { cashIn: 0, cashOut: 0, count: 0 };
-      byMonth[month].cashIn  += Math.round(f.predicted_inflow_kobo / 100);
-      byMonth[month].cashOut += Math.round(f.lower_bound_kobo / 100); // use lower as floor reference
-      byMonth[month].count++;
+    // Historical: one point per day from transactions
+    const byDay: Record<string, { cashIn: number; cashOut: number }> = {};
+    for (const t of transactions) {
+      const day = (t.occurredAt ?? t.createdAt ?? "").slice(0, 10);
+      if (!day) continue;
+      if (!byDay[day]) byDay[day] = { cashIn: 0, cashOut: 0 };
+      const amt = Math.round(Number(t.amountKobo) / 100);
+      if (t.type === "debit" || t.type === "loan_repayment") byDay[day].cashOut += amt;
+      else if (t.status === "success") byDay[day].cashIn += amt;
     }
 
-    const futurePoints = Object.entries(byMonth)
-      .filter(([m]) => !existingMonths.has(m))
-      .map(([month, v]) => ({
-        month,
-        cashIn: null as number | null,
-        cashOut: null as number | null,
-        forecast: v.cashIn,
-        forecastLow: Math.round(v.cashOut),
-        forecastHigh: Math.round(v.cashIn * 1.22),
+    const historicalPoints = Object.entries(byDay)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([day, vals]) => ({
+        day,
+        label: new Date(day).toLocaleDateString("en-NG", { month: "short", day: "numeric" }),
+        cashIn: vals.cashIn,
+        cashOut: vals.cashOut,
+        forecast: null as number | null,
+        forecastLow: null as number | null,
+        forecastHigh: null as number | null,
       }));
 
-    return [...historicalData, ...futurePoints];
+    if (!showForecast || forecastDays.length === 0) return historicalPoints;
+
+    const existingDays = new Set(historicalPoints.map((p) => p.day));
+    const forecastPoints = forecastDays
+      .filter((f) => !existingDays.has(f.date))
+      .map((f) => ({
+        day: f.date,
+        label: new Date(f.date).toLocaleDateString("en-NG", { month: "short", day: "numeric" }),
+        cashIn: null as number | null,
+        cashOut: null as number | null,
+        forecast: Math.round(f.predicted_inflow_kobo / 100),
+        forecastLow: Math.round(f.lower_bound_kobo / 100),
+        forecastHigh: Math.round(f.upper_bound_kobo / 100),
+      }));
+
+    return [...historicalPoints, ...forecastPoints];
   })();
 
-  const todayLabel = new Date().toLocaleDateString("en-NG", { month: "short" });
+  const todayLabel = new Date().toLocaleDateString("en-NG", { month: "short", day: "numeric" });
 
   // Fraud banner pre-computations — avoiding reduce callbacks so tsc doesn't need node_modules to infer types
   const openAlerts = fraudAlerts.filter((fa: BackendFraudAlert) => fa.isAnomalous && fa.status === "open");
@@ -472,18 +469,16 @@ export default function DashboardPage() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left — main content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Revenue chart */}
+            {/* Cash Flow chart */}
             <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Cash Flow</h2>
                 <div className="flex items-center gap-3">
-                  {/* Legend */}
                   <div className="flex gap-3 text-xs text-[#94a3b8]">
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Cash In</span>
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#334155" }} />Cash Out</span>
+                    <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Actual</span>
                     {showForecast && <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#3b82f6" }} />Forecast</span>}
+                    {showForecast && <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block opacity-40" style={{ backgroundColor: "#3b82f6" }} />CI band</span>}
                   </div>
-                  {/* Toggle button */}
                   <button
                     onClick={handleForecastToggle}
                     disabled={forecastLoading}
@@ -498,37 +493,71 @@ export default function DashboardPage() {
                   </button>
                 </div>
               </div>
-              {historicalData.length === 0 ? (
-                <div className="flex items-center justify-center h-[220px] text-sm text-[#64748b]">No transaction data yet</div>
+
+              {/* Dip warning banner */}
+              {showForecast && dipWarning && (
+                <div className="rounded-xl px-4 py-3 mb-4 flex items-start gap-3" style={{ backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid #ef444430" }}>
+                  <span style={{ fontSize: 16, marginTop: 1 }}>⚠️</span>
+                  <div>
+                    <p className="text-sm font-semibold text-[#ef4444]">
+                      Income dip detected · {dipWarning.severity} severity
+                    </p>
+                    <p className="text-xs text-[#94a3b8] mt-0.5">
+                      {new Date(dipWarning.dip_start_date).toLocaleDateString("en-NG", { month: "short", day: "numeric" })} – {new Date(dipWarning.dip_end_date).toLocaleDateString("en-NG", { month: "short", day: "numeric" })} · Expected gap: ₦{Math.round(dipWarning.expected_gap_kobo / 100).toLocaleString()} · Suggested loan: ₦{Math.round(dipWarning.suggested_loan_kobo / 100).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {chartData.length === 0 ? (
+                <div className="flex items-center justify-center h-[240px] text-sm text-[#64748b]">No transaction data yet</div>
               ) : (
-              <ResponsiveContainer width="100%" height={220}>
-                <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="cashInGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#ff6b00" stopOpacity={0.18} />
-                      <stop offset="95%" stopColor="#ff6b00" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.18} />
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
-                  <XAxis dataKey="month" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <YAxis tickFormatter={(v: number) => `₦${(v / 1000).toFixed(0)}K`} tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }}
-                    formatter={(v: number, name: string) => [`₦${v.toLocaleString()}`, name === "cashIn" ? "Cash In" : name === "cashOut" ? "Cash Out" : "Forecast"]}
-                  />
-                  {/* "Today" divider when forecast is visible */}
-                  {showForecast && <ReferenceLine x={todayLabel} stroke="#64748b" strokeDasharray="4 2" label={{ value: "Today", fill: "#64748b", fontSize: 10, position: "top" }} />}
-                  {/* Historical */}
-                  <Area type="monotone" dataKey="cashIn" stroke="#ff6b00" strokeWidth={2.5} fill="url(#cashInGrad)" connectNulls={false} dot={false} />
-                  <Area type="monotone" dataKey="cashOut" stroke="#334155" strokeWidth={2} fill="none" strokeDasharray="4 2" connectNulls={false} dot={false} />
-                  {/* Forecast extension */}
-                  {showForecast && <Area type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 3" fill="url(#forecastGrad)" connectNulls dot={false} />}
-                </AreaChart>
-              </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height={240}>
+                  <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="cashInGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%"  stopColor="#ff6b00" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#ff6b00" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="forecastBandGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.08} />
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e1e1e" />
+                    <XAxis dataKey="label" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                    <YAxis tickFormatter={(v: number) => `₦${(v / 1000).toFixed(0)}K`} tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: "#0d0d0d", border: "1px solid #1e1e1e", borderRadius: 12, fontSize: 12, color: "#f0f0f0" }}
+                      formatter={(v: number, name: string) => {
+                        const labels: Record<string, string> = { cashIn: "Actual inflow", cashOut: "Outflow", forecast: "Forecast", forecastLow: "Lower bound", forecastHigh: "Upper bound" };
+                        return [`₦${v.toLocaleString()}`, labels[name] ?? name];
+                      }}
+                      labelFormatter={(label: string) => label}
+                    />
+                    {showForecast && (
+                      <ReferenceLine x={todayLabel} stroke="#475569" strokeDasharray="4 2" label={{ value: "Today", fill: "#475569", fontSize: 10, position: "insideTopRight" }} />
+                    )}
+                    {/* CI band — upper */}
+                    {showForecast && (
+                      <Area type="monotone" dataKey="forecastHigh" stroke="none" fill="url(#forecastBandGrad)" connectNulls dot={false} legendType="none" />
+                    )}
+                    {/* CI band — lower */}
+                    {showForecast && (
+                      <Area type="monotone" dataKey="forecastLow" stroke="none" fill="#0d0d0d" connectNulls dot={false} legendType="none" />
+                    )}
+                    {/* Forecast line */}
+                    {showForecast && (
+                      <Area type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 3" fill="url(#forecastGrad)" connectNulls dot={false} />
+                    )}
+                    {/* Historical actual inflow — orange */}
+                    <Area type="monotone" dataKey="cashIn" stroke="#ff6b00" strokeWidth={2.5} fill="url(#cashInGrad)" connectNulls={false} dot={false} />
+                  </AreaChart>
+                </ResponsiveContainer>
               )}
             </div>
 
