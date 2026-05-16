@@ -56,20 +56,20 @@ jobs:
           script: |
             echo "$ECR_TOKEN" | sudo docker login --username AWS --password-stdin "$ECR_REGISTRY"
 
-            # Free disk space before pulling — removes stopped containers,
-            # dangling images, and build cache that accumulate over deploys
+            # Ensure shared network exists so backend can reach ml-service by name
+            sudo docker network create trace-net 2>/dev/null || true
+
+            # Free disk space before pulling
             sudo docker stop ml-service 2>/dev/null || true
             sudo docker rm   ml-service 2>/dev/null || true
             sudo docker image prune -af 2>/dev/null || true
 
             sudo docker pull "$IMAGE"
 
-            sudo docker stop ml-service 2>/dev/null || true
-            sudo docker rm   ml-service 2>/dev/null || true
-
             sudo docker run -d \
               --name ml-service \
               --restart unless-stopped \
+              --network trace-net \
               -p 8000:8000 \
               -e DATABASE_URL="$DATABASE_URL" \
               -e PYTHONUNBUFFERED=1 \

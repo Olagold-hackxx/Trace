@@ -10,7 +10,10 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-from db import get_db, fetch_transactions, fetch_user_meta
+from db import (
+    get_db, fetch_transactions, fetch_user_meta,
+    fetch_job_for_match, fetch_workers_for_match, SessionLocal,
+)
 from inference.artifact_loader import Artifact
 from inference.cash_flow_predictor import CashFlowPredictor
 from inference.credit_predictor import CreditPredictor
@@ -300,31 +303,63 @@ def predict_forecast(
 def _ensure_match_engine():
     """Load the job matching engine on first call and cache it in state."""
     if state.get('match_engine') is None:
-        # Deferred imports — keeps torch/sentence-transformers out of startup
         from training.job_match_engine import JobMatchEngine
-        from training.job_match_synthetic import load_jobs, generate_workers
+        from training.job_match_synthetic import generate_workers
 
         logger.info("Loading job matching engine (first match request)...")
+
+        # Load fixture workers (have full gig data — lat/lng, ratings, history)
         workers_path = FIXTURES_DIR / 'workers.json'
-        workers_df = pd.read_json(workers_path) if workers_path.exists() else generate_workers(n=200)
-        jobs_path = FIXTURES_DIR / 'jobs.json'
-        jobs_df = pd.read_json(jobs_path) if jobs_path.exists() else load_jobs()
+        fixture_df = pd.read_json(workers_path) if workers_path.exists() else generate_workers(n=200)
+
+        # Load DB users and append any not already covered by the fixture (by name)
+        try:
+            _db = SessionLocal()
+            try:
+                db_df = fetch_workers_for_match(_db)
+            finally:
+                _db.close()
+        except Exception as e:
+            logger.warning(f"Could not load workers from DB, using fixture only: {e}")
+            db_df = pd.DataFrame()
+
+        if not db_df.empty:
+            fixture_names = set(fixture_df['name'].str.strip().str.lower())
+            new_workers = db_df[~db_df['name'].str.strip().str.lower().isin(fixture_names)]
+            if not new_workers.empty:
+                workers_df = pd.concat([fixture_df, new_workers], ignore_index=True)
+                logger.info(f"Merged {len(fixture_df)} fixture + {len(new_workers)} DB workers")
+            else:
+                workers_df = fixture_df
+        else:
+            workers_df = fixture_df
+
         engine = JobMatchEngine(model_name=MATCH_MODEL)
         engine.load_workers(workers_df, cache_path=str(EMBEDDINGS_PATH))
         state['match_engine'] = engine
-        state['jobs_df']      = jobs_df
         logger.info(f"Job matching engine ready — {len(workers_df)} workers indexed")
-    return state['match_engine'], state['jobs_df']
+
+    return state['match_engine']
 
 
 @app.post('/predict/match', response_model=MatchResponse)
-def predict_match(req: MatchRequest):
-    engine, jobs_df = _ensure_match_engine()
-    job_rows = jobs_df[jobs_df['job_id'] == req.job_id]
-    if job_rows.empty:
-        raise HTTPException(404, f"job_id '{req.job_id}' not found")
+def predict_match(req: MatchRequest, db: Session = Depends(get_db)):
+    engine = _ensure_match_engine()
 
-    job = job_rows.iloc[0].to_dict()
+    # Try DB first (job_id is a UUID in the jobs table)
+    job = fetch_job_for_match(db, req.job_id)
+
+    # Fall back to fixture for legacy fixture-based job IDs (e.g. "job_demo_iya_delivery")
+    if job is None:
+        jobs_path = FIXTURES_DIR / 'jobs.json'
+        if jobs_path.exists():
+            jobs_df = pd.read_json(jobs_path)
+            job_rows = jobs_df[jobs_df['job_id'] == req.job_id]
+            if not job_rows.empty:
+                job = job_rows.iloc[0].to_dict()
+
+    if job is None:
+        raise HTTPException(404, f"job_id '{req.job_id}' not found in database or fixtures")
 
     try:
         results = engine.match(job, top_k=req.top_k)

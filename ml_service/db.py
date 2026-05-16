@@ -151,6 +151,110 @@ def write_forecast_cache(
     db.commit()
 
 
+# ── Job matching helpers ───────────────────────────────────────────────────────
+
+# Approximate coordinates for Lagos market areas
+_MARKET_COORDS: dict[str, tuple[float, float]] = {
+    "Unilag":           (6.5158, 3.3940),
+    "Yaba":             (6.5144, 3.3792),
+    "Computer Village": (6.6018, 3.3515),
+    "Ikeja":            (6.6018, 3.3515),
+    "Surulere":         (6.5059, 3.3542),
+    "Lekki":            (6.4281, 3.5214),
+    "Mushin":           (6.5244, 3.3600),
+    "Alaba":            (6.4750, 3.2940),
+    "Idumota":          (6.4550, 3.3880),
+    "Balogun":          (6.4537, 3.3893),
+    "Agege":            (6.6194, 3.3236),
+    "Oshodi":           (6.5482, 3.3527),
+    "Lagos Island":     (6.4541, 3.3947),
+}
+_DEFAULT_COORDS = (6.5244, 3.3792)  # Lagos centre
+
+
+def _coords(location: str | None) -> tuple[float, float]:
+    if not location:
+        return _DEFAULT_COORDS
+    for key, val in _MARKET_COORDS.items():
+        if key.lower() in location.lower():
+            return val
+    return _DEFAULT_COORDS
+
+
+def fetch_job_for_match(db: Session, job_id: str) -> dict | None:
+    """Return a job row shaped for the match engine, or None if not found."""
+    try:
+        result = db.execute(
+            text("""
+                SELECT id, title, category, pay_kobo, location, description
+                FROM jobs
+                WHERE id = :job_id AND status = 'active'
+            """),
+            {"job_id": job_id},
+        )
+        row = result.fetchone()
+    except Exception:
+        return None
+    if row is None:
+        return None
+    lat, lng = _coords(row.location)
+    return {
+        "job_id":       str(row.id),
+        "title":        row.title,
+        "category":     row.category,
+        "budget_naira": int(row.pay_kobo) // 100,
+        "location_name": row.location,
+        "location_lat":  lat,
+        "location_lng":  lng,
+        "description":   row.description or "",
+    }
+
+
+def fetch_workers_for_match(db: Session) -> pd.DataFrame:
+    """Return all active trader users shaped as worker rows for the match engine."""
+    result = db.execute(text("""
+        SELECT
+            id,
+            full_name,
+            archetype,
+            market_name,
+            bvn IS NOT NULL AS bvn_verified,
+            created_at
+        FROM users
+        WHERE role IN ('trader', 'worker')
+          AND full_name IS NOT NULL
+    """))
+    rows = result.fetchall()
+    if not rows:
+        return pd.DataFrame()
+
+    records = []
+    for row in rows:
+        lat, lng = _coords(row.market_name)
+        archetype = row.archetype or "general"
+        records.append({
+            "worker_id":             str(row.id),
+            "name":                  row.full_name,
+            "primary_category":      archetype,
+            "secondary_categories":  [],
+            "bio":                   f"{row.full_name}, {archetype.replace('_', ' ')} at {row.market_name or 'Lagos'}.",
+            "skills":                [archetype],
+            "location_name":         row.market_name or "Lagos",
+            "location_lat":          lat,
+            "location_lng":          lng,
+            "service_radius_km":     15,
+            "daily_rate_naira":      5000,
+            "completed_gigs":        0,
+            "avg_rating":            None,
+            "completion_rate":       None,
+            "kudiscore_tier":        None,
+            "bvn_verified":          bool(row.bvn_verified),
+            "days_since_last_active": 0,
+            "last_active_at":        row.created_at.isoformat() if row.created_at else None,
+        })
+    return pd.DataFrame(records)
+
+
 def read_forecast_cache(
     db: Session,
     user_id: str,
