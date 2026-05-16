@@ -13,10 +13,8 @@ import {
   EditNote,
   RemoveRedEye,
   Close,
-  BarChart,
   CheckCircle,
   Warning,
-  Info,
 } from "@mui/icons-material";
 
 // ─── raw shape from /api/v1/score/explain ─────────────────────────────────
@@ -127,10 +125,10 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
 
           {data && (
             <>
-              {/* score ring card */}
+              {/* score card */}
               <div
                 className="rounded-2xl p-6 flex items-center gap-6"
-                style={{ backgroundColor: bandBg, border: `1px solid ${scoreColor}22` }}
+                style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}
               >
                 <div className="relative shrink-0 w-24 h-24">
                   <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
@@ -138,7 +136,7 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                     <circle
                       cx="40" cy="40" r="34"
                       fill="none"
-                      stroke={scoreColor}
+                      stroke="#ff6b00"
                       strokeWidth="8"
                       strokeLinecap="round"
                       strokeDasharray={`${2 * Math.PI * 34}`}
@@ -148,8 +146,8 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span
-                      className="text-2xl font-bold"
-                      style={{ color: scoreColor, fontFamily: "Epilogue, sans-serif" }}
+                      className="text-2xl font-bold text-[#ff6b00]"
+                      style={{ fontFamily: "Epilogue, sans-serif" }}
                     >
                       {data.score}
                     </span>
@@ -159,18 +157,14 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
 
                 <div>
                   <p
-                    className="text-xs font-semibold uppercase tracking-[0.2em] mb-1"
-                    style={{ color: scoreColor }}
-                  >
-                    {data.band}
-                  </p>
-                  <p
                     className="text-xl font-bold text-[#f0f0f0] leading-tight"
                     style={{ fontFamily: "Epilogue, sans-serif" }}
                   >
                     Credit score
                   </p>
-                  <p className="text-xs text-[#94a3b8] mt-2 leading-relaxed">{data.summary}</p>
+                  <p className="text-xs text-[#94a3b8] mt-2">
+                    Default probability: {(Number(data.pd) * 100).toFixed(1)}%
+                  </p>
                 </div>
               </div>
 
@@ -181,20 +175,7 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                 </p>
                 <div className="space-y-3">
                   {data.factors.map((f, i) => {
-                    const icon =
-                      f.impact === "positive" ? (
-                        <CheckCircle style={{ fontSize: 16, color: "#22c55e" }} />
-                      ) : f.impact === "negative" ? (
-                        <Warning style={{ fontSize: 16, color: "#ef4444" }} />
-                      ) : (
-                        <Info style={{ fontSize: 16, color: "#94a3b8" }} />
-                      );
-
-                    const accent =
-                      f.impact === "positive" ? "#22c55e"
-                      : f.impact === "negative" ? "#ef4444"
-                      : "#94a3b8";
-
+                    const isPositive = f.direction === "positive";
                     return (
                       <div
                         key={i}
@@ -202,32 +183,19 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                         style={{
                           backgroundColor: "#111111",
                           border: "1px solid #1e1e1e",
-                          borderLeft: `3px solid ${accent}`,
+                          borderLeft: `3px solid ${isPositive ? "#22c55e" : "#ef4444"}`,
                         }}
                       >
-                        <div className="mt-0.5 shrink-0">{icon}</div>
-                        <div>
-                          <p className="text-sm font-semibold text-[#f0f0f0] capitalize">{f.label}</p>
-                          <p className="text-xs text-[#94a3b8] mt-1 leading-relaxed">{f.detail}</p>
+                        <div className="mt-0.5 shrink-0">
+                          {isPositive
+                            ? <CheckCircle style={{ fontSize: 16, color: "#22c55e" }} />
+                            : <Warning style={{ fontSize: 16, color: "#ef4444" }} />}
                         </div>
+                        <p className="text-sm text-[#f0f0f0] leading-relaxed">{f.text}</p>
                       </div>
                     );
                   })}
                 </div>
-              </div>
-
-              {/* recommendation */}
-              <div
-                className="rounded-2xl p-5"
-                style={{ backgroundColor: "#111111", border: "1px solid #ff6b0022" }}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <BarChart style={{ fontSize: 16, color: "#ff6b00" }} />
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#ff6b00]">
-                    Lender recommendation
-                  </p>
-                </div>
-                <p className="text-sm text-[#cbd5e1] leading-relaxed">{data.recommendation}</p>
               </div>
             </>
           )}
