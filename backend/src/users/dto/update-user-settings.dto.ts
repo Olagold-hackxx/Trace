@@ -1,4 +1,4 @@
-import { IsBoolean, IsIn, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsIn, IsNumber, IsOptional, IsString, Min } from "class-validator";
 
 export class UpdateUserSettingsDto {
   @IsOptional()
@@ -25,4 +25,28 @@ export class UpdateUserSettingsDto {
   @IsString()
   @IsIn(["trader", "lender", "admin"])
   role?: "trader" | "lender" | "admin";
+
+  // Worker profile
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  skills?: string[];
+
+  @IsOptional()
+  @IsString()
+  workerCategory?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  dailyRateKobo?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  serviceRadiusKm?: number;
 }

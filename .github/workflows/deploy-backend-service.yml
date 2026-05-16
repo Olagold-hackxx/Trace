@@ -83,6 +83,9 @@ jobs:
             REDIS_HOST_VALUE="${REDIS_HOST:-localhost}"
             REDIS_PORT_VALUE="${REDIS_PORT:-6379}"
 
+            # Ensure shared network exists so backend can reach ml-service by name
+            sudo docker network create trace-net 2>/dev/null || true
+
             # Free disk space before pulling
             sudo docker stop backend-service 2>/dev/null || true
             sudo docker rm   backend-service 2>/dev/null || true
@@ -93,9 +96,11 @@ jobs:
             sudo docker run -d \
               --name backend-service \
               --restart unless-stopped \
+              --network trace-net \
               -p 3001:3001 \
               -e PORT=3001 \
               -e NODE_ENV=production \
+              -e ML_SERVICE_URL=http://ml-service:8000 \
               -e DATABASE_URL="$DATABASE_URL" \
               -e DATABASE_CA_CERT="$DATABASE_CA_CERT" \
               -e DB_HOST="$DB_HOST" \

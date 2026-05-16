@@ -52,6 +52,22 @@ export class User {
   @Column({ default: false })
   lenderVisible!: boolean;
 
+  // Worker profile fields — used by the job matching engine
+  @Column({ nullable: true, type: "text" })
+  bio?: string;
+
+  @Column("simple-array", { nullable: true })
+  skills?: string[];
+
+  @Column({ nullable: true })
+  workerCategory?: string;
+
+  @Column({ nullable: true, type: "bigint" })
+  dailyRateKobo?: number;
+
+  @Column({ nullable: true, type: "float" })
+  serviceRadiusKm?: number;
+
   @CreateDateColumn()
   createdAt!: Date;
 

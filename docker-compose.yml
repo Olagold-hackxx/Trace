@@ -2,32 +2,36 @@ services:
   backend:
     build:
       context: ./backend
-    container_name: kudiscore-backend
+    container_name: backend-service
     env_file:
       - ./backend/.env
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/kudiscore
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-      ML_SERVICE_URL: http://ml_service:8000
+      ML_SERVICE_URL: http://ml-service:8000
     ports:
       - "3001:3001"
+    networks:
+      - trace-net
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_started
-      ml_service:
+      ml-service:
         condition: service_started
 
-  ml_service:
+  ml-service:
     build:
       context: ./ml_service
-    container_name: kudiscore-ml-service
+    container_name: ml-service
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/kudiscore
     ports:
       - "8000:8000"
+    networks:
+      - trace-net
     depends_on:
       postgres:
         condition: service_healthy
@@ -57,6 +61,10 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+
+networks:
+  trace-net:
+    driver: bridge
 
 volumes:
   postgres_data:
