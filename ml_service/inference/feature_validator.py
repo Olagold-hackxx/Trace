@@ -23,8 +23,13 @@ def validate_and_prepare(
         row[col] = value
     
     df = pd.DataFrame([row], columns=feature_cols)
-    
+
+    # Cast categoricals first, then force every remaining column to float.
+    # Without this, None/missing values produce object dtype which LightGBM rejects.
     for col in categorical_cols:
         df[col] = pd.Categorical(df[col], categories=known_categories[col])
-    
+
+    numeric_cols = [c for c in feature_cols if c not in categorical_cols]
+    df[numeric_cols] = df[numeric_cols].astype(float)
+
     return df

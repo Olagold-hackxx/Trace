@@ -403,6 +403,8 @@ def _features_identity(user_meta: dict, as_of: datetime) -> dict:
         onboarding_dt = pd.to_datetime(onboarding_date)
         as_of_dt = pd.to_datetime(as_of)
         feats['days_since_onboarding'] = float((as_of_dt - onboarding_dt).total_seconds() / 86400)
+    else:
+        feats['days_since_onboarding'] = np.nan
     
     # Direct metadata features (LightGBM handles categorical natively)
     feats['archetype'] = user_meta.get('archetype', np.nan)
