@@ -18,7 +18,15 @@ export class VirtualAccountsService {
 
   async getCurrentUserAccount(sessionToken?: string) {
     const user = await this.usersService.getCurrentUser(sessionToken);
-    return this.provisionForUser(user);
+
+    // Only traders need virtual accounts — return null silently for admins/lenders
+    if (user.role !== "trader") {
+      return null;
+    }
+
+    // Reload user with BVN (excluded from default select for security)
+    const userWithBvn = await this.usersService.findWithBvn(user.id);
+    return this.provisionForUser(userWithBvn ?? user);
   }
 
   async provisionForUser(user: { id: string; businessName?: string; fullName: string; phone: string; bvn?: string; email?: string }) {
