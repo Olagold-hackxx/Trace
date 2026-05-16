@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { useTraderData } from "@/hooks/use-trader-data";
-import { formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
+import { fetchBackend, formatDateLabel, formatNairaFromKobo } from "@/lib/backend";
 import {
   AccountBalanceWallet,
   ChevronRight,
@@ -20,90 +20,25 @@ import {
 } from "@mui/icons-material";
 
 // ─── raw shape from /api/v1/score/explain ─────────────────────────────────
-interface MlFactorExplanation {
-  feature: string;
-  value: string;
-  phrasing: string;
-  score_delta: number;
+interface BackendFactor {
+  text: string;
+  direction: "positive" | "negative";
 }
-interface MlExplainResponse {
-  user_id: string;
+interface BackendExplainResponse {
   score: number;
-  pd: number;
-  helping: MlFactorExplanation[];
-  hurting: MlFactorExplanation[];
-  model_version: string;
-}
-
-// ─── ui shape the drawer consumes ─────────────────────────────────────────
-interface ScoreFactor {
-  label: string;
-  impact: "positive" | "negative" | "neutral";
-  detail: string;
-}
-interface ScoreExplain {
-  score: number;
-  band: string;
-  summary: string;
-  factors: ScoreFactor[];
-  recommendation: string;
-}
-
-// ─── adapter ──────────────────────────────────────────────────────────────
-function toScoreBand(score: number): string {
-  if (score >= 700) return "Strong";
-  if (score >= 550) return "Fair";
-  if (score >= 400) return "Weak";
-  return "Poor";
-}
-function toSummary(score: number, pd: number): string {
-  const pct = (pd * 100).toFixed(1);
-  if (score >= 700)
-    return `Your profile looks healthy to lenders. Estimated default probability is ${pct}%.`;
-  if (score >= 550)
-    return `Your profile is acceptable but has room to improve. Estimated default probability is ${pct}%.`;
-  return `Your profile raises some concerns for lenders. Estimated default probability is ${pct}%. Focus on the hurting factors below.`;
-}
-function toRecommendation(score: number, hurting: MlFactorExplanation[]): string {
-  if (!hurting.length)
-    return "Your profile is in good standing. Keep maintaining consistent cash flow and repayments.";
-  const top = hurting.slice(0, 2).map((h) => h.phrasing).join(" ");
-  return `To improve your score, focus on: ${top}`;
-}
-function adaptExplain(raw: MlExplainResponse): ScoreExplain {
-  const helping: ScoreFactor[] = raw.helping.map((h) => ({
-    label: h.feature.replace(/_/g, " "),
-    impact: "positive" as const,
-    detail: h.phrasing,
-  }));
-  const hurting: ScoreFactor[] = raw.hurting.map((h) => ({
-    label: h.feature.replace(/_/g, " "),
-    impact: "negative" as const,
-    detail: h.phrasing,
-  }));
-  return {
-    score: raw.score,
-    band: toScoreBand(raw.score),
-    summary: toSummary(raw.score, raw.pd),
-    factors: [...helping, ...hurting],
-    recommendation: toRecommendation(raw.score, raw.hurting),
-  };
+  pd: string | number;
+  factors: BackendFactor[];
+  modelVersion: string;
 }
 
 // ─── fetch ────────────────────────────────────────────────────────────────
-const API = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
-async function fetchScoreExplain(): Promise<ScoreExplain> {
-  const res = await fetch(`${API}/api/v1/score/explain`, {
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error(`Score unavailable (${res.status})`);
-  const raw: MlExplainResponse = await res.json();
-  return adaptExplain(raw);
+async function fetchScoreExplain(): Promise<BackendExplainResponse> {
+  return fetchBackend<BackendExplainResponse>("/api/v1/score/explain");
 }
 
 // ─── drawer ───────────────────────────────────────────────────────────────────
 function LenderViewDrawer({ onClose }: { onClose: () => void }) {
-  const [data, setData] = useState<ScoreExplain | null>(null);
+  const [data, setData] = useState<BackendExplainResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -113,18 +48,6 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   });
-
-  const scoreColor =
-    !data ? "#94a3b8"
-    : data.score >= 700 ? "#22c55e"
-    : data.score >= 500 ? "#f59e0b"
-    : "#ef4444";
-
-  const bandBg =
-    !data ? "#1e1e1e"
-    : data.score >= 700 ? "#052e16"
-    : data.score >= 500 ? "#1c1407"
-    : "#2d0a0a";
 
   return (
     <>
