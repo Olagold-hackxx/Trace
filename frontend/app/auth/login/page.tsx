@@ -55,7 +55,10 @@ export default function LoginPage() {
 
       storeAuthToken(loginResult.token);
 
-      const virtualAccount = await fetchBackend<BackendVirtualAccount>("/virtual-accounts/me");
+      const isTrader = loginResult.user.role === "trader";
+      const virtualAccount = isTrader
+        ? await fetchBackend<BackendVirtualAccount>("/virtual-accounts/me").catch(() => null)
+        : null;
 
       persistTraderSession({ user: loginResult.user, virtualAccount });
       setLoading(false);

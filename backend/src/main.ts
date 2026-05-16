@@ -1,4 +1,4 @@
-import { ValidationPipe, VersioningType, RequestMethod } from "@nestjs/common";
+import { Logger, ValidationPipe, VersioningType, RequestMethod } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
@@ -22,6 +22,18 @@ async function bootstrap() {
     },
     credentials: true
   });
+  // HTTP request logger
+  const httpLogger = new Logger("HTTP");
+  app.use((req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => {
+    const { method, originalUrl } = req;
+    const start = Date.now();
+    res.on("finish", () => {
+      const ms = Date.now() - start;
+      httpLogger.log(`${method} ${originalUrl} ${res.statusCode} +${ms}ms`);
+    });
+    next();
+  });
+
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
