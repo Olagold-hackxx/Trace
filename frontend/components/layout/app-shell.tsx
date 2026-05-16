@@ -2,6 +2,7 @@
 
 import { Sidebar } from "./sidebar";
 import { AppHeader } from "./app-header";
+import { FraudAlertModal } from "@/components/fraud/fraud-alert-modal";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export function AppShell({ children, role = "user", title }: AppShellProps) {
           {children}
         </main>
       </div>
+      <FraudAlertModal />
     </div>
   );
 }

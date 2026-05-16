@@ -282,7 +282,7 @@ export default function DashboardPage() {
   let revenueLastMonth = 0;
   for (const t of transactions) {
     if (t.type === "debit" || t.type === "loan_repayment") continue;
-    const d = new Date(t.occurredAt ?? t.createdAt ?? "");
+    const d = new Date(t.occurredAt ?? "");
     if (d.getMonth() === thisMonth && d.getFullYear() === thisYear) {
       revenueThisMonth += Math.round(Number(t.amountKobo) / 100);
     } else if (d.getMonth() === lastMonthNum && d.getFullYear() === lastMonthYear) {
@@ -307,7 +307,7 @@ export default function DashboardPage() {
   const chartData = (() => {
     const byDay: Record<string, { cashIn: number; cashOut: number }> = {};
     for (const t of transactions) {
-      const day = (t.occurredAt ?? t.createdAt ?? "").slice(0, 10);
+      const day = (t.occurredAt ?? "").slice(0, 10);
       if (!day) continue;
       if (!byDay[day]) byDay[day] = { cashIn: 0, cashOut: 0 };
       const amt = Math.round(Number(t.amountKobo) / 100);
@@ -422,21 +422,36 @@ export default function DashboardPage() {
           <MetricCard label="Available Balance" value={formatNaira(metrics.balance)} icon={AccountBalance} color="#ff6b00" />
         </div>
 
-        {/* Payment link bar */}
-        <div className="rounded-2xl p-4 mb-6 flex items-center gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
-          <div className="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-xl" style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
-            <span className="text-sm text-[#f0f0f0] font-mono">{paymentLink}</span>
-          </div>
-          <button onClick={copy} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all hover:bg-[#161616]" style={{ borderColor: "#1e1e1e", color: "#f0f0f0" }}>
-            <ContentCopy style={{ fontSize: 16 }} />
-            {copied ? "Copied!" : "Copy link"}
-          </button>
-          {virtualAccount && (
-            <div className="hidden lg:block text-xs text-[#94a3b8]">
-              Virtual account: {virtualAccount.accountNumber} · {virtualAccount.bankName}
+        {/* Virtual Account Card */}
+        {virtualAccount && (
+          <div className="rounded-2xl p-6 mb-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#ff6b00] mb-4">Receive Payments</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+              <div className="flex-1">
+                <p className="text-xs text-[#64748b] mb-1">Bank</p>
+                <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{virtualAccount.bankName}</p>
+              </div>
+              <div className="w-px h-10 hidden sm:block" style={{ backgroundColor: "#1e1e1e" }} />
+              <div className="flex-1">
+                <p className="text-xs text-[#64748b] mb-1">Account Number</p>
+                <p className="text-3xl font-black tracking-widest text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{virtualAccount.accountNumber}</p>
+              </div>
+              <div className="w-px h-10 hidden sm:block" style={{ backgroundColor: "#1e1e1e" }} />
+              <div className="flex-1">
+                <p className="text-xs text-[#64748b] mb-1">Account Name</p>
+                <p className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>{user?.businessName ?? user?.fullName}</p>
+              </div>
+              <button
+                onClick={() => { navigator.clipboard.writeText(virtualAccount.accountNumber); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-90 shrink-0"
+                style={{ backgroundColor: copied ? "#16a34a" : "#ff6b00", color: "#fff" }}
+              >
+                <ContentCopy style={{ fontSize: 16 }} />
+                {copied ? "Copied!" : "Copy"}
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="rounded-2xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
           <div className="flex items-center gap-3">
