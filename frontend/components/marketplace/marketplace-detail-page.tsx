@@ -46,6 +46,7 @@ export function MarketplaceDetailPage({
     e.preventDefault();
     await fetchBackend(`/marketplace/jobs/${jobId}/apply`, {
       method: "POST",
+      bodyJson: { coverNote: coverNote.trim() || null },
     });
     setApplied(true);
     setShowForm(false);

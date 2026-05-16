@@ -66,9 +66,7 @@ export default function DashboardPage() {
   const [recentTransactions, setRecentTransactions] = useState<Array<{ id: string; date: string; desc: string; type: string; amount: number; status: string }>>([]);
   const [liveFeed, setLiveFeed] = useState<Array<{ id: string; label: string; title: string; description: string; status: string }>>([]);
   const [fraudAlerts, setFraudAlerts] = useState<BackendFraudAlert[]>([]);
-  const [showForecast, setShowForecast] = useState(false);
   const [forecastDays, setForecastDays] = useState<BackendDailyForecast[]>([]);
-  const [forecastLoading, setForecastLoading] = useState(false);
   const [dipWarning, setDipWarning] = useState<BackendForecastResponse["dip_warning"] | null>(null);
   const paymentLink = defaultPaymentLink?.url ?? "https://trace-nu-dusky.vercel.app/pay";
   const displayName = user?.fullName?.split(" ")[0] ?? "there";
@@ -137,7 +135,7 @@ export default function DashboardPage() {
     if (!user?.id || streamStarted.current) return;
     streamStarted.current = true;
 
-    const eventSource = new EventSource(buildBackendUrl(`/api/v1/stream/user/${user.id}`), {
+    const eventSource = new EventSource(buildBackendUrl(`/stream/user/${user.id}`), {
       withCredentials: true,
     });
 
@@ -295,28 +293,18 @@ export default function DashboardPage() {
     ? Math.round(((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 1000) / 10
     : undefined;
 
-  // Forecast fetch — lazy, triggered by toggle button
-  const handleForecastToggle = async () => {
-    const next = !showForecast;
-    setShowForecast(next);
-    if (next && forecastDays.length === 0) {
-      setForecastLoading(true);
-      try {
-        const res = await fetchBackend<BackendForecastResponse>("/score/forecast?horizon_days=30");
+  // Fetch forecast on mount
+  useEffect(() => {
+    fetchBackend<BackendForecastResponse>("/score/forecast?horizon_days=30")
+      .then((res) => {
         setForecastDays(res.daily ?? []);
         setDipWarning(res.dip_warning ?? null);
-      } catch {
-        setForecastDays([]);
-        setDipWarning(null);
-      } finally {
-        setForecastLoading(false);
-      }
-    }
-  };
+      })
+      .catch(() => { /* non-critical — chart still shows historical */ });
+  }, [user?.id]);
 
-  // Build daily chart data: historical actuals + forecast
+  // Build daily chart data: historical actuals + forecast always merged
   const chartData = (() => {
-    // Historical: one point per day from transactions
     const byDay: Record<string, { cashIn: number; cashOut: number }> = {};
     for (const t of transactions) {
       const day = (t.occurredAt ?? t.createdAt ?? "").slice(0, 10);
@@ -339,7 +327,7 @@ export default function DashboardPage() {
         forecastHigh: null as number | null,
       }));
 
-    if (!showForecast || forecastDays.length === 0) return historicalPoints;
+    if (forecastDays.length === 0) return historicalPoints;
 
     const existingDays = new Set(historicalPoints.map((p) => p.day));
     const forecastPoints = forecastDays
@@ -473,35 +461,18 @@ export default function DashboardPage() {
             <div className="rounded-2xl p-6" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", boxShadow: "0px 10px 30px rgba(0,0,0,0.25)" }}>
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>Cash Flow</h2>
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-3 text-xs text-[#94a3b8]">
-                    <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Actual</span>
-                    {showForecast && <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#3b82f6" }} />Forecast</span>}
-                    {showForecast && <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block opacity-40" style={{ backgroundColor: "#3b82f6" }} />CI band</span>}
-                  </div>
-                  <button
-                    onClick={handleForecastToggle}
-                    disabled={forecastLoading}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
-                    style={{
-                      backgroundColor: showForecast ? "#1d3461" : "rgba(255,255,255,0.05)",
-                      color: showForecast ? "#3b82f6" : "#94a3b8",
-                      border: `1px solid ${showForecast ? "#3b82f650" : "#1e1e1e"}`,
-                    }}
-                  >
-                    {forecastLoading ? "Loading…" : showForecast ? "Hide forecast" : "Show forecast"}
-                  </button>
+                <div className="flex gap-3 text-xs text-[#94a3b8]">
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#ff6b00" }} />Actual</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-full inline-block" style={{ backgroundColor: "#3b82f6" }} />Forecast</span>
                 </div>
               </div>
 
               {/* Dip warning banner */}
-              {showForecast && dipWarning && (
+              {dipWarning && (
                 <div className="rounded-xl px-4 py-3 mb-4 flex items-start gap-3" style={{ backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid #ef444430" }}>
                   <span style={{ fontSize: 16, marginTop: 1 }}>⚠️</span>
                   <div>
-                    <p className="text-sm font-semibold text-[#ef4444]">
-                      Income dip detected · {dipWarning.severity} severity
-                    </p>
+                    <p className="text-sm font-semibold text-[#ef4444]">Income dip detected · {dipWarning.severity} severity</p>
                     <p className="text-xs text-[#94a3b8] mt-0.5">
                       {new Date(dipWarning.dip_start_date).toLocaleDateString("en-NG", { month: "short", day: "numeric" })} – {new Date(dipWarning.dip_end_date).toLocaleDateString("en-NG", { month: "short", day: "numeric" })} · Expected gap: ₦{Math.round(dipWarning.expected_gap_kobo / 100).toLocaleString()} · Suggested loan: ₦{Math.round(dipWarning.suggested_loan_kobo / 100).toLocaleString()}
                     </p>
@@ -539,22 +510,10 @@ export default function DashboardPage() {
                       }}
                       labelFormatter={(label: string) => label}
                     />
-                    {showForecast && (
-                      <ReferenceLine x={todayLabel} stroke="#475569" strokeDasharray="4 2" label={{ value: "Today", fill: "#475569", fontSize: 10, position: "insideTopRight" }} />
-                    )}
-                    {/* CI band — upper */}
-                    {showForecast && (
-                      <Area type="monotone" dataKey="forecastHigh" stroke="none" fill="url(#forecastBandGrad)" connectNulls dot={false} legendType="none" />
-                    )}
-                    {/* CI band — lower */}
-                    {showForecast && (
-                      <Area type="monotone" dataKey="forecastLow" stroke="none" fill="#0d0d0d" connectNulls dot={false} legendType="none" />
-                    )}
-                    {/* Forecast line */}
-                    {showForecast && (
-                      <Area type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 3" fill="url(#forecastGrad)" connectNulls dot={false} />
-                    )}
-                    {/* Historical actual inflow — orange */}
+                    <ReferenceLine x={todayLabel} stroke="#475569" strokeDasharray="4 2" label={{ value: "Today", fill: "#475569", fontSize: 10, position: "insideTopRight" }} />
+                    <Area type="monotone" dataKey="forecastHigh" stroke="none" fill="url(#forecastBandGrad)" connectNulls dot={false} legendType="none" />
+                    <Area type="monotone" dataKey="forecastLow" stroke="none" fill="#0d0d0d" connectNulls dot={false} legendType="none" />
+                    <Area type="monotone" dataKey="forecast" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 3" fill="url(#forecastGrad)" connectNulls dot={false} />
                     <Area type="monotone" dataKey="cashIn" stroke="#ff6b00" strokeWidth={2.5} fill="url(#cashInGrad)" connectNulls={false} dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>

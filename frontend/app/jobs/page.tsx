@@ -3,7 +3,7 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Add, People, CheckCircle, Cancel, AccessTime, Work, ChevronRight } from "@mui/icons-material";
+import { Add, People, CheckCircle, Cancel, AccessTime, Work, Close, Phone } from "@mui/icons-material";
 import { Spinner } from "@/components/ui/spinner";
 import {
   BackendJob,
@@ -12,6 +12,15 @@ import {
   formatDateLabel,
   formatNairaFromKobo,
 } from "@/lib/backend";
+
+interface JobApplicant {
+  id: string;
+  userId: string;
+  coverNote: string | null;
+  status: string;
+  createdAt: string;
+  applicant: { name: string; phone: string; businessName: string | null } | null;
+}
 
 const statusMap: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
   Active: { color: "#16a34a", bg: "#dcfce7", icon: CheckCircle },
@@ -43,6 +52,11 @@ export default function JobsPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [applicantsJob, setApplicantsJob] = useState<BackendJob | null>(null);
+  const [applicants, setApplicants] = useState<JobApplicant[]>([]);
+  const [applicantsLoading, setApplicantsLoading] = useState(false);
+  const [applicantCounts, setApplicantCounts] = useState<Record<string, number>>({});
+
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -70,8 +84,29 @@ export default function JobsPage() {
       setPostedJobs(mine);
       setAppliedJobs(applications);
       setJobsIndex(Object.fromEntries(marketplace.map((job) => [job.id, job])));
+
+      // Fetch real applicant counts for posted jobs
+      const counts = await Promise.all(
+        mine.map(async (job) => {
+          const apps = await fetchBackend<JobApplicant[]>(`/jobs/${job.id}/applications`).catch(() => []);
+          return [job.id, apps.length] as [string, number];
+        })
+      );
+      setApplicantCounts(Object.fromEntries(counts));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openApplicants = async (job: BackendJob) => {
+    setApplicantsJob(job);
+    setApplicants([]);
+    setApplicantsLoading(true);
+    try {
+      const apps = await fetchBackend<JobApplicant[]>(`/jobs/${job.id}/applications`);
+      setApplicants(apps);
+    } finally {
+      setApplicantsLoading(false);
     }
   };
 
@@ -221,23 +256,23 @@ export default function JobsPage() {
                         <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#3b1d09" }}>
                           <Work style={{ fontSize: 16, color: "#ff6b00" }} />
                         </div>
-                            <span className="font-semibold text-[#f0f0f0]">{j.title}</span>
+                        <span className="font-semibold text-[#f0f0f0]">{j.title}</span>
                       </div>
                     </td>
                     <td className="px-5 py-4 text-[#cbd5e1]">{j.category}</td>
                     <td className="px-5 py-4"><StatusBadge status={j.status === "active" ? "Active" : j.status} /></td>
                     <td className="px-5 py-4">
-                      <span className="flex items-center gap-1 text-[#cbd5e1]">
-                        <People style={{ fontSize: 14 }} />{appliedJobs.filter((application) => application.jobId === j.id).length}
-                      </span>
+                      <button onClick={() => openApplicants(j)} className="flex items-center gap-1 text-[#cbd5e1] hover:text-[#ff6b00] transition-colors">
+                        <People style={{ fontSize: 14 }} />{applicantCounts[j.id] ?? 0}
+                      </button>
                     </td>
                     <td className="px-5 py-4 font-semibold text-[#f0f0f0]">0</td>
                     <td className="px-5 py-4 font-semibold text-[#f0f0f0]">{formatNairaFromKobo(j.payKobo)}/day</td>
                     <td className="px-5 py-4 text-[#94a3b8]">{formatDateLabel(j.createdAt)}</td>
                     <td className="px-5 py-4">
-                      <Link href={`/jobs/${j.id}`} className="flex items-center gap-1 text-xs font-semibold transition-colors hover:underline" style={{ color: "#ff6b00" }}>
-                        View <ChevronRight style={{ fontSize: 14 }} />
-                      </Link>
+                      <button onClick={() => openApplicants(j)} className="text-xs font-semibold transition-colors hover:underline" style={{ color: "#ff6b00" }}>
+                        View applicants
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -301,6 +336,81 @@ export default function JobsPage() {
           ))}
         </div>
       </div>
+
+      {/* Applicants drawer */}
+      {applicantsJob && (
+        <>
+          <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setApplicantsJob(null)} />
+          <div
+            className="fixed right-0 top-0 bottom-0 z-50 flex flex-col"
+            style={{ width: "min(480px, 100vw)", backgroundColor: "#0d0d0d", borderLeft: "1px solid #1e1e1e" }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 shrink-0" style={{ borderBottom: "1px solid #1a1a1a" }}>
+              <div>
+                <p className="text-base font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
+                  Applicants
+                </p>
+                <p className="text-xs text-[#64748b] mt-0.5">{applicantsJob.title} · {applicantsJob.location}</p>
+              </div>
+              <button onClick={() => setApplicantsJob(null)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[#1a1a1a]">
+                <Close style={{ fontSize: 18, color: "#64748b" }} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+              {applicantsLoading && (
+                <div className="flex flex-col items-center justify-center py-20 gap-3">
+                  <div className="w-8 h-8 rounded-full border-2 border-[#ff6b00] border-t-transparent" style={{ animation: "spin 0.8s linear infinite" }} />
+                  <p className="text-sm text-[#64748b]">Loading applicants…</p>
+                </div>
+              )}
+
+              {!applicantsLoading && applicants.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20 gap-2">
+                  <People style={{ fontSize: 40, color: "#334155" }} />
+                  <p className="text-sm text-[#64748b]">No applications yet</p>
+                </div>
+              )}
+
+              {!applicantsLoading && applicants.map((app, i) => (
+                <div key={app.id} className="rounded-2xl p-5" style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e" }}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: "#ff6b00" }}>
+                      {app.applicant?.name?.[0] ?? String(i + 1)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-[#f0f0f0]">{app.applicant?.name ?? "Unknown applicant"}</p>
+                      {app.applicant?.businessName && (
+                        <p className="text-xs text-[#94a3b8]">{app.applicant.businessName}</p>
+                      )}
+                    </div>
+                    <StatusBadge status={app.status.charAt(0).toUpperCase() + app.status.slice(1)} />
+                  </div>
+
+                  {app.applicant?.phone && (
+                    <div className="flex items-center gap-2 mb-3">
+                      <Phone style={{ fontSize: 14, color: "#64748b" }} />
+                      <span className="text-xs text-[#94a3b8]">{app.applicant.phone}</span>
+                    </div>
+                  )}
+
+                  {app.coverNote && (
+                    <p className="text-xs text-[#cbd5e1] leading-relaxed p-3 rounded-xl" style={{ backgroundColor: "#161616" }}>
+                      {app.coverNote}
+                    </p>
+                  )}
+
+                  <p className="text-xs text-[#475569] mt-3">Applied {formatDateLabel(app.createdAt)}</p>
+                </div>
+              ))}
+            </div>
+
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        </>
+      )}
     </AppShell>
   );
 }

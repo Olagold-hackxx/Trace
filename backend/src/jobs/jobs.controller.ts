@@ -52,8 +52,8 @@ export class JobsController {
 
   @Version("1")
   @Post("marketplace/jobs/:jobId/apply")
-  applyToMarketplaceJob(@Req() req: Request, @Param("jobId") jobId: string) {
-    return this.jobsService.applyToJob(resolveToken(req), jobId);
+  applyToMarketplaceJob(@Req() req: Request, @Param("jobId") jobId: string, @Body() body: { coverNote?: string }) {
+    return this.jobsService.applyToJob(resolveToken(req), jobId, body?.coverNote);
   }
 
   @Version("1")

@@ -39,6 +39,12 @@ export function ScorePage() {
   const score = backendScore?.score ?? 0;
   const pct = (score / 850) * 100;
   const circumference = 2 * Math.PI * 80;
+
+  const scoreBand = score >= 750 ? { label: "Excellent", color: "#22c55e" }
+    : score >= 600 ? { label: "Good", color: "#ff6b00" }
+    : score >= 450 ? { label: "Fair", color: "#f59e0b" }
+    : score >= 300 ? { label: "Poor", color: "#ef4444" }
+    : { label: "Very Poor", color: "#7f1d1d" };
   const activeHistory = backendHistory.map((item) => ({
     month: new Date(item.createdAt ?? Date.now()).toLocaleDateString("en-NG", { month: "short" }),
     score: item.score,
@@ -80,6 +86,8 @@ export function ScorePage() {
         >
           <div className="flex flex-col items-center">
             <div className="relative w-52 h-52">
+              {/* Glow */}
+              <div className="absolute inset-0 rounded-full blur-2xl opacity-20" style={{ backgroundColor: scoreBand.color }} />
               <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
                 <circle cx="100" cy="100" r="80" fill="none" stroke="#1e1e1e" strokeWidth="16" />
                 <circle
@@ -87,23 +95,24 @@ export function ScorePage() {
                   cy="100"
                   r="80"
                   fill="none"
-                  stroke="#ff6b00"
+                  stroke={scoreBand.color}
                   strokeWidth="16"
                   strokeDasharray={`${circumference * (pct / 100)} ${circumference}`}
                   strokeLinecap="round"
+                  style={{ filter: `drop-shadow(0 0 8px ${scoreBand.color})`, transition: "stroke-dasharray 0.6s ease" }}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <p className="text-6xl font-bold text-[#f0f0f0]" style={{ fontFamily: "Epilogue, sans-serif" }}>
                   {score}
                 </p>
-                <p className="text-sm font-semibold mt-1" style={{ color: "#ff6b00" }}>
-                  {score >= 750 ? "Excellent" : score >= 650 ? "Good" : "Building"}
+                <p className="text-sm font-semibold mt-1" style={{ color: scoreBand.color }}>
+                  {scoreBand.label}
                 </p>
                 <p className="text-xs text-[#94a3b8]">out of 850</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: "#dcfce7", color: "#16a34a" }}>
+            <div className="flex items-center gap-2 mt-3 px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: `${scoreBand.color}20`, color: scoreBand.color, border: `1px solid ${scoreBand.color}40` }}>
               <TrendingUp style={{ fontSize: 16 }} />
               +7 points this month
             </div>
@@ -114,24 +123,27 @@ export function ScorePage() {
               Score Bands
             </p>
             {[
-              { label: "Excellent", range: "750–850", color: "#16a34a", bg: "#dcfce7" },
-              { label: "Good", range: "600–749", color: "#ff6b00", bg: "#3b1d09", active: true },
-              { label: "Fair", range: "450–599", color: "#d97706", bg: "#fef3c7" },
-              { label: "Poor", range: "300–449", color: "#dc2626", bg: "#fee2e2" },
-              { label: "Very Poor", range: "0–299", color: "#7f1d1d", bg: "#fecaca" },
-            ].map((b) => (
-              <div
-                key={b.label}
-                className="flex items-center justify-between p-3 rounded-xl"
-                style={{ backgroundColor: b.active ? b.bg : "#161616", border: `1px solid ${b.active ? `${b.color}40` : "#1e1e1e"}` }}
-              >
-                <div className="flex items-center gap-2">
-                  {b.active && <CheckCircle style={{ fontSize: 16, color: b.color }} />}
-                  <span className="text-sm font-medium text-[#f0f0f0]">{b.label}</span>
+              { label: "Excellent", range: "750–850", color: "#22c55e", min: 750 },
+              { label: "Good",      range: "600–749", color: "#ff6b00", min: 600 },
+              { label: "Fair",      range: "450–599", color: "#f59e0b", min: 450 },
+              { label: "Poor",      range: "300–449", color: "#ef4444", min: 300 },
+              { label: "Very Poor", range: "0–299",   color: "#7f1d1d", min: 0   },
+            ].map((b) => {
+              const active = b.label === scoreBand.label;
+              return (
+                <div
+                  key={b.label}
+                  className="flex items-center justify-between p-3 rounded-xl"
+                  style={{ backgroundColor: active ? `${b.color}15` : "#161616", border: `1px solid ${active ? `${b.color}40` : "#1e1e1e"}` }}
+                >
+                  <div className="flex items-center gap-2">
+                    {active && <CheckCircle style={{ fontSize: 16, color: b.color }} />}
+                    <span className="text-sm font-medium text-[#f0f0f0]">{b.label}</span>
+                  </div>
+                  <span className="text-xs text-[#94a3b8] font-mono">{b.range}</span>
                 </div>
-                <span className="text-xs text-[#94a3b8] font-mono">{b.range}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="space-y-4">

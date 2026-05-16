@@ -63,10 +63,27 @@ export class JobsService {
   }
 
   async getJobApplications(jobId: string) {
-    return this.applicationsRepository.find({
+    const applications = await this.applicationsRepository.find({
       where: { jobId },
       order: { createdAt: "DESC" }
     });
+
+    return Promise.all(
+      applications.map(async (app) => {
+        const user = await this.usersService.findById(app.userId).catch(() => null);
+        return {
+          id: app.id,
+          jobId: app.jobId,
+          userId: app.userId,
+          coverNote: app.coverNote,
+          status: app.status,
+          createdAt: app.createdAt,
+          applicant: user
+            ? { name: user.fullName, phone: user.phone, businessName: user.businessName ?? null }
+            : null,
+        };
+      })
+    );
   }
 
   async getMyApplications(sessionToken?: string) {
@@ -117,12 +134,13 @@ export class JobsService {
     });
   }
 
-  async applyToJob(sessionToken: string | undefined, jobId: string) {
+  async applyToJob(sessionToken: string | undefined, jobId: string, coverNote?: string) {
     await this.getJob(jobId);
     const user = await this.usersService.getCurrentUser(sessionToken);
     return this.applicationsRepository.save({
       jobId,
       userId: user.id,
+      coverNote: coverNote ?? null,
       status: "pending"
     });
   }
