@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/common/brand-logo";
 import { BackendUser, BackendVirtualAccount, fetchBackend, persistTraderSession } from "@/lib/backend";
 
-type Role = "trader" | "lender";
+type Role = "trader" | "lender" | "worker";
 
 const roles: {
   id: Role;
@@ -23,6 +23,13 @@ const roles: {
     image:
       "https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?w=800&q=80&auto=format&fit=crop",
     tag: "Most popular",
+  },
+  {
+    id: "worker",
+    label: "Worker / Gig Worker",
+    sub: "I offer skills or labour — delivery, welding, tailoring, and more. I want to find jobs and get paid.",
+    image:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&auto=format&fit=crop",
   },
   {
     id: "lender",
@@ -44,16 +51,22 @@ export default function RolePage() {
     setLoading(true);
     setError("");
     try {
-      await fetchBackend("/users/me", {
-        method: "PATCH",
-        bodyJson: { role: selected },
-      });
+      // Workers are stored as role='trader' in the DB; we flag them via workerCategory
+      const dbRole = selected === "worker" ? "trader" : selected;
+      const patch: Record<string, unknown> = { role: dbRole };
+      if (selected === "worker") patch.workerCategory = "general";
+
+      await fetchBackend("/users/me", { method: "PATCH", bodyJson: patch });
+
       const [user, virtualAccount] = await Promise.all([
         fetchBackend<BackendUser>("/users/me"),
         fetchBackend<BackendVirtualAccount>("/virtual-accounts/me").catch(() => null),
       ]);
       persistTraderSession({ user, virtualAccount: virtualAccount ?? undefined });
-      router.push(selected === "lender" ? "/lender" : "/dashboard");
+
+      if (selected === "lender") router.push("/lender");
+      else if (selected === "worker") router.push("/worker/profile");
+      else router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setLoading(false);
@@ -101,10 +114,10 @@ minHeight: "100dvh",
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: 16,
           width: "100%",
-          maxWidth: 680,
+          maxWidth: 960,
           marginBottom: 28,
         }}
         className="role-grid"
@@ -223,7 +236,7 @@ minHeight: "100dvh",
       </div>
 
       {/* CTA */}
-      <div style={{ width: "100%", maxWidth: 680 }}>
+      <div style={{ width: "100%", maxWidth: 960 }}>
         {error && (
           <p style={{ fontSize: 13, color: "#f87171", textAlign: "center", marginBottom: 12 }}>{error}</p>
         )}
@@ -247,7 +260,7 @@ minHeight: "100dvh",
           {loading
             ? "Setting up your account..."
             : selected
-            ? `Continue as ${selected === "trader" ? "Trader / Merchant" : "Lender"} →`
+            ? `Continue as ${selected === "trader" ? "Trader / Merchant" : selected === "worker" ? "Worker / Gig Worker" : "Lender"} →`
             : "Select a role to continue"}
         </button>
 
@@ -261,7 +274,7 @@ minHeight: "100dvh",
 
       {/* Mobile stacking */}
       <style>{`
-        @media (max-width: 600px) {
+        @media (max-width: 800px) {
           .role-grid {
             grid-template-columns: 1fr !important;
           }

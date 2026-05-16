@@ -73,9 +73,9 @@ TRADERS = [
 
 LENDERS = [
     # (full_name, phone, email, display_name)
-    ("GTCO Microfinance",  "+2348022000001", "gtco@demo.trace",   "GTCO Microfinance"),
-    ("LAPO Microfinance",  "+2348022000002", "lapo@demo.trace",   "LAPO Microfinance"),
-    ("Carbon Lending",     "+2348022000003", "carbon@demo.trace", "Carbon Lending"),
+    ("GTCO Microfinance",  "+2348022000001", "gtco@trace.com",   "GTCO Microfinance"),
+    ("LAPO Microfinance",  "+2348022000002", "lapo@trace.com",   "LAPO Microfinance"),
+    ("Carbon Lending",     "+2348022000003", "carbon@trace.com", "Carbon Lending"),
 ]
 
 # Workers who need DB user accounts (Tunde applies live; Bayo+Chinedu are pre-seeded).
@@ -406,12 +406,12 @@ def seed_users(cur, demo_day: date) -> dict:
             bvn[-4:], bvn, demo_email(name), False,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
-    for (name, phone, _, display) in LENDERS:
+    for (name, phone, email, display) in LENDERS:
         bvn = gen_bvn(f"bvn-{phone}")
         rows.append((
             uid(phone), phone, password_hash, display, None, None, None,
             "english", "lender", None, None, None,
-            bvn[-4:], bvn, f"{phone}@demo.trace", True,
+            bvn[-4:], bvn, email, True,
             datetime(demo_day.year - 1, demo_day.month, demo_day.day, tzinfo=timezone.utc),
         ))
     for (name, phone, archetype, market, gender, age) in WORKER_USERS:

@@ -217,7 +217,12 @@ def fetch_workers_for_match(db: Session) -> pd.DataFrame:
             id,
             full_name,
             archetype,
+            worker_category,
             market_name,
+            bio,
+            skills,
+            daily_rate_kobo,
+            service_radius_km,
             bvn IS NOT NULL AS bvn_verified,
             created_at
         FROM users
@@ -231,26 +236,32 @@ def fetch_workers_for_match(db: Session) -> pd.DataFrame:
     records = []
     for row in rows:
         lat, lng = _coords(row.market_name)
-        archetype = row.archetype or "general"
+        primary_cat = row.worker_category or row.archetype or "general"
+        # skills is stored as CSV by TypeORM simple-array
+        raw_skills = row.skills or ""
+        skills_list = [s.strip() for s in raw_skills.split(",") if s.strip()] if raw_skills else [primary_cat]
+        daily_rate = int(row.daily_rate_kobo) // 100 if row.daily_rate_kobo else 5000
+        radius = float(row.service_radius_km) if row.service_radius_km else 15.0
+        bio = row.bio or f"{row.full_name}, {primary_cat.replace('_', ' ')} at {row.market_name or 'Lagos'}."
         records.append({
-            "worker_id":             str(row.id),
-            "name":                  row.full_name,
-            "primary_category":      archetype,
-            "secondary_categories":  [],
-            "bio":                   f"{row.full_name}, {archetype.replace('_', ' ')} at {row.market_name or 'Lagos'}.",
-            "skills":                [archetype],
-            "location_name":         row.market_name or "Lagos",
-            "location_lat":          lat,
-            "location_lng":          lng,
-            "service_radius_km":     15,
-            "daily_rate_naira":      5000,
-            "completed_gigs":        0,
-            "avg_rating":            None,
-            "completion_rate":       None,
-            "kudiscore_tier":        None,
-            "bvn_verified":          bool(row.bvn_verified),
+            "worker_id":              str(row.id),
+            "name":                   row.full_name,
+            "primary_category":       primary_cat,
+            "secondary_categories":   [s for s in skills_list if s != primary_cat],
+            "bio":                    bio,
+            "skills":                 skills_list,
+            "location_name":          row.market_name or "Lagos",
+            "location_lat":           lat,
+            "location_lng":           lng,
+            "service_radius_km":      radius,
+            "daily_rate_naira":       daily_rate,
+            "completed_gigs":         0,
+            "avg_rating":             None,
+            "completion_rate":        None,
+            "kudiscore_tier":         None,
+            "bvn_verified":           bool(row.bvn_verified),
             "days_since_last_active": 0,
-            "last_active_at":        row.created_at.isoformat() if row.created_at else None,
+            "last_active_at":         row.created_at.isoformat() if row.created_at else None,
         })
     return pd.DataFrame(records)
 
