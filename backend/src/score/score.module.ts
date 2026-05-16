@@ -3,13 +3,14 @@ import { HttpModule } from "@nestjs/axios";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ScoreSnapshot } from "../entities/score-snapshot.entity";
 import { ScoreController } from "./score.controller";
+import { PredictController } from "./predict.controller";
 import { ScoreService } from "./score.service";
 import { UsersModule } from "../users/users.module";
 import { MlClientService } from "../ml/ml-client.service";
 
 @Module({
   imports: [HttpModule, TypeOrmModule.forFeature([ScoreSnapshot]), UsersModule],
-  controllers: [ScoreController],
+  controllers: [ScoreController, PredictController],
   providers: [ScoreService, MlClientService],
   exports: [ScoreService, MlClientService],
 })

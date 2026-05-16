@@ -17,26 +17,30 @@ import {
   Warning,
 } from "@mui/icons-material";
 
-// ─── raw shape from /api/v1/score/explain ─────────────────────────────────
-interface BackendFactor {
-  text: string;
-  direction: "positive" | "negative";
+// ─── raw shape from /api/v1/predict/explain ───────────────────────────────
+interface MlFactor {
+  feature: string;
+  value: string;
+  phrasing: string;
+  score_delta: number;
 }
-interface BackendExplainResponse {
+interface PredictExplainResponse {
+  user_id: string;
   score: number;
-  pd: string | number;
-  factors: BackendFactor[];
-  modelVersion: string;
+  pd: number;
+  helping: MlFactor[];
+  hurting: MlFactor[];
+  model_version: string;
 }
 
 // ─── fetch ────────────────────────────────────────────────────────────────
-async function fetchScoreExplain(): Promise<BackendExplainResponse> {
-  return fetchBackend<BackendExplainResponse>("/score/explain");
+async function fetchScoreExplain(): Promise<PredictExplainResponse> {
+  return fetchBackend<PredictExplainResponse>("/predict/explain");
 }
 
 // ─── drawer ───────────────────────────────────────────────────────────────────
 function LenderViewDrawer({ onClose }: { onClose: () => void }) {
-  const [data, setData] = useState<BackendExplainResponse | null>(null);
+  const [data, setData] = useState<PredictExplainResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -163,7 +167,7 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                     Credit score
                   </p>
                   <p className="text-xs text-[#94a3b8] mt-2">
-                    Default probability: {(Number(data.pd) * 100).toFixed(1)}%
+                    Default probability: {(data.pd * 100).toFixed(1)}%
                   </p>
                 </div>
               </div>
@@ -174,27 +178,30 @@ function LenderViewDrawer({ onClose }: { onClose: () => void }) {
                   Score factors
                 </p>
                 <div className="space-y-3">
-                  {data.factors.map((f, i) => {
-                    const isPositive = f.direction === "positive";
-                    return (
-                      <div
-                        key={i}
-                        className="rounded-xl p-4 flex gap-3"
-                        style={{
-                          backgroundColor: "#111111",
-                          border: "1px solid #1e1e1e",
-                          borderLeft: `3px solid ${isPositive ? "#22c55e" : "#ef4444"}`,
-                        }}
-                      >
-                        <div className="mt-0.5 shrink-0">
-                          {isPositive
-                            ? <CheckCircle style={{ fontSize: 16, color: "#22c55e" }} />
-                            : <Warning style={{ fontSize: 16, color: "#ef4444" }} />}
-                        </div>
-                        <p className="text-sm text-[#f0f0f0] leading-relaxed">{f.text}</p>
+                  {data.helping.map((f, i) => (
+                    <div
+                      key={`h-${i}`}
+                      className="rounded-xl p-4 flex gap-3"
+                      style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderLeft: "3px solid #22c55e" }}
+                    >
+                      <div className="mt-0.5 shrink-0">
+                        <CheckCircle style={{ fontSize: 16, color: "#22c55e" }} />
                       </div>
-                    );
-                  })}
+                      <p className="text-sm text-[#f0f0f0] leading-relaxed">{f.phrasing}</p>
+                    </div>
+                  ))}
+                  {data.hurting.map((f, i) => (
+                    <div
+                      key={`u-${i}`}
+                      className="rounded-xl p-4 flex gap-3"
+                      style={{ backgroundColor: "#111111", border: "1px solid #1e1e1e", borderLeft: "3px solid #ef4444" }}
+                    >
+                      <div className="mt-0.5 shrink-0">
+                        <Warning style={{ fontSize: 16, color: "#ef4444" }} />
+                      </div>
+                      <p className="text-sm text-[#f0f0f0] leading-relaxed">{f.phrasing}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </>
