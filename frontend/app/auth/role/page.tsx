@@ -58,10 +58,10 @@ export default function RolePage() {
 
       await fetchBackend("/users/me", { method: "PATCH", bodyJson: patch });
 
-      const [user, virtualAccount] = await Promise.all([
-        fetchBackend<BackendUser>("/users/me"),
-        fetchBackend<BackendVirtualAccount>("/virtual-accounts/me").catch(() => null),
-      ]);
+      const user = await fetchBackend<BackendUser>("/users/me");
+      const virtualAccount = (dbRole === "trader")
+        ? await fetchBackend<BackendVirtualAccount>("/virtual-accounts/me").catch(() => null)
+        : null;
       persistTraderSession({ user, virtualAccount: virtualAccount ?? undefined });
 
       if (selected === "lender") router.push("/lender");
