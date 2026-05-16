@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { MetricCard } from "@/components/common/metric-card";
 import { useTraderData } from "@/hooks/use-trader-data";
@@ -19,6 +19,9 @@ import {
   Download,
 } from "@mui/icons-material";
 import {
+  BackendTransactionsSummary,
+  buildBackendUrl,
+  fetchBackend,
   formatDateLabel,
   formatNairaFromKobo,
   BACKEND_API_BASE_URL,
@@ -57,6 +60,12 @@ export default function PaymentsPage() {
     useTraderData();
   const [tab, setTab] = useState<"transactions" | "links">("transactions");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const streamStarted = useRef(false);
+  const [liveSummary, setLiveSummary] = useState<BackendTransactionsSummary | null>(null);
+  const [liveNewTxns, setLiveNewTxns] = useState<Array<{
+    id: string; date: string; time: string; desc: string; ref: string;
+    type: string; amount: number; status: string; method: string;
+  }>>([]);
 
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [requestAmount, setRequestAmount] = useState("");
@@ -66,26 +75,32 @@ export default function PaymentsPage() {
   const [requestError, setRequestError] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
 
-  const mappedTransactions = transactions.map((t) => ({
-    id: t.id,
-    date: formatDateLabel(t.occurredAt),
-    time: new Date(t.occurredAt).toLocaleTimeString("en-NG", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    desc: t.senderName ?? t.reference,
-    ref: t.reference,
-    type:
-      t.type === "debit" || t.type === "loan_repayment" ? "Debit" : "Credit",
-    amount: Math.round(Number(t.amountKobo) / 100),
-    status:
-      t.status === "success"
-        ? "Success"
-        : t.status === "failed"
-          ? "Failed"
-          : "Pending",
-    method: t.type === "payment_link" ? "Payment link" : "Bank transfer",
-  }));
+  const mappedTransactions = [
+    ...liveNewTxns,
+    ...transactions.map((t) => ({
+      id: t.id,
+      date: formatDateLabel(t.occurredAt),
+      time: new Date(t.occurredAt).toLocaleTimeString("en-NG", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      desc: t.senderName ?? t.reference,
+      ref: t.reference,
+      type:
+        t.type === "debit" || t.type === "loan_repayment" ? "Debit" : "Credit",
+      amount: Math.round(Number(t.amountKobo) / 100),
+      status:
+        t.status === "success"
+          ? "Success"
+          : t.status === "failed"
+            ? "Failed"
+            : "Pending",
+      method: t.type === "payment_link" ? "Payment link" : "Bank transfer",
+    })),
+  ];
+
+  // Use live summary if we have one (updated by SSE), otherwise use loaded summary
+  const activeSummary = liveSummary ?? summary;
 
   const mappedPaymentLinks = paymentLinks.map((link) => ({
     id: link.id,
@@ -99,6 +114,83 @@ export default function PaymentsPage() {
     created: formatDateLabel(link.createdAt),
     active: link.active,
   }));
+
+  // SSE: open stream and push new transactions live
+  useEffect(() => {
+    if (streamStarted.current) return;
+    let source: EventSource | null = null;
+
+    fetchBackend<{ id: string }>("/users/me")
+      .then((u) => {
+        if (streamStarted.current) return;
+        streamStarted.current = true;
+
+        source = new EventSource(buildBackendUrl(`/stream/user/${u.id}`), { withCredentials: true });
+
+        source.onmessage = (event) => {
+          try {
+            const parsed = JSON.parse(event.data) as {
+              type: string;
+              payload: Record<string, unknown>;
+              createdAt: string;
+            };
+
+            if (parsed.type === "transaction.created") {
+              const amountKobo = Number(parsed.payload.amountKobo ?? 0);
+              const reference = String(parsed.payload.reference ?? "");
+              const senderName = parsed.payload.senderName ? String(parsed.payload.senderName) : null;
+              const indicator = String(parsed.payload.transactionIndicator ?? "C");
+              const isDebit = indicator === "D";
+              const now = new Date();
+
+              const newTxn = {
+                id: reference || String(Date.now()),
+                date: formatDateLabel(parsed.createdAt),
+                time: now.toLocaleTimeString("en-NG", { hour: "2-digit", minute: "2-digit" }),
+                desc: senderName ?? reference,
+                ref: reference,
+                type: isDebit ? "Debit" : "Credit",
+                amount: Math.round(amountKobo / 100),
+                status: "Pending",
+                method: "Bank transfer",
+              };
+
+              setLiveNewTxns((prev) => {
+                // deduplicate by reference
+                if (prev.some((t) => t.ref === reference)) return prev;
+                return [newTxn, ...prev];
+              });
+
+              // Update live summary totals
+              setLiveSummary((prev) => {
+                const base = prev ?? (summary ?? { totalInflowKobo: 0, totalOutflowKobo: 0, balanceKobo: 0, transactionCount: 0 });
+                return {
+                  ...base,
+                  totalInflowKobo: isDebit ? base.totalInflowKobo : base.totalInflowKobo + amountKobo,
+                  totalOutflowKobo: isDebit ? base.totalOutflowKobo + amountKobo : base.totalOutflowKobo,
+                  balanceKobo: isDebit ? base.balanceKobo - amountKobo : base.balanceKobo + amountKobo,
+                  transactionCount: base.transactionCount + 1,
+                };
+              });
+            }
+          } catch {
+            // ignore malformed events
+          }
+        };
+      })
+      .catch(() => {});
+
+    return () => {
+      source?.close();
+      streamStarted.current = false;
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sync liveSummary when summary loads for the first time
+  useEffect(() => {
+    if (summary && !liveSummary) setLiveSummary(summary);
+  }, [summary, liveSummary]);
 
   const copy = (text: string, id: string) => {
     navigator.clipboard.writeText(
@@ -453,13 +545,13 @@ export default function PaymentsPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <MetricCard
             label="Total Inflow"
-            value={formatNairaFromKobo(summary?.totalInflowKobo)}
+            value={formatNairaFromKobo(activeSummary?.totalInflowKobo)}
             icon={Wallet}
             color="#ff6b00"
           />
           <MetricCard
             label="Available Balance"
-            value={formatNairaFromKobo(summary?.balanceKobo)}
+            value={formatNairaFromKobo(activeSummary?.balanceKobo)}
             icon={TrendingUp}
             color="#ff6b00"
           />
