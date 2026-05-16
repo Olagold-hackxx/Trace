@@ -140,7 +140,7 @@ export class JobsService {
     return this.applicationsRepository.save({
       jobId,
       userId: user.id,
-      coverNote: coverNote ?? null,
+      coverNote: coverNote ?? undefined,
       status: "pending"
     });
   }
