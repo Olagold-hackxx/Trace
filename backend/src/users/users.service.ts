@@ -66,6 +66,15 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  /** Loads user with BVN included — only used for virtual account provisioning. */
+  async findWithBvn(id: string): Promise<User | null> {
+    return this.usersRepository
+      .createQueryBuilder("user")
+      .addSelect("user.bvn")
+      .where("user.id = :id", { id })
+      .getOne();
+  }
+
   /** Only used by AuthService — explicitly loads the password hash column. */
   async findForAuth(identifier: string): Promise<User | null> {
     return this.usersRepository
