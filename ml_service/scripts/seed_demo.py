@@ -372,6 +372,11 @@ CREATE TABLE IF NOT EXISTS fraud_alerts (
 
 -- Idempotent column additions for tables created before this field existed
 ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS skills TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS worker_category TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_rate_kobo BIGINT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS service_radius_km FLOAT;
 """
 
 TRUNCATE_SQL = """
